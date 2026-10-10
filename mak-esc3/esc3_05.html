@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		I want more !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		５．CUT&SHORT
+		<BR>
+		</FONT>
+		<BR>
+		<IMG src="image/esc3-05a.jpg" alt="表面"><BR>
+		<BR>
+		　表面は1ヶ所。基板では無く、2212P003の10ピンをカットし、水平に拡げます。<BR>
+		<BR>
+		<IMG src="image/esc3-05b.jpg" alt="裏面"><BR>
+		<BR>
+		　裏面は4ヶ所。カッターで実体図に赤の斜線で示した部分のパターンをカットします。
+		勢い余って隣のパターンを切らない様に注意します。<BR>
+		<BR>
+		　CUT&SHORTと言いつつ、カットしかありませんが・・・カットした部分がショートしていないか
+		（まだつながっていないか）はテスター等できちんとチェックしておきましょう。
+		　Pカッター等があると若干作業しやすいですが、わざわざ買うほどの物ではありません。
+		（図のPカッターをあてている場所はカットする箇所ではありません。）<BR>
+		<BR>
+		<IMG src="image/esc3-05c.jpg" alt="Pカッター"><BR>
+		<BR>
+		　もう少し説明しておきます。興味がある人だけ読んでください。表面は元々2212P003に来ている/SLTSLをGALに入れ、
+		GALからの出力(/SCC)を2212P003に入れるためのカットです。裏面は、載せ替えるSRAM(628512)と元々載っている
+		1Mbit ROMは似たピン配置ですが、ピン数以外にも異なる場所があり、その為のカット作業となります。<BR>
+		</B>
+		<BR>
+		<TT><PRE>
+□各ＩＣ等のピン配置
+	 SRAM(628512)		 　1Mbit ROM
+	    +--_--+
+	 A18|1  32|VDD
+	 A16|2  31|A15		    +--_--+
+	 A14|3  30|A17		 A15|1  28|VDD		SRAMのA14にA15が来るのはOK、A17にVDDが来るのはカット
+	 A12|4  29|/WE		 A12|2  27|A14		SRAMの/WEにA14が来るのはカット
+	 A 7|5  28|A13		 A 7|3  26|A13
+	 A 6|6  27|A 8		 A 6|4  25|A 8
+	 A 5|7  26|A 9		 A 5|5  24|A 9
+	 A 4|8  25|A11		 A 4|6  23|A11
+	 A 3|9  24|/OE		 A 3|7  22|A16		SRAMの/OEにA16が来るのはカット
+	 A 2|10 23|A10		 A 2|8  21|A10
+	 A 1|11 22|/CS		 A 1|9  20|/CS		信号名はどちらも/CSですが、GALからの/CSとつなげるのでカット
+	 A 0|12 21|D 7		 A 0|10 19|D 7
+	 D 0|13 20|D 6		 D 0|11 18|D 6
+	 D 1|14 19|D 5		 D 1|12 17|D 5
+	 D 2|15 18|D 4		 D 2|13 16|D 4
+	 GND|16 17|D 3		 GND|14 15|D 3
+	    +-----+		    +-----+
+		</PRE></TT>
+		<B>
+		<A href="esc3_06.html" target="_self">
+			<IMG src="../image/go.png" alt="次へ">
+			次へ
+		</A>
+		<BR>
+		</B>
+	</BODY>
+</HTML>

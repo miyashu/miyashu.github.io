@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MICRO CABIN MUSIC PLAYER 技術説明</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a><a class="alt" href="mcplayer_tech_en.html" hreflang="en">English</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">MCPLAYER · 技術資料</div>
+  <h1>MICRO CABIN MUSIC PLAYER 技術説明</h1>
+  <p class="lead">使い方は配布物の <code>README.txt</code> を見てください。ここでは、ツールとプレーヤーの作りを説明します。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">全体の流れ</a></li><li class="t2"><a href="#h2">曲の取り出し（extract_disks.py）</a></li><li class="t2"><a href="#h4">プレイリストの書式</a></li><li class="t2"><a href="#h5">ドライバ（ゲームごと）</a></li><li class="t2"><a href="#h7">ゲームごとの表（音色など）</a></li><li class="t2"><a href="#h8">動き</a></li><li class="t2"><a href="#h9">CG</a></li><li class="t2"><a href="#h10">画面</a></li><li class="t2"><a href="#h11">ROM の構成（ASCII16）</a></li><li class="t2"><a href="#h12">メモリ</a></li><li class="t2"><a href="#h13">確かめたこと</a></li><li class="t2"><a href="#h14">フォント</a></li></ul></nav>
+<main class="docbody">
+<h3 id="h1">全体の流れ</h3>
+<ol><li><code>tools/extract_disks.py</code> がディスクイメージから曲（MCM）を取り出し、データベース <code>tools/mcm_db.csv</code> を元にプレイリスト <code>player/playlist.txt</code> を作る。</li><li><code>player/build_rom.py</code> がプレイリストの曲・曲名・CG と、ディスクイメージから取り出したゲームのドライバと表（音色など）を ROM（ASCII16 メガロム）にまとめる。</li><li>ROM の中のプレーヤー（<code>player/player.asm</code>）が、曲ごとにそのゲームのドライバを RAM へ写して鳴らす。</li></ol>
+<h3 id="h2">曲の取り出し（extract_disks.py）</h3>
+<ul><li><code>disk_image</code> の下のフォルダ 1 つが 1 ゲームです。ディスク番号は、ファイル名で並べた順に 1 から付けます。</li><li>ディスクの全位置を調べて MCM の形のデータを探します（<code>tools/mcm_scan.py</code>）。MCM の形: 先頭のワードがチャンネルのブロック数、続いて各ブロックが「次のブロックの位置」で始まる鎖になっていて、0000 で終わる。各チャンネルのコマンド列の終わりの <code>00</code> がちょうどブロックの最後に来ることも確かめます（<code>tools/mcm.py</code>）。</li><li>取り出すのは、FM 音源を使う曲と、データベースに登録した PSG の曲だけです。データベースで除外にした曲（効果音など）は取り出しません（<code>--all</code> で全部）。</li><li>ファイル名は「フォルダ名の先頭 4 文字 + ディスク番号 1 桁 + 連番 2 桁」です（例 <code>ILLU102</code>）。FRAY_M2 / FRAY_TR は <code>FRYM2</code> / <code>FRYTR</code> で始めます。PSG だけの曲はディスク番号の前に <code>P</code>、Xak のおまけゲーム（BASIC の PLAY 文）を MCM にした曲は <code>O</code> を付けます（例 <code>XAKP101</code>、<code>XAKO301</code>）。</li><li>Xak のおまけゲーム「GoGo ピクシー」のタイトルの曲は、ディスクの OMAKE.BAS の PLAY 文・SOUND 文から MCM を作ります（<code>tools/omake.py</code>）。</li><li>使い回しの曲（同じデータが複数のゲームにある）は、データベースの行ごとに、それぞれのゲームのフォルダへ書きます。</li><li>最後に、取り出した曲とデータベースからプレイリストと <code>extract_log.txt</code>（ファイルとデータベースの行の対応）を作ります。プレイリストがもうあれば <code>playlist_new.txt</code> に書きます。</li></ul>
+<h4 id="h3">データベース（mcm_db.csv）</h4>
+<p>UTF-8（BOM 付き）の CSV で、1 行が「あるゲームの 1 曲」です。曲は中身（MD5）で見分けるので、ファイル名やディスク上の位置が違っても、中身が同じなら同じ曲です。同じデータを別のゲームでも使っているときは、ゲームごとに 1 行ずつ持てるので、曲名もゲームごとに付けられます（例: 同じデータが Xak II では「ボローズの森」、ガゼルの塔では「森」）。</p>
+<div class="scroll"><table><thead><tr><th>欄</th><th>内容</th></tr></thead><tbody><tr><td>id</td><td>行の番号（S0001 など）</td></tr><tr><td>game / game_en</td><td>ゲーム名 / 英語のゲーム名</td></tr><tr><td>order</td><td>ゲームの中の並び</td></tr><tr><td>title / title_en</td><td>曲名 / 英語の曲名</td></tr><tr><td>exclude</td><td>除外の理由（空なら収録）</td></tr><tr><td>loops</td><td>ループ回数（空なら既定）</td></tr><tr><td>folder / file</td><td>この曲に使うファイル（disk_image のフォルダ名とファイル名）</td></tr><tr><td>md5 ほか</td><td>照合用の値、見つかった場所</td></tr></tbody></table></div>
+<p>管理用のコマンド（<code>tools/mcm_db.py</code>）:</p>
+<div class="scroll"><pre>python tools/mcm_db.py sync          # 詳しい形式の playlist.txt の曲名などをデータベースに反映
+python tools/mcm_db.py playlist      # データベース + data -&gt; playlist.txt
+python tools/mcm_db.py find ファイル  # ファイルがどの曲か調べる (チャンネル単位で似た曲も出す)</pre></div>
+<p><code>extract_disks.py --full</code> は、詳しい形式（曲名などの欄も書いたもの）のプレイリストを作ります。</p>
+<h3 id="h4">プレイリストの書式</h3>
+<div class="scroll"><pre># コメント
+@startup ../data/CABIN/CABI112.MCM | タイトル | Title   # 起動時に鳴らす曲 (曲のリストには出ない)
+@startup_cg ../data/cabin.png                          # 起動時に表示する CG
+@game Xak | Xak                                        # 以降の曲のゲーム名 | 英語のゲーム名
+@cg ../data/xak.png                                    # このゲームの CG
+../data/XAK/XAK201.MCM                           # 曲名を省略するとデータベースの曲名
+../data/XAK/XAK202.MCM | 教会                     # 曲名を指定
+../data/XAK/XAK202.MCM | 教会 |  |  | Church      # 5 番目の欄は英語の曲名
+@song_cg ../data/xak_botu.png                    # 前の行の曲を鳴らしている間だけの CG
+../data/ILLUSION/ILLU110.MCM | City | 1          # ループ回数を指定
+../data/FFANTASY/FFAN101.MCM |      | 0          # 0 = 自然に終わるか最大演奏時間までループ</pre></div>
+<ul><li>パスはプレイリストのファイルからの相対パスです。</li><li>曲名を省略するとデータベースの曲名、データベースにもなければ「Track 番号」になります。ループ回数を省略するとデータベースの値、なければ <code>--loops</code> の値（既定 2）です。</li><li>4 番目の欄（以前のドライバの指定）は使いません。</li><li>英語の曲名・ゲーム名は、本体の文字セット（BIOS の 002Bh 番地）が日本以外のときに表示します。英語がなければ日本語で表示します。ROM の 001Eh 番地（目印 <code>MCPLAYER LANG:</code> の直後）の 1 バイトで言語を固定できます（<code>00</code> = 自動、<code>01</code> = 英語、<code>02</code> = 日本語。ビルド時なら <code>--lang</code>）。</li><li>使える文字は英数字・記号、かな、漢字（JIS 第一・第二水準）です。フォントにない文字は <code>?</code> になり、ビルド時に警告が出ます。全角英数は半角に、半角カナは全角にして表示します。<code>#</code> 以降はコメントなので、曲名に <code>#</code> は使えません。</li><li>1 行は 256 ドット（英数字は約 42 文字、全角は 32 文字）までで、はみ出す分は切ります。</li><li>最大 999 曲。中身が同じ曲データは 1 つだけ ROM に入ります。<code>@song_cg</code> は最大 24 曲です。</li></ul>
+<h3 id="h5">ドライバ（ゲームごと）</h3>
+<p>曲は、その曲を取ったゲーム自身のサウンドドライバで鳴らします。ROM を作るとき、曲ファイルのフォルダと同じ名前の <code>disk_image</code> のフォルダのディスクイメージからドライバを取り出して手を入れ、ROM に入れます。曲を鳴らす前に、そのドライバを元の番地（RAM）へ写します。</p>
+<div class="scroll"><table><thead><tr><th>版（drivers.json）</th><th>ゲーム</th><th>置く番地</th></tr></thead><tbody><tr><td>PMAKER</td><td>プリンセスメーカー</td><td>CE00h</td></tr><tr><td>RISK2</td><td>キャンペーン版大戦略II</td><td>CCC0h</td></tr><tr><td>CABIN_CD00</td><td>The Tower of Cabin（ディスク 1・2）</td><td>CCC0h</td></tr><tr><td>XAKII / GAZZEL</td><td>Xak II、ガゼルの塔</td><td>CE00h</td></tr><tr><td>CABIN_CF00</td><td>FRAY（MSX2）、The Tower of Cabin（ディスク 3）</td><td>CE00h</td></tr><tr><td>FRAY_TR</td><td>FRAY（turboR）</td><td>CE00h</td></tr><tr><td>ILLUSION</td><td>幻影都市</td><td>8000h</td></tr><tr><td>XAK</td><td>Xak</td><td>D000h</td></tr><tr><td>FFANTASY</td><td>ファイナルファンタジー</td><td>752Fh（ページ1。ワークは BD00h〜）</td></tr></tbody></table></div>
+<ul><li>使える版は <code>drivers.json</code> に載っているものだけです。中身は版ごとの番地などと、版を見分ける md5 で、ドライバのプログラムは入っていません。ドライバの入口の形（<code>jp 割込み処理</code> / <code>di</code>, <code>push ix</code> ...）か <code>sig</code>（ドライバの先頭のバイト列）で候補を探し、先頭 600h バイトの md5 で版を決め、全体の md5 で確かめます。</li><li>曲のドライバは、曲が見つかったディスクにあるドライバ、なければ同じフォルダのほかのディスクのドライバです。1 枚のディスクに 2 つの版（turboR 用など）があるときは、drivers.json に載っている方を使います。</li><li>番地などは、Roberto Vargas さんによる幻影都市のドライバの逆アセンブル（Manuel Pazos さんのサイトで公開されている mcdrv.asm）と命令列を突き合わせて求めました。</li><li>コマンド番号はドライバによって違います（初期化 3、フェードアウト 4、演奏中か 6 / 5、演奏開始 9 / 2）。チャンネルのワークの大きさ（40h / 2Eh / 2Dh）、ループ回数の位置なども drivers.json の値を使います。</li></ul>
+<p>ROM を作るとき、ドライバに次の手を入れます（<code>build_rom.py</code> の <code>Drivers</code>）。</p>
+<ul><li>ループの終わりの <code>ld a,(ix+n)</code>（ループ先を読む命令）→ <code>call HookLoop</code>（無限ループの折り返しを数える）</li><li>音符を鳴らす処理の <code>ld c,(ix+4)</code> → <code>call HookNote</code>（レベルメーターに発音を知らせる）</li><li>表のポインタ 4 つ → 表を置く番地</li><li>曲の番地が決まっているドライバ（Xak・Xak II・ガゼルの塔・FRAY・ファイナルファンタジー）: <code>ld hl,C000h</code> などの曲の番地 → A000h</li><li>幻影都市・FRAY（turboR）: turboR のタイマー（E6h）で待つ FM 音源の書き込みを待たない形に、待つだけのルーチンを <code>ret</code> に（turboR は起動時に Z80 モードにする）</li><li>ファイナルファンタジー: コマンドの出口の <code>ei</code> を <code>nop</code> に</li></ul>
+<h4 id="h6">ファイナルファンタジーのドライバ（ページ1）</h4>
+<p>FF のドライバはゲーム本体（4000h〜）の中にあり、ページ1で動きます。ページ1はこの ROM なので、ドライバはページ1の裏の RAM（ページ3と同じスロットの RAM）に置き、呼ぶ間だけページ1を RAM に切り替えます（割込みを止めて A8h と拡張スロットのレジスタを切り替え、終わったら ROM に戻す）。そのため、ドライバから呼ばれるフック（<code>HookLoop</code>・<code>HookNote</code>）と切り替えの処理はページ3の RAM（<code>RamHooks</code>）に置いています。</p>
+<ul><li>チャンネルのワークは 2Dh バイトで、FM の 7〜9 チャンネルは常にリズムとして扱います（<code>D_RHY</code> = 0FFh）。</li><li>ワークがページ2の BD00h からにあるので、曲は 7424 バイトまでです。</li><li>ページ1に RAM がない機種では、FF の曲は鳴らさずに次へ進みます。</li><li>FF のディスクにドライバが見つからないときは、Xak のドライバ（なければ Xak II などのドライバ）で鳴らします（<code>DRV_FALLBACK</code>）。</li></ul>
+<h3 id="h7">ゲームごとの表（音色など）</h3>
+<p>エンベロープ・ビブラート・エフェクト・FM 音色（ソフト音色 32 個）の表（0x1E0 バイト）はゲームごとに違います。ROM を作るとき、ディスクイメージから表を集めて ROM に入れ、曲を鳴らす前にその曲の表をページ2の RAM へ写します。</p>
+<ul><li>ディスクの中では、表は曲と同じ並びに置かれていて、後ろに続く曲で使われます（Cabin Times のディスクでは Xak II の表の後ろに Xak II の曲、FRAY の表の後ろに FRAY の曲）。そこで、曲をディスクイメージの中で探し、同じディスクで曲より前にある一番近い表を使います。</li><li>表を置く番地は、ゲームの中での番地の下位 12 ビットをそのままにして 9000h〜9FFFh に移したものです（ガゼルの塔は入らないので 8F00h〜）。下位の並びがゲームと同じなので、表の外を読む音（37 番目の音など）もゲームと同じになります。</li><li>表が見つからない曲は、幻影都市などの表で鳴らします。</li><li>どの曲にどのドライバと表を使ったかは、ROM を作ったときに表示されます。</li><li>Manuel Pazos さんの Windows 版 PCPLAYER の <code>.fmins</code>（FANTASY / FRAY / MCDRV(=幻影都市) / PMAKER / XAK）は、ディスクにある表の FM 音色の部分と一致しました。</li></ul>
+<h3 id="h8">動き</h3>
+<ul><li>ドライバの割込み処理は H.TIMI のフックから呼びます。画面の描き直しに時間がかかってもテンポは乱れません。キーも割込みで毎フレーム読んで貯めておきます。</li><li>曲の終わりの判定
+<ul><li>全チャンネルが無限ループを指定回数折り返したら、フェードアウトして次の曲へ進みます（<code>HookLoop</code> で数える）。</li><li>ループしない曲（どのチャンネルにも無限ループがない曲）は、ROM を作るときに見分けてループ回数を 1 にし、自然に終わった時点で次へ進みます（LOOP は 01/01）。</li><li>鳴り終わった後に音を出さない無限ループ（休符だけの繰り返し）で待つ曲（Xak の GET アイテムなど）は、ROM を作るときにそのループの所でチャンネルを終わらせ、ループしない曲として扱います。</li><li>10 分を超えたら、強制的にフェードアウトします（<code>MAX_SECONDS</code>）。</li></ul></li><li>曲が鳴り終わって次の曲へ進むときは、音源を初期化しません（FM の余韻の途中で音量を最小にすると「プチッ」と鳴るため）。</li><li>13 チャンネル以上ある曲は、13 チャンネル目以降を演奏しません。</li><li>PAL（50Hz）の本体では、割込み 5 回に 1 回ドライバをもう一度動かして、NTSC と同じ速さ（60 回/秒）で演奏します。50Hz かどうかは、MSX2 以降は VDP の設定（R#9）、MSX1 は本体の ID で決めます。</li><li>音源: MSX-MUSIC（内蔵）と FM-PAC を自動で見つけます（FM-PAC は 7FF6h で I/O を有効にする）。なければ FM 用の曲データの PSG のパートだけが鳴ります（ゲームが FM 音源のないときに使う PSG 用の曲データは使いません）。turboR では起動時に Z80 モードにします。</li><li>起動時の動作
+<ul><li>MSX2 以降: 起動時の CG を出し、起動時の曲があればループで鳴らします（なければ無音）。何かキーで曲選択の画面へ。</li><li>MSX1（と V9990 があるとき）: 曲選択の画面で、起動時の曲を 1 周だけ鳴らして止まります。</li><li><code>--autoplay</code>: 起動時の曲は 1 回だけで、終わったらリストの先頭の曲から自動で鳴らします（起動時の曲がなければ CG を約 3 秒見せてから）。プレイリスト表の +2 の bit0。</li></ul></li><li>再生モード（E・R キー）と、曲が終わったときの動き:
+<div class="scroll"><table><thead><tr><th></th><th>REPEAT</th><th>ONCE</th></tr></thead><tbody><tr><td>ALL</td><td>次の曲へ。最後まで行ったら先頭へ</td><td>次の曲へ。最後で止まる</td></tr><tr><td>GAME</td><td>そのゲームの次の曲へ。最後まで行ったらそのゲームの先頭へ</td><td>そのゲームの最後で止まる</td></tr><tr><td>ONE</td><td>同じ曲を頭からもう一度</td><td>止まる</td></tr></tbody></table></div></li><li>V キー（MSX2 以降）: 再生中のゲームの CG とリストを切り替えます。CG の表示中は、最下行に演奏中の「ゲーム名 / 曲名」を出し、↑↓←→ で選択を動かすと選択中の曲を出します。</li><li>V9990（GFX9000 など）: 起動時に見つけたら、CG は常に V9990 にだけ出し、内蔵 VDP は曲選択の画面だけにします（V キーは使いません。MSX1 でも CG が出ます）。SCREEN 5 の CG は B1（256×212）の BP4、SCREEN 7 は B3（512×212、インターレースは 512×424）の BP4、SCREEN 8 は B1 の BD8 で表示します。見つけ方: ポート 67h でソフトリセットしたあと、R#15 に書いた値が読み返せるか。</li></ul>
+<h3 id="h9">CG</h3>
+<ul><li>読める画像: Pillow で読める画像（PNG・JPEG・BMP・GIF など）と BSAVE 形式の <code>.SC5</code> / <code>.SC8</code>。透明な部分は黒にします。</li><li>大きさ
+<ul><li>256×212: そのまま。256×192 / 512×192 は下を黒で埋めます。</li><li>512×212: 横 512 ドットの画面として SCREEN 7（16 色）。</li><li>320×240 / 640×480: エミュレータのスクリーンショットとして、周りの枠を切り取ります（212 ライン表示なら上下 14 ドット、192 ライン表示なら 24 ドット、左右 32 ドット）。640×480 で横が 2 倍の絵でなければ横 512 ドットの画面、行ごとに違えばインターレース（512×424。SCREEN 7 の 2 ページを交互に表示）。</li><li>それ以外の大きさは 256×212 に引き伸ばします（縦横比は保たない。警告が出ます）。</li></ul></li><li>色
+<ul><li>横 256 ドット: MSX2 の 512 色（RGB 各 3 ビット）に直して 16 色以下なら SCREEN 5（色はそのまま）。それより多ければ SCREEN 8（固定の 256 色）に誤差拡散で減らします。</li><li>横 512 ドット: 16 色より多ければ 16 色に減らします。</li><li>CG 表示中の最下行の文字は白、背景は黒です。SCREEN 5・7 で 16 色すべてを使っていて足す空きがないときは、絵の中で最も明るい色・最も暗い色を使います。</li></ul></li><li>エミュレータのスクリーンショット（openMSX の <code>screenshot -raw</code>）から作るのが確実です。ゲームはパレットを VDP に直接書くので、VRAM を保存する方法ではパレットが残らないことがあります。スキャンラインやぼかし入りの画像は色が増えて SCREEN 8 になってしまいます。</li><li>圧縮: ROM には「パレット 32 バイト + ランレングス圧縮した画面のデータ」で入れ、プレーヤーが展開しながら VDP / V9990 へ送ります（<code>cgrle.py</code>。01h-7Fh = そのまま n バイト、80h+n = 1 バイトを n+3 回）。まとまりは 256 バイトの区切りと ROM のバンクの境目をまたがないので、展開は 256 バイトずつ（間に割込みを通す）、そのままのバイトは OTIR で送ります。写真のような絵は縮みにくく、表示にも時間がかかります（SCREEN 7 の 1 枚で約 1 秒、写真に近いインターレースの絵で約 1.9 秒）。</li></ul>
+<h3 id="h10">画面</h3>
+<p>SCREEN 2（256×192）に、漢字・かなは k8x12（8×12 ドット）、英数字は k6x8 の全角の英数字（6×8 ドット。12 ドットの行の上から 2 ドット目に置く）で文字を描きます。ASCII のうち <code>&quot; &#x27; - ~</code> は全角の字がないので、似た字（” ’ − 〜）で代用しています。文字の位置は 2 ドット単位で、半角は 6 ドット、全角は 8 ドット進めます。名前表を 0〜255 の連番にしてビットマップとして使うので、1 画面に出せる漢字の種類に制限はありません。1 行は 12 ドットで、画面は 16 行です。</p>
+<div class="scroll"><table><thead><tr><th>行</th><th>左</th><th>右</th></tr></thead><tbody><tr><td>0</td><td>タイトル</td><td>レベルメーター（12 本: PSG 3 + FM 9）</td></tr><tr><td>1</td><td>音源</td><td>〃</td></tr><tr><td>2</td><td>TRACK・LOOP（何周目か / ループ回数）</td><td>〃</td></tr><tr><td>3</td><td>TIME・再生モード</td><td>チャンネル名（PSG は A B C、FM は 1〜9。リズムモードの曲は FM の最後の 3 つが B S H。使うチャンネルは白、使わないチャンネルは灰色）</td></tr><tr><td>4</td><td>演奏中の「ゲーム名 / 曲名」（止まっているときは STOP）</td><td></td></tr><tr><td>5</td><td><code>前のゲーム &lt;- 【選んでいるゲーム】 -&gt; 次のゲーム</code></td><td></td></tr><tr><td>6〜15</td><td>選んでいるゲームの曲リスト（10 曲）</td><td></td></tr></tbody></table></div>
+<ul><li>レベルメーターは、新しい音が鳴るとその音量まで跳ね上がり、あとは 3 フレームに 1 段ずつ下がります。音が続いている間は音量の半分で止まり、休符では 0 まで下がります。発音は <code>HookNote</code> で知り、音量は PSG はレジスタ（R7, R8〜R10）、FM はドライバのチャンネルのワーク（キーオンと音量）を読みます。</li><li>使うチャンネルは、曲を始めるときに各チャンネルに音符があるかで決めます（PSG のチャンネルでは、音色の命令 42h〜61h・FCh もノイズを鳴らすので数える）。</li><li>H キーのヘルプ（バージョン・クレジット・キー操作）は、リストの上にウィンドウで出します。</li></ul>
+<h3 id="h11">ROM の構成（ASCII16）</h3>
+<div class="scroll"><table><thead><tr><th>バンク</th><th>配置</th><th>内容</th></tr></thead><tbody><tr><td>0</td><td>4000h-7FFFh</td><td>プログラム、ドライバの情報（DrvDir: 1 つ 40 バイト、最大 12）、ドライバと表の組（SetDir: 最大 32 組）、プレイリスト表（1 曲 12 バイト）、ゲームの情報（CG の場所とゲーム名）、半角フォント</td></tr><tr><td>1〜</td><td>読み出すときだけページ1に出す</td><td>ゲームのドライバ（1 つ約 3KB）、ゲームの表、曲名（日本語と英語）、曲データ（バンク境界をまたがないように詰める）、CG（バンクの先頭から続けて置く）</td></tr><tr><td>最後</td><td>〃</td><td>全角フォント（曲名・ゲーム名で使う文字だけ。1 字 16 バイト）</td></tr></tbody></table></div>
+<p>プレイリスト表の 1 曲（12 バイト）: 曲データのバンク・アドレス・長さ、曲名のバンク・アドレス、ループ回数、ドライバと表の組の番号（SetDir の 1 から）、ゲームの情報のアドレス。</p>
+<h3 id="h12">メモリ</h3>
+<div class="scroll"><table><thead><tr><th>場所</th><th>内容</th></tr></thead><tbody><tr><td>ページ1の裏の RAM 752Fh-7FAFh</td><td>ファイナルファンタジーのドライバ（呼ぶ間だけページ1を RAM にする）</td></tr><tr><td>ページ2の RAM 8000h-8D76h</td><td>幻影都市のドライバ</td></tr><tr><td>8F00h-9FFFh</td><td>ゲームの表（曲を始めるたびにコピー。番地はドライバごと）</td></tr><tr><td>A000h-BFFFh</td><td>演奏中の曲データ（曲を始めるたびにコピー）。FF のドライバのときは BD00h からがそのワーク</td></tr><tr><td>C000h-</td><td>プレーヤーのワーク、RAM に置くルーチン（バンク読み出し・CG の展開・フック）</td></tr><tr><td>-CCBFh</td><td>スタック</td></tr><tr><td>CCC0h-DDFFh</td><td>ゲームのドライバ（番地はドライバごと。後ろはドライバのワーク）</td></tr></tbody></table></div>
+<ul><li>ドライバはゲームの中で決まった番地に置かれる作りで動かせないため、元の番地に置きます。ドライバが替わる曲を始めるときに、ROM からコードと表・初期値の部分を写し、ワークを 0 にして初期化します。</li><li>HIMEM が DE00h より下の機種では、その上のシステムのワークとドライバが重なるので、元の H.TIMI フック（ディスクのタイマー処理）は呼びません。</li><li>ページ2に RAM が必要なので、RAM 32KB 以上で動きます（FF の曲は 64KB）。</li></ul>
+<h3 id="h13">確かめたこと</h3>
+<ul><li>openMSX の turboR（FS-A1ST）と C-BIOS の MSX2+・MSX1 で、10 の版すべてのドライバで演奏・曲の終わりの判定・ループの計測が動くこと。</li><li>全 255 曲を前の版（幻影都市のドライバの逆アセンブル mcdrv.asm を ROM 用に直したドライバと、PMAKER のドライバ）と通しで鳴らし、247 曲で曲の終わりの時刻が一致すること。違ったのは Xak の 3 曲（XAK210・XAK301・XAK306。2〜7 秒長い）と大戦略 II の RISK202（MCDRV では途中で止まっていたのがループするようになった）。録音して比べた音もほぼ同じ。</li><li>自動再生（キー入力なし）、V9990 の表示、インターレースの CG、PAL の速さ、英語表示。</li><li>音そのものは耳でまだ十分に確かめていません。</li></ul>
+<h3 id="h14">フォント</h3>
+<p>門真 なむ氏の「k8x12」と「k6x8」（英数字）を使っています。どちらも自由に利用・改変・再配布できます（<code>font/misaki_12x8/k8x12.txt</code>、<code>font/k6x8/k6x8.txt</code> を参照）。</p>
+</main>
+</div>
+</body>
+</html>

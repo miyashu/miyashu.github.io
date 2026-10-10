@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		I want more !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		１．はじめに
+		<BR>
+		</FONT>
+		　ここでは、コナミのSCC音源付き基板を使ったROMゲームに手を加えて似非SCCを作る方法を紹介します。
+		RAM容量は512kByteです。この基板には、1Mbit(128kByte)のROMとメガロムコントローラ2212P003が
+		搭載されています。スナッチャー、SDスナッチャー付属のSCCカートリッジ、2MbitのROMが載っているROM
+		ゲーム（ゴーファーの野望）はここでは対象外です。<BR><BR>
+		■必要な材料
+		<TABLE border="2" bordercolor="#0000FF" width="100%">
+			<TR>
+				<TD>品名</TD>
+				<TD>数量</TD>
+				<TD>備考</TD>
+			</TR>
+			<TR>
+				<TD>ROMゲーム</TD>
+				<TD>1</TD>
+				<TD>"激突ペナントレース"、"激突ペナントレース２"、"沙羅曼陀"等、
+				<A href="image/escc-1m.jpg">1Mbit ROMが載った基板</A><BR>
+				写真ではすでにROMを外しています。<BR>
+				<A href="image/escc-2m.jpg">2Mbit ROMが載った基板</A>と
+				"スナッチャー"や"SDスナッチャー"付属のSCCカートリッジは不可です。</TD>
+			</TR>
+			<TR>
+				<TD>SRAM 628512</TD>
+				<TD>1</TD>
+				<TD>DIPタイプ。8bit入出力の4Mbit SRAM。</TD>
+			</TR>
+			<TR>
+				<TD>74HC74</TD>
+				<TD>2</TD>
+				<TD>DIPタイプ。</TD>
+			</TR>
+			<TR>
+				<TD>74HC133</TD>
+				<TD>1</TD>
+				<TD>DIPタイプ。</TD>
+			</TR>
+			<TR>
+				<TD>74HC139</TD>
+				<TD>2</TD>
+				<TD>DIPタイプ。</TD>
+			</TR>
+			<TR>
+				<TD>0.01〜0.1uFのコンデンサ</TD>
+				<TD>2</TD>
+				<TD><A href="image/cera_con.jpg">セラミックコンデンサ</A>、
+				または<A href="image/seki_con.jpg">積層セラミックコンデンサ<A>。<BR>
+				パスコン用です。ICにつき1個入れるのが普通ですが、今回はとりあえず2個で。</TD>
+			</TR>
+			<TR>
+				<TD>抵抗 10KΩ</TD>
+				<TD>2</TD>
+				<TD>SRAMの数+1個(切り離しスイッチ用)。</TD>
+			</TR>
+			<TR>
+				<TD>ダイオード 1S1588</TD>
+				<TD>1</TD>
+				<TD>まぁ、適当です。</TD>
+			</TR>
+			<TR>
+				<TD><A href="image/cap.jpg">電気二重層コンデンサ</A></TD>
+				<TD>1</TD>
+				<TD>1.0Fあると安心。写真には2種類写っていますが使うのは1個です。</TD>
+			</TR>
+			<TR>
+				<TD><A href="image/3pin.jpg">3ピンスイッチ</A></TD>
+				<TD>1</TD>
+				<TD>SRAM切り離し用です。</TD>
+			</TR>
+			<TR>
+				<TD>配線材</TD>
+				<TD>適量</TD>
+				<TD>細い方が便利。</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<A href="esc2_2.html" target="_self">
+			<IMG src="../image/go.png" alt="次へ">
+			次へ
+		</A>
+		<BR>
+		</B>
+	</BODY>
+</HTML>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MICRO CABIN MUSIC PLAYER Ver 0.10</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← John Doe's Reports</a><a class="alt" href="mcplayer_readme.html" hreflang="ja">日本語</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">MCPLAYER · README</div>
+  <h1>MICRO CABIN MUSIC PLAYER Ver 0.10</h1>
+  <p class="lead">A tool that builds an MSX MegaROM cartridge (ASCII16) to listen to the music of Micro Cabin games. Every song is played with the game's own sound driver and instruments.</p>
+</header>
+<nav class="toc" aria-label="Contents"><ul><li class="t2"><a href="#h1">Supported games</a></li><li class="t2"><a href="#h2">Requirements</a></li><li class="t2"><a href="#h3">Building the ROM</a></li><li class="t2"><a href="#h4">Running</a></li><li class="t2"><a href="#h5">Editing the playlist</a></li><li class="t2"><a href="#h6">Pictures</a></li><li class="t2"><a href="#h7">Fixing titles</a></li><li class="t2"><a href="#h8">Credits</a></li></ul></nav>
+<main class="docbody">
+<p>This package contains <strong>no Micro Cabin data</strong> (no music, drivers or graphics). The music and drivers are extracted from <strong>your own disk images</strong> of the games when you build the ROM.</p>
+<h3 id="h1">Supported games</h3>
+<div class="scroll"><table><thead><tr><th>Folder</th><th>Game</th><th>Disks</th></tr></thead><tbody><tr><td>XAK</td><td>Xak</td><td>3</td></tr><tr><td>XAKII</td><td>Xak II</td><td>6</td></tr><tr><td>FRAY_M2</td><td>Fray (MSX2)</td><td>4</td></tr><tr><td>FRAY_TR</td><td>Fray (MSX turboR)</td><td>5</td></tr><tr><td>GAZZEL</td><td>Tower of Gazzel</td><td>4</td></tr><tr><td>ILLUSION</td><td>Illusion City</td><td>8</td></tr><tr><td>FFANTASY</td><td>Final Fantasy</td><td>1</td></tr><tr><td>RISK2</td><td>Dai Senryaku II (Campaign Version)</td><td>2</td></tr><tr><td>PMAKER</td><td>Princess Maker</td><td>7</td></tr><tr><td>CABIN</td><td>The Tower of Cabin</td><td>3</td></tr></tbody></table></div>
+<p>You can skip the games you don't have.</p>
+<h3 id="h2">Requirements</h3>
+<ul><li>Python 3.8 or later with Pillow (<code>pip install pillow</code>)</li><li>Disk images (.dsk) of the games</li><li>sjasmplus is not needed (the prebuilt <code>player/player.bin</code> is used; only needed if you change <code>player/player.asm</code>)</li></ul>
+<h3 id="h3">Building the ROM</h3>
+<p>Run in the folder containing this README:</p>
+<ol><li><code>python tools/extract_disks.py</code> - creates one folder per game under <code>disk_image</code>.</li><li>Put the disk images (.dsk) of each game in its folder. Disks are numbered in file name order (names like "Disk 1 of 3" are fine as they are).</li><li><code>python tools/extract_disks.py</code> again - extracts the songs to <code>data/&lt;folder&gt;/</code>, and writes <code>player/playlist.txt</code> and <code>extract_log.txt</code>.</li><li><code>cd player</code> and <code>python build_rom.py</code> - writes <code>player/MCPLAYER.ROM</code> (1MB, ASCII16 mapper).</li></ol>
+<p>build_rom.py options:</p>
+<div class="scroll"><table><thead><tr><th>Option</th><th></th></tr></thead><tbody><tr><td><code>--autoplay</code></td><td>Auto play (see below)</td></tr><tr><td><code>--loops 3</code></td><td>Default loop count (2)</td></tr><tr><td><code>--lang en</code> / <code>ja</code></td><td>Always English / Japanese (default: by the machine's character set)</td></tr><tr><td><code>--size auto</code></td><td>Smallest ROM size (default 1024KB)</td></tr><tr><td><code>-o name.rom</code></td><td>Output file</td></tr></tbody></table></div>
+<p>A ROM built with <code>--autoplay</code> plays the list from the first song after the startup song (or right after boot), forever. For machines without a keyboard (1chipMSX etc.). You can still use the keys.</p>
+<h3 id="h4">Running</h3>
+<ul><li>Use it as an ASCII16 MegaROM. In emulators, select the <strong>ASCII16</strong> mapper.</li><li>Works on MSX1 / MSX2 / MSX2+ / turboR with 32KB RAM or more (64KB for Final Fantasy songs).</li><li>MSX-MUSIC / FM-PAC are detected automatically. Without FM, only the PSG part of the FM song data plays (the separate PSG song data the games use without FM is not used).</li><li>Pictures (CG) are shown on MSX2 or later. With a V9990 (GFX9000), pictures are always shown on the V9990 only, and the built-in VDP shows only the list (pictures are shown even on MSX1).</li></ul>
+<p>Keys: Up/Down select a track (SHIFT: 10 tracks), Left/Right select a game, SPACE play / stop, E range (ALL / GAME / ONE), R repeat (REPEAT / ONCE), V picture / list, H help.</p>
+<h3 id="h5">Editing the playlist</h3>
+<p><code>player/playlist.txt</code> lists one song file per line, in play order. Titles, English titles and loop counts come from the database <code>tools/mcm_db.csv</code> when the ROM is built (text after <code>#</code> is only a memo). The driver and instruments are those of the game of the song file's folder.</p>
+<ul><li><code>@game Name | English name</code> - game of the following songs</li><li><code>@cg picture</code> - picture of the game, <code>@song_cg picture</code> (line after a song) - picture only while that song plays</li><li><code>@startup song</code> / <code>@startup_cg picture</code> - song and picture at boot (default picture if omitted)</li><li>Pictures: prepare them yourself (see "Pictures" below).</li></ul>
+<h3 id="h6">Pictures</h3>
+<p>Any image can be shown, not only game screens, with these limits:</p>
+<ul><li>Files: PNG, JPEG, BMP, GIF etc. (anything Pillow reads) and BSAVE .SC5 / .SC8. Transparent parts become black.</li><li>Size:
+<ul><li>256x212 is used as is; 256x192 is padded with black. 512x212 becomes a 512-dot screen (16 colours).</li><li>320x240 and 640x480 are treated as emulator screenshots and their border is cut off.</li><li>Other sizes are resized to 256x212 (the aspect ratio is not kept). Crop and scale images to 256x212 beforehand.</li></ul></li><li>Aspect ratio: one image pixel becomes one MSX dot, but MSX dots are not square. On a real NTSC TV / monitor a dot is about 1.14:1 (wide), so images with square pixels look about 14% wider. A 4:3 image simply resized to 256x212 (ignoring the aspect ratio) looks almost 4:3 on real hardware. On PAL machines dots are even wider (about 1.37:1), so all pictures, including the games' own, look wider. Emulators may show square dots depending on their settings.</li><li>Colours: 16 colours or less (after conversion to the MSX2 512 colours) are kept exactly (SCREEN 5). More colours (photos etc.) are reduced to a fixed 256-colour palette (SCREEN 8) and look coarse. 512-dot wide images are reduced to 16 colours.</li><li>Size in ROM: pictures are compressed, but photo-like images stay large (up to about 53KB each) and take 1-2 seconds to show. If the ROM (1MB by default) is full, use <code>--size 2048</code> etc. (up to 4MB).</li><li>The bottom line shows the song title over the picture.</li><li>Game screens are best taken from emulator screenshots (openMSX <code>screenshot -raw</code>). Scanlines or blur add colours and make the picture SCREEN 8.</li></ul>
+<h3 id="h7">Fixing titles</h3>
+<p>To fix a title, find the song id in <code>extract_log.txt</code> and edit that row of <code>tools/mcm_db.csv</code>.</p>
+<h3 id="h8">Credits</h3>
+<ul><li>Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre.</li><li>Driver disassembly: Roberto Vargas. Driver addresses were found by comparing each driver with Roberto Vargas' disassembly of Illusion City's driver (mcdrv.asm, published on Manuel Pazos' website).</li><li>Fonts: "k8x12" and "k6x8" by Num Kadoma (free to use and redistribute; see <code>font/</code>).</li><li>Music, drivers and graphics are (C) MICRO CABIN Corp. Use the ROM you build for your personal enjoyment only and do not distribute it.</li></ul>
+<p>All music (C) MICRO CABIN Corp. Thank you for the wonderful music!</p>
+</main>
+</div>
+</body>
+</html>

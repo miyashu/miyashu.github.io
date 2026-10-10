@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SFORM16 要求仕様書(SFORM-2 0.07互換方式・spec2)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">SFORM16 · 技術資料</div>
+  <h1>SFORM16 要求仕様書(SFORM-2 0.07互換方式・spec2)</h1>
+  <p class="lead">MSX-DOS2 / MEGA-SCSI用、FAT16マルチパーティション・フォーマッタの完全仕様(0.09a版とは異なり、隠しFAT12領域を持たない、よりシンプルな構成)。この文書だけで <code>sform16_007.py</code> / <code>write_physical_007.py</code> と同等のプログラムを再現できることを目標にまとめている。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. 全体構成</a></li><li class="t2"><a href="#s2">2. パーティションのパラメータ(現在の実装値。用途に応じて変更可)</a></li><li class="t2"><a href="#s3">3. ブートセクタのフィールド(全パーティション共通)</a></li><li class="t2"><a href="#s4">4. MBRエントリの規則</a></li><li class="t2"><a href="#s5">5. FAT・ルートディレクトリ・MEGASCSI.TBL</a></li><li class="t2"><a href="#s6">6. ブートプログラム(138byte)</a></li><li class="t2"><a href="#s7">7. パーティション計画ロジック</a></li><li class="t2"><a href="#s8">8. 0.09a版との主な違い</a></li><li class="t2"><a href="#s9">9. 既知の注意点</a></li></ul></nav>
+<main class="docbody">
+<h3 id="s1">1. 全体構成</h3>
+<div class="scroll"><pre>Sector 0    : パーティション0(FAT16)。同時にMBRを兼ねる。
+Sector xxx  : パーティション1(FAT16)。チェーンの基準点。
+Sector xxx  : パーティション2以降(FAT16)。拡張チェーン本体。</pre></div>
+<ul><li>隠し領域・MEGASCSI.PNTは<strong>存在しない</strong>。Sector0自身がそのまま使える実パーティション(パーティション0)である。</li><li>全パーティションが均等にFAT16。</li><li>パーティション総数の上限は32個(MEGASCSI.TBLのレコード数制約)。実運用の上限は<code>MAX_PARTITIONS</code>で別途設定(例: 16個、ファームウェアのドライブ登録テーブル上限に合わせる)。</li></ul>
+<h3 id="s2">2. パーティションのパラメータ(現在の実装値。用途に応じて変更可)</h3>
+<div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>sectors/cluster</td><td>16 (8KB/cluster)</td></tr><tr><td>reserved sectors</td><td>1</td></tr><tr><td>FATs</td><td>2</td></tr><tr><td>root entries</td><td>512</td></tr><tr><td>max clusters</td><td>環境により変更(例: 4078=約32MB、65501=約512MB)</td></tr><tr><td>sectors/FAT</td><td>ceil(max_clusters×2/512)</td></tr><tr><td>1パーティションの目標セクタ数</td><td>reserved + FATs×sec/FAT + root_dir_sec + max_clusters×sec/cluster</td></tr><tr><td>最小パーティションセクタ数</td><td>reserved + FATs×sec/FAT + root_dir_sec + 1×sec/cluster</td></tr></tbody></table></div>
+<h3 id="s3">3. ブートセクタのフィールド(全パーティション共通)</h3>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td>ジャンプ命令 <code>EB FE 90</code></td></tr><tr><td class="off">0x03-0x0A</td><td>OEM名(8byte、任意。例 <code>&quot;SFRM16  &quot;</code>)</td></tr><tr><td class="off">0x0B-0x0C</td><td>bytes/sector = 512</td></tr><tr><td class="off">0x0D</td><td>sectors/cluster</td></tr><tr><td class="off">0x0E-0x0F</td><td>reserved sectors = 1</td></tr><tr><td class="off">0x10</td><td>FATs = 2</td></tr><tr><td class="off">0x11-0x12</td><td>root entries</td></tr><tr><td class="off">0x13-0x14</td><td>total sectors(16bit) = 0 (拡張BPB使用のため常にゼロ)</td></tr><tr><td class="off">0x15</td><td>media ID = 0xF0</td></tr><tr><td class="off">0x16-0x17</td><td>sectors/FAT</td></tr><tr><td class="off">0x18-0x19</td><td>sectors/track = 0</td></tr><tr><td class="off">0x1A-0x1B</td><td>heads = 0</td></tr><tr><td class="off">0x1C-0x1D</td><td>hidden sectors(2byte) = 0</td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 1E</code> (JR命令、+30 → 0x3E = ブートプログラム開始位置へジャンプ)</td></tr><tr><td class="off">0x20-0x23</td><td>総セクタ数(32bit拡張、LE)</td></tr><tr><td class="off">0x24</td><td>物理ドライブ番号 = 0</td></tr><tr><td class="off">0x25</td><td>予約 = 0</td></tr><tr><td class="off">0x26</td><td>拡張ブートシグネチャ = 0x29</td></tr><tr><td class="off">0x27-0x2A</td><td>ボリュームシリアル(4byte、任意値)</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NO NAME    &quot;</code>(11byte)</td></tr><tr><td class="off">0x36-0x3D</td><td><code>&quot;FAT16   &quot;</code>(8byte)</td></tr><tr><td>0x3E-</td><td>ブートプログラム(138byte、<a class="xref" href="#s6">§6</a>参照)</td></tr><tr><td class="off">0x1B8-0x1BB</td><td>ディスクシグネチャ(4byte、任意値)。<strong>Sector0のみ</strong>。他のパーティションは全ゼロ</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>MBRエントリ1(自分自身)。<a class="xref" href="#s4.1">§4.1</a>参照</td></tr><tr><td class="off">0x1CE-0x1DD</td><td>MBRエントリ2(次のパーティション)。<a class="xref" href="#s4.2">§4.2</a>参照</td></tr><tr><td class="off">0x1FE-0x1FF</td><td>ブートシグネチャ <code>55 AA</code></td></tr></tbody></table></div>
+<p>MBRエントリの構造(16byte):</p>
+<div class="scroll"><pre>+0-3  : status/CHS開始(未使用、常に0)
++4    : パーティション種別(type)
++5-7  : CHS終了(未使用、常に0)
++8-11 : 開始LBA(4byte, LE)
++12-15: サイズ(4byte, LE)</pre></div>
+<h3 id="s4">4. MBRエントリの規則</h3>
+<h4 id="s4.1">4.1 エントリ1(自分自身、0x1BE-0x1CD)</h4>
+<p><strong>全パーティション例外無く</strong>、以下の固定パターン:</p>
+<div class="scroll"><pre>type = 0x06 (FAT16)
+開始LBA(0x1C6) = 0  (常に自己相対。絶対LBAを入れてはならない)
+サイズ(0x1CA) = 自分自身のセクタ数</pre></div>
+<p>Sector0(パーティション0)も例外ではなく、開始LBA=0を使う(=「自分自身」を指す)。</p>
+<h4 id="s4.2">4.2 エントリ2(次のパーティション、0x1CE-0x1DD)</h4>
+<p>基準点は<strong>常にパーティション1の絶対LBA</strong>(<code>chain_start</code>と呼ぶ)。</p>
+<ul><li><strong>パーティション0</strong>: 次(パーティション1)が存在すれば<code>type=0x05, 開始LBA=chain_start(絶対値), サイズ=0</code>。パーティションが1個しか無い場合は全ゼロ(type=0x00含む)。</li><li><strong>パーティション1以降(最後以外)</strong>: <code>type=0x05, 開始LBA=(次パーティションの絶対LBA − chain_start), サイズ=0</code> (=<strong>パーティション1からの相対LBA</strong>。直前のパーティションからの相対ではない点に注意)。</li><li><strong>最後のパーティション</strong>: エントリ2は全ゼロ(type=0x00含む)。</li></ul>
+<h3 id="s5">5. FAT・ルートディレクトリ・MEGASCSI.TBL</h3>
+<p>各パーティションは以下を持つ:</p>
+<div class="scroll"><pre>+reserved(1)                     : ブートセクタ
++reserved 〜 +reserved+FATs×sec/FAT-1 : FAT×2本
+                                    (各FATの先頭4byteは F0 FF FF FF、残りゼロ)
++その後、root_dir_sec分           : ルートディレクトリ
+                                    (先頭32byteにMEGASCSI.TBLのディレクトリ
+                                     エントリ。クラスタ2、サイズは§5.1参照。
+                                     残りは全ゼロ)
++さらにその後、クラスタ2(1セクタ分書き込めば十分) : MEGASCSI.TBLの実データ
+                                    (§5.2参照)</pre></div>
+<p>MEGASCSI.PNTは存在しない。</p>
+<h4 id="s5.1">5.1 MEGASCSI.TBLのディレクトリエントリ(32byte)</h4>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x0A</td><td><code>&quot;MEGASCSITBL&quot;</code>(11byte、ドット無し8.3形式)</td></tr><tr><td class="off">0x0B</td><td>属性 = 0x27</td></tr><tr><td class="off">0x0C-0x19</td><td>0(予約/日時)</td></tr><tr><td class="off">0x1A-0x1B</td><td>先頭クラスタ = 2 (LE)</td></tr><tr><td class="off">0x1C-0x1F</td><td>ファイルサイズ = (パーティション総数)×16 byte (LE)</td></tr></tbody></table></div>
+<h4 id="s5.2">5.2 MEGASCSI.TBLの実データ(512byte)</h4>
+<p>16byteレコード×32個。0.09a版(<a class="xref" href="#s2.5">§2.5</a>)と<strong>同一形式</strong>。</p>
+<div class="scroll"><pre>+0    : ドライブ種別(0)
++1    : フラグ(bit6=書込禁止。このspec2では特定パーティションを
+        書込禁止にする要件は無いため、通常は0のままで良い)
++2-4  : 開始LBA(3byte, ビッグエンディアン, 絶対値)
++5-7  : サイズ(3byte, ビッグエンディアン)
++8-9  : ブロック長(2byte, ビッグエンディアン) = 512
++10-15: 予約(0)</pre></div>
+<ul><li>レコード0 = パーティション0(Sector0)、以降レコードNがパーティションN (隠し領域が無いため、0.09a版のような「1つずれる」ことはない)。</li><li>実パーティション数を N とすると、レコード N は終端マーカー(開始=デバイス総容量, サイズ=0xFFFFFF, ブロック長=0,予約=<code>00 00 FF FF FF FF</code>)を1つだけ置く。</li><li>レコード (N+1) 以降、テーブル末尾(512byte)まで<code>00 00 00 00 FF FF FF FF</code> を8byte単位で繰り返して埋める。</li></ul>
+<p>この実データは<strong>全パーティション(パーティション0含む)のクラスタ2に同一内容を複製する</strong>。</p>
+<h3 id="s6">6. ブートプログラム(138byte)</h3>
+<p>全パーティションとも offset 0x3E から、以下の同一バイト列を配置する。</p>
+<div class="scroll"><pre>d0 ed 53 70 c0 32 7a c0 36 6d 23 36 c0 31 1f f5 11 b4 c0 0e 0f cd 7d f3
+b7 20 28 11 00 01 0e 1a cd 7d f3 21 01 00 22 c2 c0 21 00 3f 11 b4 c0 0e
+27 cd 7d f3 c3 00 01 6f c0 cd 00 00 79 e6 fe fe 02 20 06 3e 00 b7 ca 22
+40 11 8e c0 0e 09 cd 7d f3 0e 07 cd 7d f3 18 b5 42 6f 6f 74 20 65 72 72
+6f 72 0d 0a 50 72 65 73 73 20 61 6e 79 20 6b 65 79 20 66 6f 72 20 72 65
+74 72 79 0d 0a 24 00 4d 53 58 44 4f 53 20 20 53 59 53</pre></div>
+<p>(SFORM-2オリジナルのIPLをそのまま流用。MSXDOS.SYSをロードする処理。)</p>
+<h3 id="s7">7. パーティション計画ロジック</h3>
+<div class="scroll"><pre>def plan_partitions(total_capacity_sectors):
+    plan = []
+    remain = total_capacity_sectors
+    lba = 0
+    while remain &gt;= MIN_PART_SECTORS and len(plan) &lt; MAX_PARTITIONS:
+        size = min(TARGET_SECTORS, remain)
+        plan.append((lba, size))
+        lba += size
+        remain -= size
+    return plan  # plan[0]=パーティション0(Sector0), plan[1:]=以降</pre></div>
+<h3 id="s8">8. 0.09a版との主な違い</h3>
+<div class="scroll"><table><thead><tr><th>項目</th><th>0.09a版</th><th>0.07互換(spec2)版</th></tr></thead><tbody><tr><td>隠しFAT12領域</td><td>あり(Sector0-19)</td><td>無し</td></tr><tr><td>MEGASCSI.PNT</td><td>あり(隠し領域のみ)</td><td>無し</td></tr><tr><td>パーティション0の実体</td><td>隠し領域(空き容量ほぼ0)</td><td>実際に使えるFAT16パーティション</td></tr><tr><td>エントリ1の開始LBA</td><td>全パーティション常に0</td><td>全パーティション常に0(同じ)</td></tr><tr><td>エントリ2の相対基準</td><td>最初の拡張パーティション</td><td>パーティション1</td></tr><tr><td>Windows接続時の見え方</td><td>全パーティションが見える</td><td>全パーティションが見える(<span class="star">★</span>旧仕様ではSector0のエントリ1がパーティション1を指す設計だったため見えなかったが、この修正版では解消)</td></tr></tbody></table></div>
+<h3 id="s9">9. 既知の注意点</h3>
+<ul><li>CP-004.COM(CP.COMへのパッチ版)には、特定条件下でパーティション番号→ファームウェアレコードの対応にオフバイワンのバグが確認されている。原因はCP-004.COM側の実装であり、本仕様のデータ構造の問題ではない。<code>CP.COM</code>(パッチ無し版)は、MEGASCSI.TBLに正しいサイズ情報がある限り問題なく動作することを確認済み。</li><li>メディアIDは全セクタを通して統一して 0xF0 を使うこと。</li></ul>
+</main>
+</div>
+</body>
+</html>

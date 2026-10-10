@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		 
+		<TITLE>
+		Welcome to Lefty Serve(^^;)!
+		</TITLE>
+	
+<link rel="icon" href="./image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<TABLE border="2" bordercolor="#0000FF" width="100%">
+			<TR>
+				<TD colspan="2">
+					<SMALL>
+					The contents of this site are written in Japanese only.
+					<BR>
+					</SMALL>
+					<BR>
+					<DIV align="center">
+						<B>
+						<I>
+						<FONT color="#00FFFF" face="Times New Roman" size="+4">
+						Welcome to Lefty Serve
+						<SUP>
+						(^^;)
+						</SUP>
+						!
+						<BR>
+						</FONT>
+						</I>
+						</B>
+					</DIV>
+					<BR>
+					<DIV align="right">
+						<SMALL>
+						<U>
+						Since 1995.12.12
+						<BR>
+						Last Update 2026.10.08
+						<BR>
+						</U>
+						</SMALL>
+					</DIV>
+					<DIV align="center">
+						<!-- 時間によって動的に切り替わるよう id="title-img" を追加 -->
+						<IMG id="title-img" src="image/title.png" alt="TITLE" width="628" height="384">
+						<BR>
+						<B>
+						<FONT face="Times New Roman">
+						Thank you for your comming!
+						<BR>
+						</FONT>
+						</B>
+						<!-- アクセスカウンター（biglobe CGI）は GitHub 移転に伴い削除 -->
+					</DIV>
+				</TD>
+			</TR>
+			<TR valign="top">
+				<TD width="200">
+					<B>
+					<FONT color="#00FFFF">
+					Contents
+					<BR>
+					</FONT>
+					<UL>
+						<LI>
+						<A href="delusion.html">
+							噂
+						</A>
+						<BR>
+						あくまで噂
+						</LI>
+						<LI>
+						<A href="ese.html">
+							似非Series
+						</A>
+						<BR>
+						似非シリーズ
+						</LI>
+						<LI>
+						<A href="case.html">
+							ケース
+						</A>
+						<BR>
+						ケースの話
+						</LI>
+						<LI>
+						<A href="pcb.html">
+							基板
+						</A>
+						<BR>
+						基板の話
+						</LI>
+						<LI>
+						<A href="soft.html">
+							ソフトウェア
+						</A>
+						<BR>
+						ソフトウェア
+						</LI>
+						<LI>
+						<A href="link.html">
+							リンク
+						</A>
+						<BR>
+						お友達と趣味のリンク
+						</LI>
+						<LI>
+						<A href="zatsudan.html">
+							雑談
+						</A>
+						<BR>
+						雑談
+						</LI>
+					</UL>
+					</B>
+				</TD>
+				<TD>
+					<B>
+					<FONT color="#00FFFF">
+					Top Page
+					<BR>
+					</FONT>
+					<UL>
+						<LI>
+						2026.10.08 リンクに「<A href="johndoe/index.html">ジョン・ドウ レポート</A>」を追加。
+						</LI>
+						<LI>
+						2026.07.28 噂「幻の幻影都市」を追加。
+						</LI>
+						<LI>
+						2026.07.28 噂「イースの秘密」を追加。
+						</LI>
+						<LI>
+						2026.07.28 噂「Serial232の秘密」を追加。
+						</LI>
+						<LI>
+						2026.07.28 噂「MEGA-SCSIとCF/SD」にMEGA-SCSI互換基板の話を追加。
+						</LI>
+						<LI>
+						2026.07.28 基板「MEGA-SCSI基板Ver.O<SUP>2</SUP>」, 「CF-SM003」, 「OPL4 Sound Cartridge」, 「FS-CV501」を追加。
+						</LI>
+						<LI>
+						2026.07.28 ソフトウェアにPC98版幻影都市及びXak IIIのMIDIファイル解凍プログラムを追加。
+						</LI>
+					</UL>
+					「<A href="johndoe/index.html">ジョン・ドウ レポート</A>」は謎のエージェント "ジョン・ドウ" によって本サイトとは非同期に更新されることがあります。<BR>
+					全部テキストベースなので、シンプルです。<BR>
+					Webデザイナーに怒られそう(^^;)。<BR>
+					タイトル画は大学のときから使っていた物なのでご容赦・・・ランダムで生成AIの画像も表示してみます。
+					</B>
+				</TD>
+			</TR>
+			<TR>
+				<TD colspan="2">
+					<HR>
+					<DIV align="right">
+						<B>
+						<SMALL>
+						このページはリンク可です。
+						<BR>
+						</SMALL>
+						<FONT face="Times New Roman">
+						<SMALL>
+						<I>
+						Lefty Serve
+						<SUP>
+						(^^;)
+						</SUP>
+						!
+						</I>
+						</SMALL>
+						</FONT>
+						<SMALL>
+						に関するご意見、ご感想は下記アドレスにお願いします。
+						<BR>
+						<IMG src="image/mail-add.png" alt="E-MAIL">
+						<BR>
+						</SMALL>
+						</B>
+					</DIV>
+		</TD>
+	</TR>
+</TABLE>
+
+<!-- 時間帯または通常画像をランダムで切り替えるスクリプト -->
+<script>
+	function updateTitleImage() {
+		const img = document.getElementById('title-img');
+
+		// 50%の確率でランダム判定（0.5未満ならtrue）
+		const showOriginal = Math.random() < 0.5;
+
+		if (showOriginal) {
+			// 【パターンA】オリジナルのtitle.pngを表示
+			img.src = 'image/title.png';
+		} else {
+			// 【パターンB】時間帯に合った画像を表示
+			const hour = new Date().getHours();
+
+			const images = {
+				morning: 'image/title_1.png', // 早朝 ( 4:00 -  8:59)
+				day:     'image/title_2.png', // 日中 ( 9:00 - 15:59)
+				evening: 'image/title_3.png', // 夕方 (16:00 - 18:59)
+				night:   'image/title_4.png'  // 夜間 (19:00 -  3:59)
+			};
+
+			if (hour >= 4 && hour < 9) {
+				img.src = images.morning;
+			} else if (hour >= 9 && hour < 16) {
+				img.src = images.day;
+			} else if (hour >= 16 && hour < 19) {
+				img.src = images.evening;
+			} else {
+				img.src = images.night;
+			}
+		}
+	}
+
+	// ページ読み込み時に実行
+	window.addEventListener('DOMContentLoaded', updateTitleImage);
+</script>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		コナミのソフト
+		<BR>
+		</FONT>
+		　コナミのROMソフトは、海外版と全く同一のものを使っている場合があります。例えば、「グラディウス」は、ささっている本体の国籍を調べ、日本国籍だとグラディウスに、海外国籍だとNemesisになります。具体的には本体のメインROMの002Bhに国籍が書かれています。ここの値が00hだと日本、それ以外だと海外です。詳細はData Packを参照してください。従って、グラディウスの国籍判定ルーチン、あるいはメインROMのこの部分を書き換えると、Nemesisが起動します。グラデイウスシリーズの3番目の作品は「ゴーファーの野望 EPISODE 2」と銘打っていますが、似非ＳＣＣなどで改造を施すと「NEMESIS 3」になったり、デモが英語になったりして興味深いです。この他にも多々あるようです。
+		<BR>
+		　ちなみに、実際に海外版で遊ぶには、MSXエミュレータを海外のROMで動かすか、ゲームにパッチをあてて、それを似非SCC等にロードすることによって遊ぶことになります。後者の具体的手法としては、LD A,(002Bh)をサーチし、LD A,01h NOPにすれば大抵はOKです。
+		<BR>
+		　プログラムはにがさんのHPにあります。
+		<A href="http://niga2.sytes.net/" target="_blank">
+			<IMG src="../image/go.png" alt="Go!">
+			Go!
+		</A>
+		<BR>
+		</B>
+	</BODY>
+</HTML>

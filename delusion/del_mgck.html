@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		マジックキーの秘密
+		<BR>
+		</FONT>
+		　SONYのソフトにはマジックキーというハードに対応しているソフトがあるという噂。<BR>
+		　マジックキーをジョイスディックポート2に接続して、対応ソフトを起動すると特別なメニューが出るようです。このマジックキーは市販されたものではなく、何かのプレゼントで配られたようなのですが、それに関する記事は見つかりませんでした。ただ、MSXマガジン1987年5月号にマジックキーの作り方が載っています。それによると裏マジックキーなるものもあるとのことで検証してみました。<BR>
+		　ややこしいのですが、マジックキーは市販こそされていませんが正式に製造、配布されたアイテムです。しかし裏マジックキーについては正式に作られたアイテムは無く、あくまでユーザーの試行錯誤の結果見つかった機能、ということのようです。<BR>
+		　記事では、通常のマジックキーはジョイスティックコネクタの1(Up), 2(Down), 8(COM)をショート、裏マジックキーは3(Left),4(Right),9(GND)をショートさせるとあります。MSX2テクニカルハンドブックに掲載されているジョイスティックの回路と比べると下記のようになります。<BR>
+		<IMG src="image/mgckey-1.png" alt="マジックキー回路"><BR>
+		<BR>
+		　ジョイスティックではすべてのボタンの信号をCOMにつなげるようです。COMは本体からの出力信号です。ボタンが押されていない時に値が不定とならないよう、MSX本体側でPull-Upされているはずです。従ってCOMといっても通常はLOWにしてボタンが押されたかどうかを検出しているものと思われます。<BR>
+		　マジックキーの回路は通常のジョイスティックの作りと似ています。裏マジックキーはGNDに接続するので違うように見えますが、COMがLOWであればGNDと同じです。<BR>
+		　一方で、FM-TOWSのジョイパットのSELECT、RUNでも代用できるという噂もありましたので、入手して解析してみると下記のようになっていました。<BR>
+		<IMG src="image/towns-1.jpg" alt="FM-TOWNジョイパッド">
+		<IMG src="image/towns-2.png" alt="FM-TOWNジョイパッド回路"><BR>
+		<BR>
+		　FM-TOWNSのジョイパッドではCOMを使わずにGNDを使っているようです。SELECTがマジックキー相当、RUNが裏マジックキー相当と言えそうです。COMを変化させてチェックすることによりFM-TOWSのジョイパッドのような回路をはじくことが可能ですが、そこまではしていないようで、結局COMにつなげてもGNDにつなげても変わらないようです。<BR>
+		<BR>
+		　マジックキーの実物が無いのでケーブルをショートさせて実験してみます。記事によると対応しているソフトは「GALL FORCE」と「雀聖」とのことですが、ネットで検索してみると「ファミリーボクシング」も対応しているとのこと。とりあえず、その頃のHiTBiTブランドのメガロムソフトで一通り確認してみることにします。ちなみに・・・一見同じに見えますが、何故か「棋聖」だけラベルが大きいケースだったりします。<BR>
+		<IMG src="image/mgckey-2.jpg" alt="ジョイスティックケーブル">
+		<IMG src="image/mgckey-3.jpg" alt="SONYのメガロムソフト"><BR>
+		<BR>
+		　一応、COMとの接続、GNDとの接続の両方を試しましたが、結果は変わりませんでした。<BR>
+		<BR>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD>発売</TD>
+				<TD>タイトル</TD>
+				<TD>マジックキー</TD>
+				<TD>裏マジックキー</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1986年11月</TD>
+				<TD rowspan="2">GALL FORCE</TD>
+				<TD>対応<BR>
+				<IMG src="image/gallf-1.jpg" alt="GALL FORCEタイトル">
+				<IMG src="image/gallf-2.jpg" alt="マジックキーメニュー"></TD>
+				<TD>対応<BR>
+				<IMG src="image/gallf-3.jpg" alt="裏マジックキーメニュー"></TD>
+			</TR>
+			<TR>
+				<TD colspan="2">タイトルに「GRAPH KEY TO "MAGIC KEY"」と表示。裏マジックキーメニューでは「TRIG2 POWER UP」が追加されます。</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1986年11月</TD>
+				<TD rowspan="2">雀聖</TD>
+				<TD>対応<BR>
+				<IMG src="image/jansei-1.jpg" alt="雀聖対戦相手選択">
+				<IMG src="image/jansei-2.jpg" alt="雀聖パラメータ変更"></TD>
+				<TD>非対応</TD>
+			</TR>
+			<TR>
+				<TD colspan="2">これは分かりにくく、「実践」を選んだ状態でESCキーとSELECTキーを押すと対戦相手のパラメータを変更できるメニューに入ります。裏マジックキーでは何もおきません。</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1987年 6月</TD>
+				<TD rowspan="2">Replicart</TD>
+				<TD>対応<BR>
+				<IMG src="image/replic-1.jpg" alt="Replicartタイトル">
+				<IMG src="image/replic-2.jpg" alt="マジックキーメニュー"></TD>
+				<TD>対応<BR>
+				<IMG src="image/replic-3.jpg" alt="裏マジックキーメニュー"></TD>
+			</TR>
+			<TR>
+				<TD colspan="2">タイトルに「Hit Graph Key to Magic Key」と表示。裏マジックキーメニューでもメニューが出ますが、マジックキーのメニューと同じようです。</TD>
+			</TR>
+			<TR>
+				<TD>1987年 8月頃</TD>
+				<TD>聖飢魔Ⅱスペシャル</TD>
+				<TD>非対応</TD>
+				<TD>非対応</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1987年 9月</TD>
+				<TD rowspan="2">奇々怪界</TD>
+				<TD>対応<BR>
+				<IMG src="image/kikika-1.jpg" alt="奇々怪界タイトル">
+				<IMG src="image/kikika-2.jpg" alt="マジックキーメニュー"></TD>
+				<TD>非対応</TD>
+			</TR>
+			<TR>
+				<TD colspan="2">タイトルに「GRAPH KEY TO MAGIC KEY」と表示。裏マジックキーメニューでは何もおきません。</TD>			</TR>
+			<TR>
+				<TD>1987年 9月</TD>
+				<TD>Hard Ball</TD>
+				<TD>非対応</TD>
+				<TD>非対応</TD>
+			</TR>
+			<TR>
+				<TD>1987年11月</TD>
+				<TD>棋聖</TD>
+				<TD>非対応</TD>
+				<TD>非対応</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1987年12月</TD>
+				<TD rowspan="2">軍人将棋</TD>
+				<TD>対応<BR>
+				<IMG src="image/gunjin-1.jpg" alt="軍人将棋タイトル">
+				<IMG src="image/gunjin-2.jpg" alt="マジックキーメニュー"></TD>
+				<TD>対応<BR>
+				<IMG src="image/gunjin-3.jpg" alt="裏マジックキーメニュー"></TD>
+			</TR>
+			<TR>
+				<TD colspan="2">これはHitBitブランドのソフトではありません。↑で紹介した「Replicart」を作ったKLONという会社が作ったソフトで、「Replicart」のタイトル画面のパロディ「Unagiacrt」が表示されるだけです。Spaceキーを押すと通常の「軍人将棋」のタイトル画面になります。<BR>
+画面が変化しているので写真は異なっていますが、マジックキーでも裏マジックキーでも同じです。本来は100勝すると表示されるご褒美画面のようです。<BR>
+MSX FAN MSX FAN 1994年6-7月号にも収録されています。同じKLONという会社が作った他のソフトも調べてみましたが、対応しているものは見つかりませんでした。</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">1988年 6月</TD>
+				<TD rowspan="2">ファミリーボクシング</TD>
+				<TD>対応<BR>
+				<IMG src="image/famib-1.jpg" alt="ファミリーボクシングタイトル">
+				<IMG src="image/famib-2.jpg" alt="マジックキーメニュー"></TD>
+				<TD>対応<BR>
+				<IMG src="image/famib-3.jpg" alt="裏マジックキーメニュー"></TD>
+			</TR>
+			<TR>
+				<TD colspan="2">タイトルに「HIT GRAPH KEY TO MAGIC KEY」と表示。裏マジックキーメニューでは「SUPER TECNIC」「POWER ITEM」が追加されます。</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		　ソフトによってマジックキー及び裏マジックキーに対応していることが分かりました。上記以外のソフトでも対応しているものがあるのかも知れませんが、調べきれませんでした。特に雀聖のようなやり方を見つけるのはほぼ不可能・・・。もし情報をお持ちの方はお教え下さい。<BR>
+		<BR>
+　		　お約束ですが、この噂を見て改造などを行い故障やその他問題が発生しても責任は負えません。各自の責任において情報を広く集めて行うことをおすすめします。
+		</B>
+	</BODY>
+</HTML>

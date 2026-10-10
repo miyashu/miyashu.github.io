@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja" data-lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ジョン・ドウ レポート</title>
+<meta name="description" content="ジョン・ドウが依頼を受けて作ったMSX用ソフトの紹介とダウンロード。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<script>
+  (function () {
+    var l = null;
+    try { l = localStorage.getItem("lang"); } catch (e) {}
+    if (!l) l = (navigator.language || "ja").toLowerCase().indexOf("ja") === 0 ? "ja" : "en";
+    document.documentElement.setAttribute("data-lang", l);
+    document.documentElement.setAttribute("lang", l);
+  })();
+</script>
+</head>
+<body>
+<div class="site">
+
+<header class="masthead">
+  <div class="masthead-row">
+    <span class="sub">MSX software · commissioned works</span>
+    <div class="langs" role="group" aria-label="Language">
+      <button type="button" id="lang-ja" data-set="ja">日本語</button>
+      <button type="button" id="lang-en" data-set="en">English</button>
+    </div>
+  </div>
+  <h1 lang="ja">ジョン・ドウ レポート</h1>
+  <h1 lang="en">John Doe's Reports</h1>
+  <p lang="ja">どうも、ジョン・ドウです。ここに並んでいるのは、ある依頼人に頼まれて私が作ったMSX用のソフトです。この依頼人がまあ細かい。1バイトの違いに目を光らせ、仕様書の表が見にくいと言っては作り直させ、コードは1行も書けないくせに注文だけは一人前。それでも実機からダンプを取ってくる根気だけは本物だったので、最後まで付き合ってやりました。</p>
+  <p lang="ja">出来は保証します。依頼人の注文の多さも保証します。</p>
+  <p lang="en">Hi, I'm John Doe. Everything on this page is MSX software I built for a certain client. A <em>very</em> particular client. They squinted at single bytes, sent my spec tables back for being "hard to read", and couldn't write a line of code themselves, yet had an opinion on every line I wrote. To be fair, they kept hauling dumps off real hardware without complaint, so I saw the job through.</p>
+  <p lang="en">The work is solid. So was the list of demands.</p>
+</header>
+
+<!-- ======================================================= SFORM16 -->
+<section class="soft" id="sform16" aria-labelledby="sform16-name">
+  <div class="soft-head">
+    <h2 id="sform16-name">SFORM16</h2>
+    <span class="ver">sform16_007</span>
+    <span class="platform">Windows</span>
+  </div>
+  <p class="tagline" lang="ja">MEGA-SCSI用 FAT16 マルチパーティション・フォーマッタ</p>
+  <p class="tagline" lang="en">FAT16 multi-partition formatter for MEGA-SCSI</p>
+  <p lang="ja">MSX-DOS2とMEGA-SCSIで使うSDカードを、WindowsからFAT16のマルチパーティション構成でフォーマットします。形式はSFORM-2(V0.09a)のネイティブ形式(隠し領域の無い方)と同じで、各パーティションにMEGASCSI.TBLを作ります。SFORM-2はFAT12専用なので、大きなパーティションを使いたいときのためのツールです。</p>
+  <p lang="en">Formats SD cards for MSX-DOS2 and MEGA-SCSI from Windows, as multiple FAT16 partitions. The layout follows SFORM-2 (V0.09a) native format (the one without the hidden area), with a MEGASCSI.TBL in every partition. SFORM-2 itself only makes FAT12, so this tool is for when you want larger partitions.</p>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">できること</h3>
+      <h3 lang="en">Features</h3>
+      <ul lang="ja">
+        <li>1パーティション 512MiB / 1GiB / 2GiB、合計2GiBまで</li>
+        <li>クラスタサイズは容量に合わせて自動で選択</li>
+        <li><code>--dry-run</code> で書き込まずに計画だけ表示</li>
+        <li><code>--inspect</code> でフォーマット済みの構造を検査</li>
+        <li>イメージファイルでの試験(管理者権限不要)</li>
+      </ul>
+      <ul lang="en">
+        <li>Partitions of 512 MiB, 1 GiB or 2 GiB, up to 2 GiB in total</li>
+        <li>Cluster size chosen automatically for each partition</li>
+        <li><code>--dry-run</code> shows the plan without writing</li>
+        <li><code>--inspect</code> checks an existing layout</li>
+        <li>Can format an image file for testing (no admin rights needed)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">必要なもの</h3>
+      <h3 lang="en">Requirements</h3>
+      <ul lang="ja">
+        <li>Windows 10 / 11、管理者権限</li>
+        <li>Python 3.7以降(標準ライブラリのみ)</li>
+        <li>32MiBより大きく32GiB以下のSDカード</li>
+      </ul>
+      <ul lang="en">
+        <li>Windows 10 / 11, administrator rights</li>
+        <li>Python 3.7 or later (standard library only)</li>
+        <li>An SD card larger than 32 MiB and up to 32 GiB</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼内容は「SFORM-2はFAT12しか作れないから、FAT16で大きなパーティションを作れるやつを」。ついでにSFORM-2・Nextorのパーティション形式の調査報告書まで書かされました。ダンプを取ってこいと言ったのは私ですが、取ってきたダンプの見出しを2か所間違え、別のカードのセクタを1つ紛れ込ませたのは依頼人です。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "SFORM-2 only makes FAT12, so build me something that makes big FAT16 partitions." Then I got roped into writing a full survey of the SFORM-2 and Nextor partition formats as well. Yes, I asked for the sector dumps. No, I did not mislabel two of them or slip in a sector from a different card. That was the client.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 物理ディスクに直接書き込みます。対象のカードの内容はすべて消えます。<code>--list</code> と <code>--dry-run</code> でディスク番号を必ず確かめてから実行してください。</p>
+  <p class="caution" lang="en"><strong>Caution:</strong> this writes directly to the physical disk and erases everything on the target card. Always confirm the disk number with <code>--list</code> and <code>--dry-run</code> first. The program's messages and manual are in Japanese.</p>
+
+  <div class="links">
+    <a class="btn primary" href="sform16_007.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 20 KB</small></a>
+    <a class="btn ghost" href="sform16_readme.html"><span lang="ja">使い方</span><span lang="en">Manual (Japanese)</span></a>
+    <a class="btn ghost" href="partition_spec.html"><span lang="ja">パーティション形式 統合仕様書</span><span lang="en">Partition formats (Japanese)</span></a>
+    <a class="btn ghost" href="sform16_spec.html"><span lang="ja">SFORM16 仕様書</span><span lang="en">SFORM16 spec (Japanese)</span></a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ======================================================= MCPLAYER -->
+<section class="soft" id="mcplayer" aria-labelledby="mcplayer-name">
+  <div class="soft-head">
+    <h2 id="mcplayer-name">MCPLAYER</h2>
+    <span class="ver">Ver 0.10</span>
+    <span class="platform">MSX ROM</span>
+  </div>
+  <p class="tagline" lang="ja">MICRO CABIN MUSIC PLAYER — マイクロキャビンのゲーム音楽をメガロムで聴く</p>
+  <p class="tagline" lang="en">MICRO CABIN MUSIC PLAYER — Micro Cabin game music on a MegaROM</p>
+  <p lang="ja">マイクロキャビンのゲームの曲を、MSXのROMカートリッジ(ASCII16メガロム)にまとめて聴くためのツールです。曲はそれぞれのゲーム自身のサウンドドライバと音色で鳴らします。配布物には曲・ドライバ・ゲームの画面などのデータは入っておらず、<strong>ご自分で持っているゲームのディスクイメージ</strong>から取り出してROMを作ります。</p>
+  <p lang="en">A tool that builds an MSX MegaROM cartridge (ASCII16) for listening to the music of Micro Cabin games. Every song plays with the game's own sound driver and instruments. The package contains no Micro Cabin data; the music and drivers are extracted from <strong>your own disk images</strong> when you build the ROM.</p>
+
+  <div class="shots">
+  <figure class="shot" lang="ja">
+    <img src="mcplayer_screen_ja.png" width="640" height="480" alt="MCPLAYER の曲選択画面。Xak の「フェアレスの町」を再生中で、右上のレベルメーターが動いている" loading="lazy">
+    <figcaption>曲選択の画面(リスト)。右上はPSG 3ch・FM 9chのレベルメーター(openMSX、FS-A1ST)</figcaption>
+  </figure>
+  <figure class="shot" lang="en">
+    <img src="mcplayer_screen_en.png" width="640" height="480" alt="The MCPLAYER song list playing Xak's Village of Fearless, with the level meters at the top right" loading="lazy">
+    <figcaption>The song list. Top right: level meters for 3 PSG and 9 FM channels (openMSX, FS-A1ST)</figcaption>
+  </figure>
+  <figure class="shot photo" lang="ja">
+    <img src="mcplayer_hw.jpg" width="1200" height="900" alt="FS-A1GT に ESERAMair を挿し、モニターに MCPLAYER の曲選択画面を表示している写真" loading="lazy">
+    <figcaption>実機: FS-A1GT + ESERAMair(背景は合成)</figcaption>
+  </figure>
+  <figure class="shot photo" lang="en">
+    <img src="mcplayer_hw.jpg" width="1200" height="900" alt="A Panasonic FS-A1GT with an ESERAMair cartridge, showing the MCPLAYER song list on a monitor" loading="lazy">
+    <figcaption>Real hardware: FS-A1GT + ESERAMair (background composited)</figcaption>
+  </figure>
+  </div>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">対応ゲーム</h3>
+      <h3 lang="en">Supported games</h3>
+      <ul lang="ja">
+        <li>Xak、Xak II、ガゼルの塔</li>
+        <li>FRAY(MSX2版 / turboR版)</li>
+        <li>幻影都市、ファイナルファンタジー</li>
+        <li>キャンペーン版大戦略II、プリンセスメーカー</li>
+        <li>The Tower of Cabin</li>
+      </ul>
+      <ul lang="en">
+        <li>Xak, Xak II, Tower of Gazzel</li>
+        <li>Fray (MSX2 / MSX turboR)</li>
+        <li>Illusion City, Final Fantasy</li>
+        <li>Dai Senryaku II (Campaign Version), Princess Maker</li>
+        <li>The Tower of Cabin</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">プレーヤー</h3>
+      <h3 lang="en">Player</h3>
+      <ul lang="ja">
+        <li>MSX1 / 2 / 2+ / turboR、RAM 32KB以上</li>
+        <li>MSX-MUSIC・FM-PACを自動で検出(無ければPSGのパートだけ)</li>
+        <li>MSX2以降ではゲームのCGを表示、V9990にも対応</li>
+        <li>レベルメーター、ループ回数・再生範囲の切り替え、自動再生</li>
+        <li>実機ではFS-A1GT(turboR)+ESERAMair(WiFi付き似非RAMディスク、ASCII16)で起動・再生を確認</li>
+      </ul>
+      <ul lang="en">
+        <li>MSX1 / 2 / 2+ / turboR, 32 KB RAM or more</li>
+        <li>Finds MSX-MUSIC or FM-PAC (PSG parts only without FM)</li>
+        <li>Shows game pictures on MSX2 and later, and on V9990</li>
+        <li>Level meters, loop count and play-range modes, autoplay</li>
+        <li>Tested on real hardware: FS-A1GT (turboR) with an ESERAMair (WiFi ESE-RAM cartridge, ASCII16)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">ROMを作るのに必要なもの</h3>
+      <h3 lang="en">To build the ROM</h3>
+      <ul lang="ja">
+        <li>Python 3.8以降とPillow</li>
+        <li>ゲームのディスクイメージ(.dsk)</li>
+      </ul>
+      <ul lang="en">
+        <li>Python 3.8 or later with Pillow</li>
+        <li>Disk images (.dsk) of your games</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼内容は「マイクロキャビンの曲を、それぞれのゲーム自身のドライバで鳴らすメガロムを」。できあがった頃に「やっぱりマイクロキャビンのコードは配布物に入れたくない」と言い出したので、ドライバをユーザーのディスクから取り出して手を入れる方式に作り直しました。ドライバ10版、全255曲で動作を確認済み。依頼人いわく「音そのものは耳でまだ十分に確かめていない」そうです。私の仕事は終わっています。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "A MegaROM that plays Micro Cabin music with each game's own sound driver." Right when it was done, the client decided no Micro Cabin code should ship in the package, so I rebuilt it to pull the drivers out of the user's own disks and patch them at build time. Ten driver versions, all 255 songs checked. The client admits they "haven't properly listened to it yet." My part is finished.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>著作権:</strong> 曲・ドライバ・ゲームの画面の著作権はマイクロキャビンにあります。作ったROMは個人で楽しむ範囲で使い、配布しないでください。</p>
+  <p class="caution" lang="en"><strong>Copyright:</strong> the music, drivers and game graphics are © MICRO CABIN Corp. Use the ROM you build for your own enjoyment only, and do not distribute it.</p>
+
+  <div class="links">
+    <a class="btn primary" href="MCPLAYER_v0.10.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 322 KB</small></a>
+    <a class="btn ghost" href="mcplayer_readme.html" lang="ja">使い方</a>
+    <a class="btn ghost" href="mcplayer_readme_en.html" lang="en">How to use</a>
+    <a class="btn ghost" href="mcplayer_tech.html" lang="ja">技術資料</a>
+    <a class="btn ghost" href="mcplayer_tech_en.html" lang="en">Technical notes</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<footer class="colophon">
+  <p lang="ja">MCPLAYERのドライバの番地などは、Roberto Vargasさんによる幻影都市のドライバの逆アセンブル(Manuel Pazosさんのサイトで公開されている mcdrv.asm)と突き合わせて求めました。Thanks: Manuel Pazos(MCDRV.COM、Windows版 PCPLAYER)、Patriek Lesparre。フォント: 門真なむ氏の「k8x12」「k6x8」。</p>
+  <p lang="en">MCPLAYER's driver addresses were found by matching against Roberto Vargas' disassembly of the Illusion City driver (mcdrv.asm, published on Manuel Pazos' website). Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre. Fonts: "k8x12" and "k6x8" by Num Kadoma.</p>
+  <p>All music © MICRO CABIN Corp. MSX is a trademark of MSX Licensing Corporation.</p>
+  <p class="signoff" lang="ja">依頼人へ: 次の注文は、もう少し仕様を固めてから持ってきてください。 — ジョン・ドウ</p>
+  <p class="signoff" lang="en">To the client: next time, pin down the spec before you call me. — John Doe</p>
+</footer>
+
+</div>
+<script>
+  (function () {
+    var root = document.documentElement;
+    function set(l) {
+      root.setAttribute("data-lang", l);
+      root.setAttribute("lang", l);
+      document.title = l === "ja" ? "ジョン・ドウ レポート" : "John Doe's Reports";
+      document.getElementById("lang-ja").setAttribute("aria-pressed", l === "ja");
+      document.getElementById("lang-en").setAttribute("aria-pressed", l === "en");
+      try { localStorage.setItem("lang", l); } catch (e) {}
+    }
+    set(root.getAttribute("data-lang") || "ja");
+    document.querySelectorAll(".langs button").forEach(function (b) {
+      b.addEventListener("click", function () { set(b.getAttribute("data-set")); });
+    });
+  })();
+</script>
+</body>
+</html>

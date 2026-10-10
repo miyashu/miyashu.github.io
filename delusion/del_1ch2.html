@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		1chip MSXの秘密（補足）
+		<BR>
+		</FONT>
+		　1chip MSXの隠し機能であるBIOSロード機能については以前に書きましたが、OSのアップデート等によって状況が変化している部分があるので、補足しておきます。<BR>
+		<BR>
+		<FONT color="#00FFFF">
+		■MSXのOSについて<BR>
+		</FONT>
+		<BR>
+		　MSX-DOS2の後継とも言えるOSが、Nextorと呼ばれる<A href="http://www.konamiman.com/msx/msx-e.html" target="_blank">Konamimanさん</A>が作ったDOSになります。このOSはMSX-DOS2の上位互換であり、ほとんどのMSX-DOS(2)のユーティリティがそのまま動作します。一番のポイントはFAT16に対応していることですが、日本では<A href="http://www.msxcartridgeshop.com/" target="_blank">MSX CARTRIDGE SHOP</A>のMegaFlashROM SCC+ SD等を使っている人にしか馴染みが無いかもしれません。FAT16対応だけで無く、[TAB] キーで入力中のファイル名が補完されたりと色々便利な、OSです。もちろん（？）仮想FD機能もあります。<BR>
+		　今回、<A href="http://miyako.asablo.jp/blog/" target="_blank">ゆうくんさん</A>がＯＫＥＩさん協力の下、1chip MSXの内蔵ディスクROMとしてNextorを搭載することに成功したようです。1chip MSXには元々BIOSロード機能があって、SDカード経由でディスクROMを上書きすることも出来ました。しかし、サイズは64kBと決まっており、NextorのディスクROM（128kB）を読み込むことは出来ませんでした。また、Windows10でフォーマットしたSDカードを認識しなかったり、起動時にSDHCカードを挿入していると起動出来ない問題もありました。これらの問題を、ゆうくんさんがすべて解決して下さいました。<BR>
+		<BR>
+		　1chip MSXは某Ｔ博士が設計されたものですが、SDカード周りに限っては「1chip MSX」→「Mega SD」→「MegaFlashROM SCC+ SD」と進化してきたもので、今回、1chip MSXに搭載したNextorは元々MegaFlashROM SCC+ SD用に公開されていたものがそのまま動いています（後述のFAT16X対応を除く）。Nextorのバージョン2.1以降には仮想FD機能があり、SDカードにあるフロッピーディスクのイメージファイルを使うことが出来ます。やり方は、至って簡単です。Konamimanさんのサイトから "Nextor 2.1 Alpha 2" をダウンロードします。その中にある "EMUFILE.COM" が仮想FD機能を実行するプログラムです。<BR>
+		<BR>
+		　#1 SDカードにフロッピーディスクのイメージファイルを準備<BR>
+		　#2 A:/>EMUFILE file1.dsk　等としてイメージファイルを指定<BR>
+		ワイルドカードが使えますので、<BR>
+		　A:/>EMUFILE file?.dsk<BR>
+		や<BR>
+		　A:/>EMUFILE file1.dsk file2.dsk<BR>
+		 等も可能です。<BR>
+		<BR>
+		　成功すると "NEXT_DSK.DAT" というファイルが生成されます。あとはリセットするだけで仮想FD機能が動作します。SDカード上（おそらくルートディレクトリ上？）に "NEXT_DSK.DAT" がある限り仮想FD機能が動作します。ディスクの交換は、例えばゲーム等で「Ｂディスクを入れてスペースキーを押してください」と表示された時に、[GRAPH] キー（1chip MSXでは [F6] キー）を押しながら [スペース] キーを押します。次に交換したいディスクの番号のキーを押すだけです。ディスクの番号は "EMUFILE.COM" が割り当てた番号になります。<BR>
+		　[1] キーを押しながら起動すれば仮想FD機能が一時的に無効になりNextorが起動しますので、そこで "NEXT_DSK.DAT" を削除すればその後も仮想FD機能が無効になります。もちろん、Windows PC等にSDカードを挿入して "NEXT_DSK.DAT" を削除してもかまいません。
+		<BR>
+		<BR>
+		<FONT color="#00FFFF">
+		■おまけ<BR>
+		<BR>
+		</FONT>
+		　おまけというより1chip MSXに関するメモの修正です。下記の二つの問題は、ゆうくんさんに修正して頂きました。<BR>
+		・キーボード<BR>
+		　私はRealforceのPS/2&USB両対応のキーボードを持っていましたが、オリジナルの1chip MSXや1chip MSX改では使えませんでした。<BR>
+		・DIP SW<BR>
+		　DIP SWの5がOFFの場合、オリジナルの1chip MSXは起動しますが、1chip MSX改ではSDカードにBIOSが入っていないと起動しませんでした。<BR>
+		<BR>
+		　さらに追加で下記不具合も修正して頂きました。<BR>
+		・ドラゴンクエスト２（MSX2版）<BR>
+		　タイトル画面が正常に表示されませんでした。<BR>
+		<BR>
+		　さらに、MegaFlashROM SCC+ SDの様にROMディスク内蔵も試みておられるようです。<BR>
+		<BR>
+		　突然のお願いにもかかわらず、快く1chip MSXの改善に挑んで頂いたゆうくんさんに感謝します。<BR>
+		　お約束ですが、この噂を見て1chip MSXのアップデートを行い、故障やその他問題が発生してもゆうくんさんや私、れふてぃは責任は負えません。各自の責任において情報を広く集めて行うことをおすすめします。<BR>
+		</B>
+	</BODY>
+</HTML>

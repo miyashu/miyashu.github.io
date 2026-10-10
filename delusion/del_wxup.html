@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		FS-A1WXの高速化
+		<BR>
+		</FONT>
+		　通常は約3.58MHzで動作していますが、FS-A1FX, FS-A1WX, FS-A1WSXではソフト的にクロックを6MHzに切り替えることが可能です。さらに、改造を施すことによって11MHzにまであげることが可能です。ただし、FDアクセスが正常にできなくなります。似非RAMディスクや似非SCCディスク、MEGA-SCSIを使用すると、FDアクセス時に一時的にクロック下げるので正常にアクセスできます。
+		<BR>
+		　クロックを6MHzに切り替えるには、BASICで「OUT &H40,8」「OUT &H41,154」とすればOKです。最初の命令がI/Oポート41hを松下の内蔵デバイスに切り替える命令で、次の命令でI/Oポート41hに6MHzへの切り替えを出力しています。
+		<BR>
+		　改造記事はにがさんのHPにあります。
+		<A href="http://niga2.sytes.net/" target="_top">
+			<IMG src="../image/go.png" alt="Go!">
+			Go!
+		</A>
+		<BR>
+		</B>
+	</BODY>
+</HTML>

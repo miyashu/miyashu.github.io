@@ -1,0 +1,21 @@
+* {
+	margin: 0px; padding: 0px; box-sizing: content-box; -moz-box-sizing: content-box;
+}
+body {
+	background: rgb(255, 255, 255); margin: 0px; padding: 0px; text-align: justify; color: rgb(0, 0, 0); line-height: 1; font-family: "ÉÅÉCÉäÉI","Verdana",sans-serif; font-size: 14px; -ms-text-justify: inter-ideograph;
+}
+a:link {
+	color: rgb(0, 0, 255);
+}
+a:visited {
+	color: rgb(153, 0, 204);
+}
+a:active {
+	color: rgb(255, 0, 0);
+}
+a:hover {
+	color: rgb(255, 0, 0); text-decoration: underline;
+}
+form {
+	padding: 0px; border: 0px currentColor; border-image: none; display: inline;
+}

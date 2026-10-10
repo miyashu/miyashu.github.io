@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		A1ST>A1GT?
+		<BR>
+		</FONT>
+		　無改造品のA1STとA1GTを比較すると、A1GTの4〜6%ほど遅くなります。理由は、内蔵メモリが512kB（128kBメモリx4）の場合、256kB（128kBメモリx2）に比べ、メモリのリフレッシュにかかる時間が2倍になるからです。実用面から言えば、メモリが多い方が使いやすいので、256kBの方が良いということではありません。また、内蔵メモリを1MB（512kBx2）に改造した場合は、内蔵メモリが256kBの時と同じ速度になります。
+		<BR>
+		　<A href="http://niga2.sytes.net/" target="_blank">にがさんのサイト</A>の「松下FS-A1FXの改造　後編」記事の「3倍速クロックアップ」の説明の中に「以前に作成した改造記事」があります。パソコン通信時代に作られた改造記事ですが、そのアーカイブの中につじかわさん作成の「POWER.COM」というCPU速度を測定するツールがありましたので、それを使って測定してみました。同梱されているにがさん作成の「CCC.COM」という動作モードを切り替えるツールを使いながらだと便利です。3倍速改造を施したA1WSXだとこんな感じです。Z80A modeは通常の速度、Z80B modeは高速（3倍速）モードでの結果になります。<BR>
+		<BR>
+		<IMG src="image/wsx_cpu.jpg" alt="A1WSX CPU速度"><BR>
+		<BR>
+		　「/ZX」はZ80の通常速度を100%としたときの速度、「/RX」はR800の通常速度を100%にしたときの速度です。その他の機種も測定した結果は下記の通りです。A1ST/A1GTの場合はDRAMのリフレッシュタイミングによって±0.1%程度のばらつきがでます。<BR>
+		<BR>
+		</B>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD>機種</TD>
+				<TD>動作モード</TD>
+				<TD>/ZX</TD>
+				<TD>/RX</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">FS-A1FX</TD>
+				<TD>3.58MHz</TD>
+				<TD align="right">100.00%</TD>
+				<TD align="right">10.05%</TD>
+			</TR>
+			<TR>
+				<TD>5.38MHz</TD>
+				<TD align="right">142.15%</TD>
+				<TD align="right">14.29%</TD>
+			</TR>
+			<TR>
+				<TD rowspan="2">FS-A1WSX</TD>
+				<TD>3.58MHz</TD>
+				<TD align="right">100.00%</TD>
+				<TD align="right">10.05%</TD>
+			</TR>
+			<TR>
+				<TD>10.74MHz</TD>
+				<TD align="right">285.23%</TD>
+				<TD align="right">28.67%</TD>
+			<TR>
+				<TD rowspan="3">FS-A1ST (256kB)</TD>
+				<TD>R800/DRAM</TD>
+				<TD align="right">995.95%</TD>
+				<TD align="right">100.02%</TD>
+			</TR>
+			<TR>
+				<TD>R800/ROM</TD>
+				<TD align="right">994.94%</TD>
+				<TD align="right">100.01%</TD>
+			</TR>
+			<TR>
+				<TD>Z80</TD>
+				<TD align="right">100.00%</TD>
+				<TD align="right">10.05%</TD>
+			</TR>
+			<TR>
+				<TD rowspan="3">FS-A1ST (1024kB)</TD>
+				<TD>R800/DRAM</TD>
+				<TD align="right">994.81%</TD>
+				<TD align="right">100.00%</TD>
+			</TR>
+			<TR>
+				<TD>R800/ROM</TD>
+				<TD align="right">994.78%</TD>
+				<TD align="right">99.99%</TD>
+			</TR>
+			<TR>
+				<TD>Z80</TD>
+				<TD align="right">99.99%</TD>
+				<TD align="right">10.05%</TD>
+			</TR>
+			<TR>
+				<TD rowspan="3">FS-A1GT (512kB)</TD>
+				<TD>R800/DRAM</TD>
+				<TD align="right">954.39%</TD>
+				<TD align="right">95.93%</TD>
+			</TR>
+			<TR>
+				<TD>R800/ROM</TD>
+				<TD align="right">954.38%</TD>
+				<TD align="right">95.94%</TD>
+			</TR>
+			<TR>
+				<TD>Z80</TD>
+				<TD align="right">100.05%</TD>
+				<TD align="right">10.05%</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<B>
+		　やはり、A1GTでは5%ほどA1STより遅くなるという結果になっています。しかし、クロックが変わっているわけではないので、VDPやFDCなどの周辺回路の動作が遅くなるわけではなく、ゲーム等に与える影響は限定的です。これはCPUの処理速度を測定するものなのでR800のDRAMモードとROMモードでは差がでませんが、ゲーム等ではむしろDRAMモードかROMモードかの方が体感速度（？）に効いてくる気がします。
+		</B>
+	</BODY>
+</HTML>

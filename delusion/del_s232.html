@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		Serial232の秘密
+		<BR>
+		</FONT>
+		　Serial232はMSX衰退期にMSXユーザーをつなぐパソコン通信の重要アイテムでした。発売は1990年1月頃でMSX2+の時代のため、古いロットのSerial232ではMSX turboRとの組み合わせで処理落ちが発生するようです。そのため、問い合わせベースでアスキーが改修を行っていたという噂があります。Rev.B基板が改修の対象であることはわかっていますが、Rev.Aがあるのかは不明です。<BR>
+		<IMG src="image/s232-1.jpg" alt="Rev.B"><BR>
+		<BR>
+		　改修方法は簡単です。<BR>
+		1. CIF1と記載されたICの13番ピンをカットし、基板から切り離す。<BR>
+		<IMG src="image/s232-2.jpg" alt="CIF1と13番ピン">
+		<IMG src="image/s232-3.jpg" alt="13番ピンをカット"><BR>
+		2. CIF1と記載されたICの13番ピンの基板側とスロットの6番ピン（/RFRS）をつなぐ。（CIF1と記載されたICの13番ピンは基板から切り離され、どこにもつながっていない状態になります。）<BR>
+		<IMG src="image/s232-4.jpg" alt="スロット6番ピンと接続"><BR>
+		<BR>
+		　Rev.Cの基板ではこの問題は修正されており、改修の必要は無いようです。スロットの6番ピンから配線が出ているのが分かります。<BR>
+		<IMG src="image/s232-5.jpg" alt="Rev.C">
+		<IMG src="image/s232-6.jpg" alt="スロット6番ピン"><BR>
+		<BR>
+		　元ネタとして参考にさせて頂いたななこっち★様こと(YMD)A様、(YMD)A様にご協力頂いたMARIO-NETのシスオペ [MARIO] 様、EquaトNetのシスオペ ゆーた様に感謝いたします。<BR>
+		<BR>
+		　お約束ですが、この噂を見て改造などを行い故障やその他問題が発生しても責任は負えません。各自の責任において情報を広く集めて行うことをおすすめします。
+		</BR>
+		</B>
+	</BODY>
+</HTML>

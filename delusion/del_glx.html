@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		GALAXIANの謎
+		<BR>
+		</FONT>
+		　謎と言いつつ、三番煎じな話です。<BR>
+		　GALAXIANを含む初期のナムコの作品の中には機種によって動かないバージョンがあります。<BR>
+		<BR>
+		<IMG src="image/galax-1.jpg" alt="GALAXIAN表"><BR>
+		<BR>
+		　その原因は、すでに<A href="http://www.tiny-yarou.com/" target="top">TINY野郎様のサイト</A>で説明されているように、スタックポインタの初期値を0000hにしているためと判明しています。<BR>
+		　近年、ツイッターで増設メモリカートリッジをスロットに挿すと動作するケースがあることが分かり、ちょっと話題になりました。しかしながら、そのメカニズムについて理解できなかったので、今回三番煎じになりますが、調査し記事化するものです。<BR>
+		<BR>
+		・動作しない原因<BR>
+		　スタックポインタの初期値が0000hになっている。このため、PUSH命令が発生するとFFFFhに値を書き込む。FFFFh、つまりPage3には通常RAMが割り当てられています。このRAMが基本スロットにあれば問題ないのですが、拡張スロットの場合、FFFFhにはRAMではなく拡張スロット選択レジスタが割り当てられています。そのためFFFFhに値を書き込んだ途端にスロットの構成がおかしくなり正常に動作しなくなります。<BR>
+		<BR>
+		・解決方法<BR>
+		　スタックポインタの初期値を変更する必要があり、その方法についてはTINY野郎さんのサイトで説明されている通りです。<BR>
+		　近年、<A href="https://x.com/inouma1972/status/1292068232833032192" target="top">イノウマ様が発見し、X（旧ツイッター）で報告</A>されたのは64kBの外部RAMカートリッジをスロット#2に挿したら動くようになった、というものです。しかしながら64kBの外部RAMカートリッジでなぜ動くようになったのか理解できず調査することとなりました。<BR>
+		<BR>
+		　結論を先に書きますと、GALAXIANを動かすためには一番若いスロットにあるPage3のメモリが基本スロットにあること、でした。ただし、turboRはプライマリメモリが固定スロットなので除きます。<BR>
+		<BR>
+		　現象自体はBlueMSXでも簡単に再現できます。といっても [MSX2] や [MSX2+] のデフォルト設定だと外部スロットが#1と#2-0になっていたりしてやりにくいので、ここではA1WXのROMを入れた状態で再現させています。A1WXのデフォルト設定では、外部スロットが#1と#2、メモリが#3-0にあります。<BR></B>
+		Step 1: スロット#1にGALAXIANをセット<BR>
+		　これで起動しようとしても起動しません。<BR>
+		　ここで、<BR>
+		Step 2: スロット#2に [特殊カートリッジ] - [外部RAMカートリッジ] - [64 kB] をセット<BR>
+		　これで起動するようになります。<BR>
+		<BR>
+		<B>
+		　この現象に対して、「最も大きいメモリが接続されているメモリマッパがプライマリメモリとして選択されるので、64kBの増設メモリを本体内蔵メモリ（64kB想定）より若い番号の基本スロット挿せば、増設メモリがプライマリメモリになり起動するようになる」という説がありました。一見、この説は正しいように見えます。しかし、この説が正しい場合、本体の内蔵メモリを256kB等にすると増設メモリはプライマリメモリにならず、起動しなくなるはずです。<BR></B>
+		Step 3: [ツール] - [マシン構成編集] - [メモリ] で [3-0 0000-FFFF 64kB Mapped RAM] をダブルクリックし、[256kB] に設定する。<BR>
+		<IMG src="image/wx-1.png" alt="256kB設定"><BR>
+		<BR>
+		<B>
+		　これでプライマリメモリが#3-0（拡張スロット）の内蔵メモリになるなら、FFFFhに拡張スロット選択レジスタがあるのでGALAXIANが起動しなくなるはず。しかし、実際に動作させてみると問題なく起動します。<BR>
+		<BR>
+		　何故このようなことが起こるかというと・・・「最も大きいメモリが接続されているメモリマッパがプライマリマッパとして選択される」のはMSX-DOS2の仕様（MSX turboRを除く）だということです。MSX-DOS2が存在しない環境では起動時にPage2とPage3のRAMを検索し、各PageにあるRAMのうち一番若いスロットをプライマリメモリに割り当てていることが<A href="http://niga2.sytes.net/msx/FX16M.html" target="top">にがさんの解析</A>（起動シークエンス部）で分かっています。試しにスロット選択レジスタを読んでみますと・・・<BR></B>
+		Step 4: スロット#1のGALAXIANを取り出して再起動（BASIC起動）<BR>
+		BASIC画面で下記を実行（スロット選択レジスタの読み込み）<BR>
+		　10 A=INP(&HA8)<BR>
+		　20 A$="00000000"+BIN$(A)<BR>
+		　30 PRINT RIGHT$(A$,8)<BR>
+		<IMG src="image/dos1.png" alt="dos1起動"><BR>
+		<BR>
+		<B>
+		　最初の"10"がPage3のスロット番号、次の"10"がPage2のスロット番号でどちらも256kBメモリのあるスロット#3ではなく、スロット#2を示しています。では、MSX-DOS2があるとどうなるかを見てみます。<BR></B>
+		Step 5:  [ツール] - [マシン構成編集] - [メモリ] - [追加] でスロット#1にRAM無し版MSX-DOS2のイメージをタイプ [ASCII 16] でセットして再起動（BASIC起動）<BR>
+		<IMG src="image/dos2-set.png" alt="dos2設定"><BR>
+		<BR>
+		BASIC画面で下記を実行（スロット選択レジスタの読み込み）<BR>
+		　10 A=INP(&HA8)<BR>
+		　20 A$="00000000"+BIN$(A)<BR>
+		　30 PRINT RIGHT$(A$,8)<BR>
+		<IMG src="image/dos2.png" alt="dos2起動"><BR>
+		<BR>
+		<B>
+		　今度は最初が"11"、次も"11"でPage3, Page2ともにスロット#3が選ばれていることが分かります。つまり、「最も大きいメモリが接続されているメモリマッパがプライマリマッパとして選択される」のはMSX-DOS2の仕様であり、MSX-DOS2がない環境であれば、Page3, Page2の一番若いスロットのメモリがプライマリになることが分かりました。そのため、GALAXIANを動かすための条件も「一番若いスロットにあるPage3のメモリが基本スロットにあること」になります。<BR>
+		　ちなみにGALAXIANが起動する構成になっているときに、追加で空きスロットにMSX-DOS2をセットすると（当然ながら？）プライマリメモリが#3-0になってしまうのでGALAXIANが起動しなくなります。<BR>
+		<BR>
+		<BR>
+		・おまけ１<BR>
+		　Step 3で [64 kB] の外部RAMカートリッジを選んでいるのは、[16 kB] はPage2用, [32 kB] はPage0-1用, [48 kB] はPage2用の増設メモリなのでPage3のメモリにならないからです。 [64 kB] はPage0-3用になります。本体にはメモリが最低でもPage3に搭載されているので、外部RAMカートリッジとしてはPage3用に作る意味があまりないためです。念のためPage3にだけRAMを置いて確認してみます。<BR></B>
+		Step 6: スロット#1にGALAXIANをセット<BR>
+		Step 7: スロット#2の [64 kB] の外部RAMカートリッジを取り外す<BR>
+		Step 8: [ツール] - [マシン構成編集] - [メモリ] で先ほどスロット#1に追加したMSX-DOS2を削除<BR>
+		Step 9: [ツール] - [マシン構成編集] - [メモリ] - [追加] でスロット#2に [Normal RAM] をサイズ [16 kB] で追加<BR>
+		<IMG src="image/ram16kb.png" alt="内蔵RAM16kB追加"><BR>
+		<BR>
+		<B>
+		　[マシン構成編集] は本体の構成なのでここで設定するRAMは内蔵RAMでPage3に設定されます。この設定でもGALAXIANが起動しますので、Page3のプライマリRAMが基本スロットであればよく、準備するのは16kBのメモリでも良いということになります。外部RAMカートリッジでPage3にメモリが載っているのは、結局64kB以上の外部RAMカートリッジ（メモリマッパ含む）ということになりますが。<BR>
+		<BR>
+		　ついでに・・・「プライマリメモリが基本スロットにあれば、FFFFhの拡張スロットレジスタが破壊されても問題ない」という話もありましたが、正しくは「Page3に割り当てられているスロットが基本スロットの場合、FFFFhに拡張スロット選択レジスタが存在しないので問題ない」ということになるかと思います。拡張スロット選択レジスタは各基本スロット毎に、スロットが拡張されている場合にのみ存在し、Page3に当該スロットが割り当てられない限り、拡張スロット選択レジスタは表に出てきません。<BR></B>
+		Step10: スロット#1のGALAXIANを取り出して再起動（BASIC起動）<BR>
+		BASIC画面で下記を実行（FFFFh=拡張スロット選択レジスタ?の書き込み＆読み込み）<BR>
+		　10 POKE 65535,0<BR>
+		　20 PRITN PEEK(65535)<BR>
+		<IMG src="image/exslot-1.png" alt="拡張スロット選択レジスタ1"><BR>
+		<BR>
+		<B>
+		　この状態（Page3がStep 9で設定したスロット#2）では、FFFFh=65535に書いた値がそのまま読めており、拡張スロット選択レジスタがないことが分かります。次にスロット#2のメモリをなくし、プライマリメモリを#3-0にしてみます。<BR></B>
+		Step11:  [ツール] - [マシン構成編集] - [メモリ] でスロット#2の [2 C000-FFFF  16 kB Normal RAM] を削除して再起動（BASIC起動）<BR>
+		BASIC画面で下記を実行（FFFFh=拡張スロット選択レジスタの書き込み＆読み込み）<BR>
+		　10 POKE 65535,0<BR>
+		　20 PRITN PEEK(65535)<BR>
+		<IMG src="image/exslot-2.png" alt="拡張スロット選択レジスタ2"><BR>
+		<BR>
+		<B>
+		　今度は書かれた値が反転して読めていますので、拡張スロット選択レジスタがあることが分かります。<BR>
+		<BR>
+		<BR>
+		・おまけ２<BR>
+		　この実験のために私が購入したGALAXIANは後期版だったようで、スタックポインタの初期値がFFFFhでした。<BR>
+		<IMG src="image/glx_dmp.png" alt="GALAXIANダンプ"><BR>
+		<BR>
+		　裏面を見てみると、古い住所（蒲田）でしたので、新しい住所のGALAXIANであれば問題が修正されている可能性がかなり高いと思われます。<BR>
+		<IMG src="image/galax-2.jpg" alt="GALAXIAN裏"><BR>
+		<BR>
+		<BR>
+		・おまけ３<BR>
+		　64kB以上の外部RAMカートリッジ（メモリマッパ含む）というのもなかなか入手しづらいので、比較的安価な16kBの外部RAMカートリッジを改造してなんとかできないかを検討してみました。<BR>
+		<BR>
+		　一番簡単なのはCASIOのOR-216です。<BR>
+		<IMG src="image/casio16k.jpg" alt="CASIO OR-216基板1"><BR>
+		<BR>
+		　回路を見てみると・・・<BR>
+		<IMG src="image/cas16sch.png" alt="CASIO OR-216回路図1"><BR>
+		<BR>
+		　A15とA14でPageが決まるので、見るポイントはそこです。16kBの外部RAMカートリッジはPage2用なので、A15, A14が1,0の時に動作するような回路になっているはずです。<BR>
+		<IMG src="image/cas16-1.png" alt="CASIO OR-216回路図2"><BR>
+		<BR>
+		　IC2の3入力NANDゲートに"/SLTSL"と"A14の反転"と"A15"が入っており、"A14の反転"の代わりに"A14"が入るようにすれば良いことが分かります。基板には半田でジャンパしている所があり、そこを切り替えれば簡単にPage3に16kBのRAMを配置する改造ができます。<BR>
+		<IMG src="image/cas16-2.jpg" alt="CASIO OR-216基板2"><BR>
+		<BR>
+		<BR>
+		　あとはどれも同じくらいの難易度になりますが、次はNATIONALのCF2131。<BR>
+		<IMG src="image/nat16k.jpg" alt="NATIONAL CF2131基板1"><BR>
+		<BR>
+		　回路を見てみると・・・<BR>
+		<IMG src="image/nat16sch.png" alt="NATIONAL CF2131回路図1"><BR>
+		<BR>
+		　同様にA15とA14を確認すると、IC7のNANDゲートに"A14の反転"と"A15"が入っていることが分かります。<BR>
+		<IMG src="image/nat16-1.png" alt="NATIONAL CF2131回路図2"><BR>
+		<BR>
+		　IC9の出力10ピンをカットし、ICの11ピンとIC7の13ピンをつなげればPage3に16kBのRAMを配置する改造ができます。<BR>
+		<IMG src="image/nat16-2.png" alt="NATIONAL CF2131回路図3"><BR>
+		<IMG src="image/nat16-3.jpg" alt="NATIONAL CF2131基板2"><BR>
+		<BR>
+		<BR>
+		　次はSONYのHBM-16。<BR>
+		<IMG src="image/son16k.jpg" alt="SONY HBM-16基板1"><BR>
+		<BR>
+		　回路を見てみると<BR>
+		<IMG src="image/son16sch.png" alt="SONY HBM-16回路図1"><BR>
+		<BR>
+		　同様にA15とA14を確認すると、IC3のNANDゲートに"A14の反転"と"A15"が入っていることが分かります。<BR>
+		<IMG src="image/son16-1.png" alt="SONY HBM-16回路図2"><BR>
+		<BR>
+		　同じIC3のNANDゲートを使ってA14を反転しているので、IC3の出力3ピンをカットし、IC3の2ピンと4ピンをつなげればPage3に16kBのRAMを配置する改造ができます。<BR>
+		<IMG src="image/son16-2.png" alt="SONY HBM-16回路図3"><BR>
+		<IMG src="image/son16-3.jpg" alt="SONY HBM-16基板2"><BR>
+		<BR>
+		<BR>
+		　最後はAddcomのADMSM301。<BR>
+		<IMG src="image/add16k.jpg" alt="Addcom ADMSM301基板1"><BR>
+		<BR>
+		　16-48kBまで対応していますが、当然ながらPage3には対応していません。実際にRAMが乗っているのはIC8とIC11です。<BR>
+		<IMG src="image/add16sch.png" alt="Addcom ADMSM301回路図1"><BR>
+		<BR>
+		　同様にA15とA14を確認すると、IC5のDECODERでPage0-2の信号を作っていることが分かります。<BR>
+		<IMG src="image/add16-1.png" alt="Addcom ADMSM301回路図2"><BR>
+		<BR>
+		　IC5ではPage3用の信号も出力されるので、Page2用の3ピン出力の代わりにPage3用の4ピン出力を使えばOKです。具体的にはIC5の3ピンをカットし、基板上でIC5の3ピンにつながっていたスルーホールとIC5の4ピンをつなげればPage3に16kBのRAMを配置する改造ができます。<BR>
+		<IMG src="image/add16-2.png" alt="Addcom ADMSM301回路図3"><BR>
+		<IMG src="image/add16-3.jpg" alt="Addcom ADMSM301基板2"><BR>
+		<BR>
+		<BR>
+		　元ネタとして参考にさせて頂いたTINY野郎様、イノウマ様、解析に協力してくださったにがさんに感謝致します。<BR>
+		<BR>
+		　お約束ですが、この噂を見て改造などを行い故障やその他問題が発生しても責任は負えません。各自の責任において情報を広く集めて行うことをおすすめします。
+		</B>
+	</BODY>
+</HTML>

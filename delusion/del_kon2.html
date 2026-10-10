@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		コナミのソフトの秘密 その2
+		<BR>
+		</FONT>
+		　コナミのROMソフトは、2本挿すと特別な機能が有効になることがあるのは有名です。読みやすくまとまっているのは英語ですがBlueMSXのサイトあたりでしょうか。<BR>
+		・<A href="http://www.msxblue.com/manual/romcombis_c.htm" target="_blank">ゲーム2本挿し</A><BR>
+		・<A href="http://www.msxblue.com/manual/gamemaster1_c.htm" target="_blank">ゲームを10倍たのしむカートリッジーム2本挿し</A><BR>
+		・<A href="http://www.msxblue.com/manual/gamemaster2_c.htm" target="_blank">新10倍カートリッジ</A><BR>
+		<BR>
+		　コナミのROMソフトはRC7xx（xxは2桁の数字）という形式の型番がついています。一部のソフトではスロットの4012hに「07 xx」と書かれており、ソフトを判別することが可能です。<BR>
+		<BR>
+		　2021年になり、スペインのMSX Userである<A href="https://x.com/ManuelPazosMSX/status/1437082245114867715" target="_blank">Manuel Pazosさんが新たな発見をしました。</A><BR>例の（？）<A href="del_yie1.html">イー・アル・カンフーの秘密</A>に関連して、イー・アル・カンフー及びイー・アル・カンフー２のROMイメージを比べていて気づいたとのことです。<BR>
+		<BR>
+		　こちらがいわゆる初期版のイー・アル・カンフーのROMイメージの最後<BR>
+		　<IMG src="image/yakf-b.png" alt="イー・アル・カンフー初期版"><BR>
+		最後にYIE AR KUNG FUという文字列が入っています。<BR>
+		<BR>
+		　一方、後期版のイー・アル・カンフーのROMイメージの最後は・・・<BR>
+		　<IMG src="image/yakf-a.png" alt="イー・アル・カンフー後期版"><BR>
+		YIE AR KUNG FUという文字列がなくなっています。
+		<BR>
+		　イー・アル・カンフー２ではどうなっているかというと・・・<BR>
+		　<IMG src="image/yakf-2.png" alt="イー・アル・カンフー２"><BR>
+		　読める文字列ではなくなっていますが、最後の部分の水色の下線部分がイー・アル・カンフーと同じであることに気づきます。さらに赤の下線部分32hは通常ASCIIコードで数字の"２"を示す事を考えると、大体読めてきて・・・"2 ｰﾌﾝｶ･ﾙｱ･ｰｲ"を示すのではないか・・・という推測に至ったようです。<BR>
+		　その右の緑の下線部分はそこより左にあるFFhまでのバイト数、その右の紫の下線部分の数字は、RC7xxのxx部分と一致しているようです。<BR>
+		<BR>
+		　例えばｸﾞﾗﾃﾞｨｳｽだと・・・<BR>
+		　<IMG src="image/gradius.png" alt="グラディウス"><BR>
+		<BR>
+		　調べてみたところ、この文字列？が入っているのか下記のソフトでした。バージョン違いによってはもっとあるのかも知れません。3FF0hまたは7FF0h付近に入っているようです。<BR>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD>RCxxx</TD>
+				<TD>ソフト名</TD>
+				<TD>文字列</TD>
+				<TD>コメント</TD>
+			</TR>
+			<TR>
+				<TD>RC701</TD>
+				<TD>けっきょく南極大冒険</TD>
+				<TD>ｹｯｷｮｸ ﾅﾝｷｮｸ ﾀﾞｲﾎﾞｳｹﾝ</TD>
+				<TD>文字列が無いバージョンもある。</TD>
+			</TR>
+			<TR>
+				<TD>RC703</TD>
+				<TD>タイムパイロット</TD>
+				<TD>ﾀｲﾑ ﾊﾟｲﾛｯﾄ</TD>
+				<TD>文字列が無いバージョンもある。</TD>
+			</TR>
+			<TR>
+				<TD>RC706</TD>
+				<TD>ビデオハスラー</TD>
+				<TD>ﾋﾞﾃﾞｵﾊｽﾗｰ</TD>
+				<TD>文字列が無いバージョンもある。</TD>
+			</TR>
+			<TR>
+				<TD>RC714</TD>
+				<TD>ぽんぽこパン</TD>
+				<TD>COMIC BAKERY</TD>
+				<TD>"COMIC BAKERY"が逆順で入っている。文字列が無いバージョンもある。</TD>
+			</TR>
+			<TR>
+				<TD>RC718</TD>
+				<TD>ハイパーラリー</TD>
+				<TD>ﾊｲﾊﾟｰﾗﾘｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC724</TD>
+				<TD>コナミのベースボール</TD>
+				<TD>ﾔｷｭｳ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC725</TD>
+				<TD>イー・アル・カンフー</TD>
+				<TD>ｲｰ･ｱﾙ･ｶﾝﾌｰ</TD>
+				<TD>"YIE AR KUNG FU"がそのまま入っているバージョンもある。</TD>
+			</TR>
+			<TR>
+				<TD>RC727</TD>
+				<TD>王家の谷</TD>
+				<TD>ｵｳｹﾉﾀﾆ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC728</TD>
+				<TD>モピレンジャー</TD>
+				<TD>ﾓﾋﾟﾚﾝｼﾞｬｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC729</TD>
+				<TD>ピポルス</TD>
+				<TD>ﾋﾟﾎﾟﾙｽ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC730</TD>
+				<TD>ロードファイター</TD>
+				<TD>ﾛｰﾄﾞ ﾌｧｲﾀｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC731</TD>
+				<TD>コナミのピンポン</TD>
+				<TD>ｺﾅﾐ ﾉ ﾋﾟﾝﾎﾟﾝ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC732</TD>
+				<TD>コナミのサッカー</TD>
+				<TD>ｺﾅﾐ ﾉ ｻｯｶｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC733</TD>
+				<TD>ハイパースポーツ３</TD>
+				<TD>ﾊｲﾊﾟｰ ｽﾎﾟｰﾂ 3</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC734</TD>
+				<TD>グーニーズ</TD>
+				<TD>ｸﾞｰﾆｰｽﾞ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC735</TD>
+				<TD>コナミのゲームを10倍楽しむカートリッジ</TD>
+				<TD>10 ﾊﾞｲ ﾀﾉｼﾑ ｶｰﾄﾘｯｼﾞ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC736</TD>
+				<TD>コナミのボクシング</TD>
+				<TD>ｺﾅﾐ ﾉ ﾎﾞｸｼﾝｸﾞ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC737</TD>
+				<TD>イー・アル・カンフー２</TD>
+				<TD>ｲｰ･ｱﾙ･ｶﾝﾌｰ 2</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC739</TD>
+				<TD>魔城伝説</TD>
+				<TD>ﾏｼﾞｮｳﾃﾞﾝｾﾂ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC740</TD>
+				<TD>ツインビー</TD>
+				<TD>ﾂｲﾝﾋﾞｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC741</TD>
+				<TD>新世SIZER</TD>
+				<TD>ｼﾝｾｻｲｻﾞｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC742</TD>
+				<TD>グラディウス</TD>
+				<TD>ｸﾞﾗﾃﾞｨｳｽ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC743</TD>
+				<TD>夢大陸アドベンチャー</TD>
+				<TD>ﾕﾒﾀｲﾘｸ ｱﾄﾞﾍﾞﾝﾁｬｰ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC746</TD>
+				<TD>Ｑバート</TD>
+				<TD>ｷｭｰﾊﾞｰﾄ</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>RC748</TD>
+				<TD>がんばれゴエモン！からくり道中</TD>
+				<TD>ｶﾞﾝﾊﾞﾚｺﾞｴﾓﾝ</TD>
+				<TD>文字の割り当ては異なる。</TD>
+			</TR>
+			<TR>
+				<TD>RC749</TD>
+				<TD>魔城伝説II ガリウスの迷宮</TD>
+				<TD>ｶﾞﾘｳｽﾉﾒｲｷｭｳ</TD>
+				<TD>文字の割り当ては異なる。</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		　この文字の割り当てを表にするとこんな感じになります。黄色は実際に使われている文字でそれ以外は推測です。<BR>
+		　<IMG src="image/kon-tbl1.png" alt="表１"><BR>
+		<BR>
+		　イー・アル・カンフーの初期版以外にも、微妙に違う法則のソフトもあります。<BR>
+		　ぽんぽこパン（英語名：COMIC BAKERY）はASCII文字列で「COMIC BAKERY」が逆順に入っています。<BR>
+		　<IMG src="image/ponpoko.png" alt="ぽんぽこパン"><BR>
+		<BR>
+		　がんばれゴエモン！からくり道中はなぜか文字の割り当てが異なります。黄色は実際に使われている文字でそれ以外は推測です。<BR>
+		　<IMG src="image/kon-tbl2.png" alt="表２"><BR>
+		<BR>
+		　魔城伝説II ガリウスの迷宮もなぜか文字の割り当てが異なります。黄色は実際に使われている文字でそれ以外は推測です。<BR>
+		　<IMG src="image/kon-tbl3.png" alt="表３"><BR>
+		<BR>
+		　上記以外のソフトで同様に文字列が入っているバージョンのROMがあれば情報をいただけると幸いです。<BR>
+		　元ネタとして参考にさせて頂いたMr.Manuel Pazosに感謝致します。<BR>
+		　I would like to thank Mr. Manuel Pazos for the original information.<BR>
+		</B>
+	</BODY>
+</HTML>

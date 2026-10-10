@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		I want more !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		１．はじめに
+		<BR>
+		</FONT>
+		　ここでは、難易度の低いTAS-1M016SもしくはTAS-1M008Sという基板を使用したROMゲームに手を加えて似非RAMを作る方法を紹介します。RAM容量は512kByteまたは1MByte(1024kByte)です。この基板には、1Mbit(128kByte)のROMが載っており、TAS-1M016S では16kB単位、TAS-1M008Sでは8kB単位でメモリを管理しています。似非RAMでは8kB単位でメモリを管理します。この基板にはASC1タイプと呼ばれるメガロムコントローラLZ93A13が搭載されています。
+		<BR>
+		<BR>
+		■必要な材料
+		<TABLE border="2" bordercolor="#0000FF" width="100%">
+			<TR>
+				<TD>品名</TD>
+				<TD>数量</TD>
+				<TD>備考</TD>
+			</TR>
+			<TR>
+				<TD>ROMゲーム</TD>
+				<TD>1</TD>
+				<TD>基板が<A href="image/1m-16s.jpg">TAS-1M016S</A>
+				か<A href="image/1m-08s.jpg">TAS-1M008S</A>であること</TD>
+			</TR>
+			<TR>
+				<TD>SRAM 628512</TD>
+				<TD>1〜2</TD>
+				<TD>DIPタイプ。1個で512kB、2個で1024kB（1MB）になります。8bit入出力の4Mbit SRAM。</TD>
+			</TR>
+			<TR>
+				<TD>74LS139</TD>
+				<TD>1</TD>
+				<TD>DIPタイプ。HC139でも可。</TD>
+			</TR>
+			<TR>
+				<TD>抵抗 10KΩ</TD>
+				<TD>2〜3</TD>
+				<TD>SRAMの数+1個(切り離しスイッチ用)を用意してください。</TD>
+			</TR>
+			<TR>
+				<TD>ダイオード 1S1588</TD>
+				<TD>1</TD>
+				<TD>まぁ、適当です。</TD>
+			</TR>
+			<TR>
+				<TD><A href="image/cap.jpg">電気二重層コンデンサ</A></TD>
+				<TD>1</TD>
+				<TD>1.0Fあると安心。写真には2種類写っていますが使うのは1個です。</TD>
+			</TR>
+			<TR>
+				<TD><A href="image/3pin.jpg">3ピンスイッチ</A></TD>
+				<TD>1</TD>
+				<TD>SRAM切り離し用です。</TD>
+			</TR>
+			<TR>
+				<TD>配線材</TD>
+				<TD>適量</TD>
+				<TD>細い方が便利。</TD>
+			</TR>
+			<TR>
+				<TD>その他</TD>
+				<TD>適量</TD>
+				<TD>付録に収録したようなスイッチ追加、電池化を行うならそれに応じて準備。</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<A href="esr_2.html" target="_self">
+			<IMG src="../image/go.png" alt="次へ">
+			次へ
+		</A>
+		<BR>
+		</B>
+	</BODY>
+</HTML>

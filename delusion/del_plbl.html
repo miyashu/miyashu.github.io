@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+﻿<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		Everything is my delusion !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		プレイボールの秘密
+		<BR>
+		</FONT>
+		　MSXで音声を再生をするソフトとしては、牌の魔術師や魔導物語が有名ですが、どのくらいのソフトが音声合成をしていたのでしょうか。ちょっとだけ調べてみました。専用ICを使うものは比較的調べやすいのですが、特にディスク版のソフトでPSGを使っているものは分からないものが多いです。情報をお持ちの方はお教えください。<BR>
+		　ジャストの「天使たちの午後II」「Deringer」等でジャストサウンド（プリンタポートに接続する専用のPCMハードウェア）に対応しているという話もありますが、確認が取れていないのでリストには載せていません。<BR>
+		　ちなみに当時は「音声合成」と呼んでいましたが、基本的には録音した音声データをPSGやその他の音楽用のデバイスを使って鳴らすもので、PCMやADPCMの技術を使った「音声再生」という言い方が近いのかも知れません。最近では「音声合成」というのは初音ミク等に代表されるような、元となるデータを変形または合成して本来のデータに無い音声 (言葉等) を発声させるものなので、技術的にはもう少し進んだものを意味しているようです。<BR>
+		</B>
+		<BR>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD>発売日</TD>
+				<TD>ソフト名</TD>
+				<TD>メーカー</TD>
+				<TD>メディア</TD>
+				<TD>技術</TD>
+				<TD>備考</TD>
+			</TR>
+			<TR>
+				<TD>1984/08頃?</TD>
+				<TD>忍者・影</TD>
+				<TD>ハドソン<BR>アスキー</TD>
+				<TD>ROM 16kB</TD>
+				<TD>PSG</TD>
+				<TD>開始時に「影参上！」クリア時に「さらばじゃ！」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1984/09頃?</TD>
+				<TD>インディアンの冒険</TD>
+				<TD>ハドソン<BR>アスキー</TD>
+				<TD>ROM 16kB</TD>
+				<TD>PSG</TD>
+				<TD>カードを取ったときに「どうした、どうした」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1984/11頃?</TD>
+				<TD>ファイヤーレスキュー</TD>
+				<TD>ハドソン</TD>
+				<TD>ROM 16kB</TD>
+				<TD>PSG</TD>
+				<TD>「火事だ！火事だ！助けて！」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1984/11/21</TD>
+				<TD>スゥーワーサム</TD>
+				<TD>東芝EMI</TD>
+				<TD>ROM 32kB</TD>
+				<TD>PSG</TD>
+				<TD>ColecoVisionという海外のゲーム機からの移植。トーキーズ・シリーズ１とのことですが２以降は不明。穴に落ちると「うわー」と叫ぶ、あとは「Ah...」「Oh, No!」「Ouch!」等としゃべるらしい？</TD>
+			</TR>
+			<TR>
+				<TD>1984/12頃?</TD>
+				<TD>ボスコニアン</TD>
+				<TD>ナムコ</TD>
+				<TD>ROM 16kB</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1985/09頃?</TD>
+				<TD>プロテクター</TD>
+				<TD>PONYCA</TD>
+				<TD>ROM 16kB</TD>
+				<TD>PSG</TD>
+				<TD>面？をクリアしたときに "アチョー" としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1985/12/21</TD>
+				<TD>ポリスストーリー</TD>
+				<TD>PONYCA</TD>
+				<TD>ROM 32kB</TD>
+				<TD>PSG</TD>
+				<TD>次の部屋に行くときに "アチョー" としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1986/01/22</TD>
+				<TD>レイドック</TD>
+				<TD>T&E SOFT</TD>
+				<TD>3.5" 1DD x1</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1986/02頃?</TD>
+				<TD>ザ・コックピット</TD>
+				<TD>ニデコ</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>最初に "Get Ready" としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1986/09</TD>
+				<TD>新世SIZER</TD>
+				<TD>コナミ</TD>
+				<TD>ROM 32kB</TD>
+				<TD>8bit PCM, DAC搭載</TD>
+				<TD>音声再生はありませんが、DAC搭載なので一応。</TD>
+			</TR>
+			<TR>
+				<TD>1986/10/21</TD>
+				<TD>プレイボール</TD>
+				<TD>SONY</TD>
+				<TD>ROM 32kB</TD>
+				<TD>専用IC (ADPCM)</TD>
+				<TD>専用ICを使ったソフトとしてはこれが初？</TD>
+			</TR>
+			<TR>
+				<TD>1986/11</TD>
+				<TD>HB-F1</TD>
+				<TD>SONY</TD>
+				<TD>MSX2本体</TD>
+				<TD>PSG</TD>
+				<TD>起動時に"Y"と"P"キーを押しっぱなしにしていると、スタッフスクロールが始まり、最後に「It's a SONY!」喋ります。</TD>
+			</TR>
+			<TR>
+				<TD>1986/11</TD>
+				<TD>迷宮神話</TD>
+				<TD>HAL研究所</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>タイトルで「迷宮神話」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1986/11</TD>
+				<TD>スーパーランボースペシャル</TD>
+				<TD>パック・イン・ビデオ</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>やられると「うわぁ！」と叫びます。ゲーム中勝手についてくる女兵士が死ぬと，「あっ…」と，ちょっと色っぽい悲鳴をあげます。</TD>
+			</TR>
+			<TR>
+				<TD>1986/12</TD>
+				<TD>The Black Onix II</TD>
+				<TD>BPS/アスキー</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>タイトル画面で「Search for The fire Crystal」と、いかにもPSGの音声合成っぽくしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/03頃?</TD>
+				<TD>雀友</TD>
+				<TD>テクノソフト</TD>
+				<TD>ROM 32kB</TD>
+				<TD>PSG</TD>
+				<TD>「リーチ！」「ロン！」などとしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/04/28</TD>
+				<TD>ウィングマン２</TD>
+				<TD>ENIX</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>変身時に"チェイング！"としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/04末頃</TD>
+				<TD>DAIVA アスラの血流 (MSX1)</TD>
+				<TD>T&E SOFT</TD>
+				<TD>ROM 256kB</TD>
+				<TD>PSG</TD>
+				<TD>WARDATAにLAYDOCKと入れると、スーパーレイドックのデモが始まりしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/07頃?</TD>
+				<TD>MSX Audio</TD>
+				<TD>Panasonic</TD>
+				<TD>専用カートリッジ</TD>
+				<TD>Y8950 (ADPCM)</TD>
+				<TD>1988/06頃発売の「エンペラー(皇帝)の女たち」でADPCMを使って音声を再生しているようです。</TD>
+			</TR>
+			<TR>
+				<TD>1987/07/18</TD>
+				<TD>スーパーレイドック</TD>
+				<TD>T&E SOFT</TD>
+				<TD>ROM 256kB</TD>
+				<TD>PSG</TD>
+				<TD>オープニングデモでしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/09/21</TD>
+				<TD>ハードボール</TD>
+				<TD>SONY</TD>
+				<TD>ROM 128kB</TD>
+				<TD>専用IC (ADPCM)</TD>
+				<TD>別スロットにプレイボールを挿入するとプレイボールの専用ICを使ってしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/10</TD>
+				<TD>怒・ＩＫＡＲＩ</TD>
+				<TD>SNK</TD>
+				<TD>ROM 256kB</TD>
+				<TD>PSG</TD>
+				<TD>やられると「うわあ！」と叫びます。</TD>
+			</TR>
+			<TR>
+				<TD>1987/12</TD>
+				<TD>アシュギーネ 虚空の牙城</TD>
+				<TD>T&E SOFT</TD>
+				<TD>ROM 256kB</TD>
+				<TD>PSG</TD>
+				<TD>オープニングデモが流れた後のタイトル画面で「アシュギーネ」と、これまたいかにもPSGの音声合成っぽくしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1987/12頃?</TD>
+				<TD>リバイバー</TD>
+				<TD>アルシスソフトウェア</TD>
+				<TD>3.5" 2DD x2</TD>
+				<TD>PSG</TD>
+				<TD>開始直後の敵？がしゃべったりします。。</TD>
+			</TR>
+			<TR>
+				<TD>1988/03上旬</TD>
+				<TD>ダイナマイトボウル</TD>
+				<TD>TOEMILAND</TD>
+				<TD>ROM 128kB</TD>
+				<TD>PSG</TD>
+				<TD>MSX(1)版のみ。1987/09/25発売のMSX2版では音声再生しません。</TD>
+			</TR>
+			<TR>
+				<TD>1988/04/01</TD>
+				<TD>魔神宮</TD>
+				<TD>ザインソフト</TD>
+				<TD>3.5" 2DD x1</TD>
+				<TD>PSG</TD>
+				<TD>タイトル画面で「魔神宮」, 敵エンカウント時に「敵だ！」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1988/05/25</TD>
+				<TD>燃えろ!!熱闘野球'88</TD>
+				<TD>ジャレコ</TD>
+				<TD>ROM 128kB</TD>
+				<TD>専用IC (ADPCM)</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1987/06上旬</TD>
+				<TD>エンペラー(皇帝)の女たち</TD>
+				<TD>オメガシステム</TD>
+				<TD>3.5" 2DDx2</TD>
+				<TD>MSX-AUDIO (ADPCM)</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1988/06上旬</TD>
+				<TD>一石にかける青春</TD>
+				<TD>ログ</TD>
+				<TD>3.5" 2DDx2</TD>
+				<TD>ボイスボックス（プリンタポートに接続する専用のADPCMハードウェア）</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1988/08頃?</TD>
+				<TD>あかんべドラゴン</TD>
+				<TD>ウィンキーソフト</TD>
+				<TD>3.5" 2DD x1</TD>
+				<TD>PSG</TD>
+				<TD>戦闘開始時等にしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1988/08下旬</TD>
+				<TD>亜紀とつかさの不思議の壁</TD>
+				<TD>NEW SYSTEM HOUSE OH!</TD>
+				<TD>3.5" 2DDx2</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1988/11/11</TD>
+				<TD>ぎゅわんぶらあ自己中心派</TD>
+				<TD>ゲームアーツ</TD>
+				<TD>ROM 256kB</TD>
+				<TD>MSX Music</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1988/11/19</TD>
+				<TD>レイドック２</TD>
+				<TD>T&E SOFT</TD>
+				<TD>3.5" 2DD x2</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1988/12頃?</TD>
+				<TD>とーくまん</TD>
+				<TD>エミールソフト</TD>
+				<TD>ROM + 3.5" 2DD x1</TD>
+				<TD>独自PCM</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/01/27</TD>
+				<TD>ゴーファーの野望 エピソードII</TD>
+				<TD>コナミ</TD>
+				<TD>ROM 256kB</TD>
+				<TD>SCC</TD>
+				<TD>バッドエンディングでヴェノムが笑います。</TD>
+			</TR>
+			<TR>
+				<TD>1989/02中旬</TD>
+				<TD>牌の魔術師</TD>
+				<TD>コナミ</TD>
+				<TD>ROM 128kB</TD>
+				<TD>8bit PCM, DAC搭載</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/04/21</TD>
+				<TD>ぎゅわんぶらあ自己中心派２</TD>
+				<TD>ゲームアーツ</TD>
+				<TD>ROM 256kB</TD>
+				<TD>MSX Music</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/05上旬</TD>
+				<TD>KUMIKO</TD>
+				<TD>NEW SYSTEM HOUSE OH!</TD>
+				<TD>3.5" 2DDx1</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/05上旬</TD>
+				<TD>NORIKO</TD>
+				<TD>NEW SYSTEM HOUSE OH!</TD>
+				<TD>3.5" 2DDx1</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/05上旬</TD>
+				<TD>KYOKO</TD>
+				<TD>NEW SYSTEM HOUSE OH!</TD>
+				<TD>3.5" 2DDx1</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/08/30</TD>
+				<TD>激突ペナントレース２</TD>
+				<TD>コナミ</TD>
+				<TD>ROM 128kB</TD>
+				<TD>SCC</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/11/07</TD>
+				<TD>魔導物語</TD>
+				<TD>COMPILE</TD>
+				<TD>3.5" 2DD x1?</TD>
+				<TD>PSG</TD>
+				<TD>ディスクステーションSPECIAL クリスマス号(#SP5)に収録。</TD>
+			</TR>
+			<TR>
+				<TD>1989/11/21</TD>
+				<TD>プロ野球ファミリースタジアム ペナントレース</TD>
+				<TD>ナムコ</TD>
+				<TD>ROM 256kB</TD>
+				<TD>PSG</TD>
+				<TD>コンパイルの技術でしゃべりますが、その為テンポが悪くなっています。</TD>
+			</TR>
+			<TR>
+				<TD>1989/11/24</TD>
+				<TD>アレスタ２</TD>
+				<TD>COMPILE</TD>
+				<TD>3.5" 2DD x3</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1989/12中旬</TD>
+				<TD>妖魔降臨</TD>
+				<TD>日本デクスタ</TD>
+				<TD>3.5" 2DD x1</TD>
+				<TD>PSG</TD>
+				<TD>ボス戦の前に「これで勝ったつもりか！」等しゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1990/04/20</TD>
+				<TD>ルーンマスターII</TD>
+				<TD>COMPILE</TD>
+				<TD>3.5" 2DD x2</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1990/06/15</TD>
+				<TD>魔導物語1-2-3</TD>
+				<TD>COMPILE</TD>
+				<TD>3.5" 2DD x4</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>1990/10/15</TD>
+				<TD>FS-A1ST</TD>
+				<TD>Panasonic</TD>
+				<TD>MSX turbo R本体</TD>
+				<TD>turbo R内蔵PCM</TD>
+				<TD>内蔵ワープロが音声ガイドしてくれます。</TD>
+			</TR>
+			<TR>
+				<TD>1990/12/06</TD>
+				<TD>FRAY サーク外伝</TD>
+				<TD>マイクロキャビン</TD>
+				<TD>3.5" 2DD x5</TD>
+				<TD>turbo R内蔵PCM</TD>
+				<TD>turbo R版のみ。MSX2版では音声再生しません。</TD>
+			</TR>
+			<TR>
+				<TD>1990/12/14</TD>
+				<TD>フリートコマンダーII</TD>
+				<TD>アスキー</TD>
+				<TD>ROM 256kB</TD>
+				<TD>8bit PCM, DAC搭載</TD>
+				<TD>再生できるハードウェアなのに特に何かを再生している様子無し？</TD>
+			</TR>
+			<TR>
+				<TD>1990/12/23</TD>
+				<TD>シードオブドラゴン</TD>
+				<TD>リバーヒルソフト</TD>
+				<TD>3.5" 2DD x3 </TD>
+				<TD>turbo R内蔵PCM</TD>
+				<TD>オープニングで、FM音源のBGMを流しつつPCMでナレーションがしゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1991/10/15</TD>
+				<TD>笑ゥせぇるすまん</TD>
+				<TD>コンパイル</TD>
+				<TD>3.5" 2DD x2 </TD>
+				<TD>PSG</TD>
+				<TD>喪黒福造がアニメと同じく「ドーン！」としゃべります。</TD>
+			</TR>
+			<TR>
+				<TD>1991/11/1</TD>
+				<TD>FS-A1GT</TD>
+				<TD>Panasonic</TD>
+				<TD>MSX turbo R本体</TD>
+				<TD>turbo R内蔵PCM</TD>
+				<TD>内蔵ワープロが音声ガイドしてくれます。</TD>
+			</TR>
+			<TR>
+				<TD>1992/05/14</TD>
+				<TD>プリンセスメーカー</TD>
+				<TD>マイクロキャビン</TD>
+				<TD>3.5" 2DD x7</TD>
+				<TD>PSG</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>2015/04頃?</TD>
+				<TD>SD Cartridge - SD Drive + Covox</TD>
+				<TD>Repro Factory</TD>
+				<TD>SDカードカートリッジ兼Covox</TD>
+				<TD>8bit PCM, DAC搭載</TD>
+				<TD>最近のハードですが、Covox自体は1986年の規格？のようです。Covoxはジャストサウンドと同じくプリンタポートに接続するDACですが、Covoxの方が古いです。</TD>
+			</TR>
+			<TR>
+				<TD>2016/04/25</TD>
+				<TD>只PCM</TD>
+				<TD>にがさん</TD>
+				<TD>プリンタポート接続DAC</TD>
+				<TD>8bit PCM, DAC搭載</TD>
+				<TD>大容量メモリの活用方法を考えている時にフリートコマンダーIIにDACが搭載されていることを発見し、思いついたものです。Covoxやジャストサウンドの存在すら知りませんでしたが、偶然なのか安価なソリューションとして必然だったのか、ほぼ同じハードです。</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<BR>
+		<B>
+		　この他に、ジャストの「天使たちの午後2」や「デリンジャー」あたりがジャストサウンドというプリンタポートに接続する専用のPCMハードウェアに対応しているという噂もありますが、確認が出来ていません。<BR>
+		<BR>
+		　専用チップを搭載したものとしてはSONYから発売されたプレイボールのようです。基板を見てみるとこんな感じで、NECのD7756Cが音声を出力しているようです。このチップについて調べてみたところ、どうやらファミリーコンピュータで発売された「燃えろ!!プロ野球」で使われたものと同じものでした。<BR>
+		<BR>
+		<IMG src="image/playball.jpg" alt="プレイボール"><BR>
+		<BR>
+		　ファミリーコンピュータの「燃えろ!!プロ野球」は1987年 6月26日発売ですので、MSXのプレイボールの方が先に発売しています。真似たと言うより、その頃にNECが色んな会社に売り込んでいたのでしょう。ちなみにファミリーコンピュータの音声再生はサン電子の「水戸黄門」が最初という噂もあります。ただ、1987年 8月11日発売ならば「燃えろ!!プロ野球」より後になります。「水戸黄門」は専用チップは使っておらず、PSGでの再生のようです。話を戻しますと、「燃えろ!!プロ野球」がMSXに移植されたものが「燃えろ!!熱闘野球'88」です。基板はこんな感じです。<BR>
+		<BR>
+		<IMG src="image/moepro88.jpg" alt="燃えろ!!熱闘野球'88"><BR>
+		<BR>
+		　音声出力部分もそれ以外も、回路としてはプレイボールの方がかなり複雑になっています。音声出力部の省略しましたが、PD7756C周辺の回路はこんな感じです。<BR>
+		<BR>
+		「プレイボール回路」の回路<BR>
+		　簡単に説明しますと、BFFFhへの書き込みがPD7756Cへの書き込みになるようです。00h～0Ehの書き込みで15種類の音声が出力されます。<BR>
+		<IMG src="image/playball.bmp" alt="プレイボール回路"><BR>
+		<BR>
+		「燃えろ!!熱闘野球'88」の回路<BR>
+		　こちらはバンク80h以降への書き込みがPD7756Cへの書き込みになるようですが、D7は1、D6は0である必要があります。D5とD4は何でも構いませんが、とりあえず0とすると80h～8Fhの書き込みで16種類の音声が出力されます。また、D6=/STが0のままだとリピート再生モードになってしまいますので、すぐにD6を1にする必要があります。<BR>
+		<IMG src="image/moepro88.bmp" alt="燃えろ!!熱闘野球'88回路"><BR>
+		<BR>
+		　ついでなのでファミリーコンピュータの「燃えろ!!プロ野球シリーズ」も含めて調べてみることに・・・。<BR>
+		</B>
+		<BR>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD>発売日</TD>
+				<TD>機種</TD>
+				<TD>ソフト名</TD>
+				<TD>型番</TD>
+				<TD>番号</TD>
+				<TD>Date Code</TD>
+			</TR>
+			<TR>
+				<TD>1986/10/21</TD>
+				<TD>MSX</TD>
+				<TD>プレイボール</TD>
+				<TD>D7756C</TD>
+				<TD>097</TD>
+				<TD>8637EY</TD>
+			</TR>
+			<TR>
+				<TD>1987/06/21</TD>
+				<TD>FC</TD>
+				<TD>燃えろ!!プロ野球</TD>
+				<TD>D7756C</TD>
+				<TD>146</TD>
+				<TD>8722PY</TD>
+			</TR>
+			<TR>
+				<TD>1988/04/15</TD>
+				<TD>FC</TD>
+				<TD>燃えろ!!プロテニス</TD>
+				<TD>D7756C</TD>
+				<TD>186</TD>
+				<TD>8808PY096</TD>
+			</TR>
+			<TR>
+				<TD>1988/05/25</TD>
+				<TD>MSX2</TD>
+				<TD>燃えろ!!熱闘野球'88</TD>
+				<TD>D7756C</TD>
+				<TD>146</TD>
+				<TD>8820PY008</TD>
+			</TR>
+			<TR>
+				<TD>1988/08/10</TD>
+				<TD>FC</TD>
+				<TD>燃えろ!!プロ野球'88 決定版</TD>
+				<TD>D7756C</TD>
+				<TD>220</TD>
+				<TD>8924PY008</TD>
+			</TR>
+			<TR>
+				<TD>1989/07/27</TD>
+				<TD>FC</TD>
+				<TD>新・燃えろ!!プロ野球</TD>
+				<TD>D7756C</TD>
+				<TD>220</TD>
+				<TD>8909PY014</TD>
+			</TR>
+			<TR>
+				<TD>1989/11/24</TD>
+				<TD>FC</TD>
+				<TD>寺尾のどすこい大相撲</TD>
+				<TD>D7755C</TD>
+				<TD>052</TD>
+				<TD>8931X011</TD>
+			</TR>
+			<TR>
+				<TD>1990/07/27</TD>
+				<TD>FC</TD>
+				<TD>燃えプロ!'90 感動編</TD>
+				<TD>D7756C</TD>
+				<TD>220</TD>
+				<TD>9026PY026</TD>
+			</TR>
+			<TR>
+				<TD>1991/11/21</TD>
+				<TD>FC</TD>
+				<TD>燃えプロ最強編</TD>
+				<TD>D7756C</TD>
+				<TD>220</TD>
+				<TD>9144PY004</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<IMG src="image/moe-87.jpg" alt="燃えろ!!プロ野球">
+		<IMG src="image/moe-88.jpg" alt="燃えろ!!プロ野球'88 決定版">
+		<IMG src="image/moe-89.jpg" alt="新・燃えろ!!プロ野球">
+		<IMG src="image/moe-90.jpg" alt="燃えプロ!'90 感動編">
+		<IMG src="image/moe-91.jpg" alt="燃えプロ最強編">
+		<IMG src="image/moe-te.jpg" alt="プレイボール回路">
+		<IMG src="image/moe-sm.jpg" alt="寺尾のどすこい大相撲"><BR>
+		<BR>
+		<B>
+		　基板を見ると、「燃えプロ最強編」のみ、「燃えプロ!'90 感動編」の基板をそのまま使っていますが、それ以外は毎回基板を新しく作っているようです。「寺尾のどすこい大相撲」も「燃えプロ!'90 感動編」の基板に見えますが、微妙に違います。搭載しているチップもD7755Cです。<BR>
+		<BR>
+		　次に肝心要のD7756C/D7755Cに注目してみましょう。<BR>
+		<IMG src="image/rom_code.jpg" alt="ROMの見方"><BR>
+		<BR>
+		　D7756C/D7755C内に書き込まれている音声データを区別するための番号と思われるのが青い四角で囲った部分の数字です。赤い四角で囲った部分はDate Codeと思われます。Date Codeというのは、ICに書かれた製造年の下二桁と週番号二桁等の番号です。写真では「8820PY008」とありますので1988年の20週目、つまり5月8日～14日の間に作られたものということを示しています。PY以降については分かりませんが、工場だったりロットだったりを示しているのかも知れません。Date Codeの部分は個体によって異なります。<BR>
+		　この結果からすると、「燃えろ!!プロ野球」(FC)と「燃えろ!!熱闘野球'88」(MSX)は同じ音声データを使っており、「燃えろ!!プロ野球'88 決定版」以降の野球ソフトはすべて同じ音声データを使っているようです。<BR>
+		　他にも「燃えろ!!」シリーズとしては「燃えろ!!ジュニアバスケット」、「燃えろ!!プロサッカー」、「燃えろ!!柔道WARRIORS」というソフトがあるようですが、これらは少なくとも音声再生用のチップを搭載していないようです。<BR>
+		<BR>
+		　チップ自体は同じもの（書き込まれた音のデータのみが異なる）なので、交換してみれば音を出すことが出来ます。ROMがあると後挿しが必要なのでそれも抜いてしまいました。たまにKONAMIのSCC音源搭載ソフトのソフトを起動させないために、ROMの電源ピンや/CSもしくは/OEをカットするだけの人がいますが、おすすめしません。他のピンから電気が来ているので、内部状態が不安定になり、変な電流が流れて壊れることがあります。たまにソフトが起動することがあるのも信号が不安定だからです。最悪の場合、MSX本体にも悪影響を与えるかも知れません。電源ピンのカットはNGです。/CSや/OEをカットする場合は、カット後にROM側の当該ピンを電源ピンとつなげておくと良いでしょう。まぁ、私も/CSをカットするだけで良いと思っていた時があったのですが(^-^; 今回は、ROMは引っこ抜き、D7756Cの部分にはソケットを載せて交換可能な状態にしました。「燃えろ!!熱闘野球'88」の方が部品数が少なく改造しやすいのですが、リピートを解除する手間があるのと、1-4ピン(D4-D7)がGNDに落ちていて17個目以降が指定できません。汎用性を追求するために今回は「プレイボール」に犠牲になってもらいました(^-^;<BR>
+		<BR>
+		<IMG src="image/playkai.jpg" alt="改造後"><BR>
+		<BR>
+		　他のソフトのD7756Cに入れ替えてみたところ、下記のような感じでした。プレイしているわけでは無いので、よく分からない音もありますが・・・。<BR>
+		　家電のケンちゃんさんで売られていたD7756C（番号:270, Data Code:9518P5002 ）も試してみました。
+		<BR>
+		</B>
+		<TABLE border="2" bordercolor="#0000FF">
+			<TR>
+				<TD></TD>
+				<TD>プレイボール</TD>
+				<TD>燃えろ!!プロ野球<BR>燃えろ!!熱闘野球'88</TD>
+				<TD>燃えろ!!プロ野球'88 決定版<BR>（及びそれ以降）</TD>
+				<TD>燃えろ!!プロテニス</TD>
+				<TD>寺尾のどすこい大相撲</TD>
+			</TR>
+			<TR>
+				<TD>IC</TD>
+				<TD>D7756C 097</TD>
+				<TD>D7756C 146</TD>
+				<TD>D7756C 220</TD>
+				<TD>D7756C 186</TD>
+				<TD>D7755C 052</TD>
+			</TR>
+			<TR>
+				<TD>#00</TD>
+				<TD>プレイ</TD>
+				<TD>ストライク</TD>
+				<TD>アウト</TD>
+				<TD>ノー (女声) </TD>
+				<TD>(拍子木の音？)</TD>
+			</TR>
+			<TR>
+				<TD>#01</TD>
+				<TD>ボール</TD>
+				<TD>ボール</TD>
+				<TD>セーフ</TD>
+				<TD>ノー (男声) </TD>
+				<TD>はっきょ～い</TD>
+			</TR>
+			<TR>
+				<TD>#02</TD>
+				<TD>フォアボール</TD>
+				<TD>タイム</TD>
+				<TD>ファール</TD>
+				<TD>０ (ラブ) </TD>
+				<TD>のこった</TD>
+			</TR>
+			<TR>
+				<TD>#03</TD>
+				<TD>セーフ</TD>
+				<TD>アウト</TD>
+				<TD>フェア</TD>
+				<TD>１５ (フィフティーン) </TD>
+				<TD>まったなし</TD>
+			</TR>
+			<TR>
+				<TD>#04</TD>
+				<TD>アウト</TD>
+				<TD>セーフ</TD>
+				<TD>ストライク</TD>
+				<TD>３０ (サーティ) </TD>
+				<TD>のこった のこった</TD>
+			</TR>
+			<TR>
+				<TD>#05</TD>
+				<TD>ストライク</TD>
+				<TD>ファール</TD>
+				<TD>ボール</TD>
+				<TD>４０ (フォーティ) </TD>
+				<TD>まったありません</TD>
+			</TR>
+			<TR>
+				<TD>#06</TD>
+				<TD>(打球音)</TD>
+				<TD>フェア</TD>
+				<TD>タイム</TD>
+				<TD>アドバンテージ</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#07</TD>
+				<TD>(キャッチ音)</TD>
+				<TD>バッターアウト</TD>
+				<TD>バッター</TD>
+				<TD>サーバー</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#08</TD>
+				<TD>ゲーム</TD>
+				<TD>プレイボール</TD>
+				<TD>フォアボール</TD>
+				<TD>レシーバー</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#09</TD>
+				<TD>デッドボール</TD>
+				<TD>フォアボール</TD>
+				<TD>ホームラン</TD>
+				<TD>オール</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0A</TD>
+				<TD>イテッ</TD>
+				<TD>ホームラン</TD>
+				<TD>プレイボール</TD>
+				<TD>デュース</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0B</TD>
+				<TD>ビールはいかが～？</TD>
+				<TD>ピッチャー交代</TD>
+				<TD>ピッチャー交代</TD>
+				<TD>ゲーム</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0C</TD>
+				<TD>ノーコン！</TD>
+				<TD>イテッ</TD>
+				<TD>代打</TD>
+				<TD>(打球音)</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0D</TD>
+				<TD>ダイコン！</TD>
+				<TD>アホッ</TD>
+				<TD>うぐっ(?)</TD>
+				<TD>歓声</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0E</TD>
+				<TD>やったー</TD>
+				<TD>(打球音)</TD>
+				<TD>(打球音)</TD>
+				<TD>フォールト</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0F</TD>
+				<TD>-</TD>
+				<TD>歓声</TD>
+				<TD>(キャッチ音(?))</TD>
+				<TD>ネット</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#10</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>(キャッチ音(?))</TD>
+				<TD>アウト</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#11</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>(キャッチ音(?))</TD>
+				<TD>(ぶつかる音(?))</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#12</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>(キャッチ音(?))</TD>
+				<TD>(ぶつかる音(?))</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#13</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>歓声</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<B>
+		　基本的には審判の声を入れ、あとはお好みという感じでしょうか。<BR>
+		<BR>
+		　ついでに家電のケンちゃんさんで売られていたD7756C（番号:270, Data Code:9518P5002 ）や他のも入手して試してみました。
+		<BR>
+		*1　こちらは日本テレコムです。アダプタの点検を行いますので受話器を元にお戻しください。<BR>
+		*2　Bonjour, le repondeur Minitel est pret a enregistrer votre message pour cela est le signal sonore allume votre visite elle et appuyez sur la touche connexion voila merci a bientot.<BR>
+		*3　ただいま話し中です。受話器を置いてランプの点滅が消えてからお掛け直しください。<BR>
+		*4　ただいま使用中です。受話器を元に戻し、使用中ランプが消えてからお掛け直しください。<BR>
+		</B>
+		<TABLE border="2" bordercolor="#0000FF" width="100%">
+			<TR>
+				<TD></TD>
+				<TD>家電のケンちゃん</TD>
+				<TD>eBay</TD>
+				<TD>淘宝 #1(仏語)</TD>
+				<TD>淘宝 #2</TD>
+				<TD>淘宝 #3(中国語)</TD>
+				<TD>淘宝 #4(英語)</TD>
+				<TD>淘宝 #5</TD>
+				<TD>淘宝 #6</TD>
+			</TR>
+			<TR>
+				<TD>IC</TD>
+				<TD>D7756C 270</TD>
+				<TD>D7756C 223</TD>
+				<TD>D7756C 130</TD>
+				<TD>D7756C 243</TD>
+				<TD>D7756C 340</TD>
+				<TD>D7756AC 046</TD>
+				<TD>D7756AC 058</TD>
+				<TD>D7756AC 074</TD>
+			</TR>
+			<TR>
+				<TD>#00</TD>
+				<TD>発生</TD>
+				<TD>(*1)</TD>
+				<TD>(*2)</TD>
+				<TD>れい</TD>
+				<TD>?始</TD>
+				<TD>one</TD>
+				<TD>(*3)</TD>
+				<TD>(*4)</TD>
+			</TR>
+			<TR>
+				<TD>#01</TD>
+				<TD>火災</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>いっ</TD>
+				<TD>我?</TD>
+				<TD>two</TD>
+				<TD>-</TD>
+				<TD>(ピンポン)</TD>
+			</TR>
+			<TR>
+				<TD>#02</TD>
+				<TD>ガス漏れ</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>に</TD>
+				<TD>不能控制</TD>
+				<TD>three</TD>
+				<TD>(ピンポン)</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#03</TD>
+				<TD>非常警報</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>さん</TD>
+				<TD>???</TD>
+				<TD>four</TD>
+				<TD>(トゥルルルルルル)</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#04</TD>
+				<TD>侵入警報</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>よん</TD>
+				<TD>一(イー)</TD>
+				<TD>five</TD>
+				<TD>(プー)</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#05</TD>
+				<TD>戸締まりを確認してください</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ご</TD>
+				<TD>二(アル)</TD>
+				<TD>six</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#06</TD>
+				<TD>ボタンを押してください</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ろく</TD>
+				<TD>三(サン)</TD>
+				<TD>seven</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#07</TD>
+				<TD>最終</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>なな</TD>
+				<TD>(ピー)</TD>
+				<TD>eight</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#08</TD>
+				<TD>警備を開始します</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>はち</TD>
+				<TD>-</TD>
+				<TD>niner</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#09</TD>
+				<TD>警備を解除します</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>きゅう</TD>
+				<TD>-</TD>
+				<TD>zero</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0A</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>分(ふん)</TD>
+				<TD>-</TD>
+				<TD>point</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0B</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>分(ぷん)</TD>
+				<TD>-</TD>
+				<TD>youth</TD>
+				<TD>番号をどうぞ</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0C</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>です</TD>
+				<TD>-</TD>
+				<TD>next</TD>
+				<TD>番号</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0D</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>てん</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#0E</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>午前</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#11</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>いち</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#12</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ご</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#14</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>よ</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#15</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ご</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#16</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ろく</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#17</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>なな</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#18</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>はち</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#19</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>く</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#1A</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>ぜろ</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#1B</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>スター</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#1C</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>シャープ</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#1F</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>時</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#21</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>月</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#22</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>火</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#23</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>水</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#24</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>木</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#25</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>金</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#26</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>土</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#27</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>日</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#28</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>曜日</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#2A</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>じゅう</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#2B</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>じゅう</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#2C</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>じゅう</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+			<TR>
+				<TD>#2D</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>じゅっ</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+				<TD>-</TD>
+			</TR>
+		</TABLE>
+		<BR>
+		<B>
+		　家電のケンちゃんさんで売られていたものは警備システムに使われていたという感じでしょうか。<BR>
+		　外国語のものは音声認識ソフトを使って認識させましたが、精度は不明です。<BR>
+		<BR>
+		　音声再生対応ソフトの情報を下さったtyr105さん、ゆうじろうさん、EBIRAさん、タカミチさん、DAC内蔵ソフトの情報を下さったにがさん、D7756の情報を下さったBABAXさんに感謝致します。<BR>
+		　お約束ですが、この噂を見て改造などを行い故障やその他問題が発生しても責任は負えません。各自の責任において情報を広く集めて行うことをおすすめします。
+		</B>
+	</BODY>
+</HTML>

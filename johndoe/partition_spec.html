@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MSX SCSI/IDE パーティション形式 比較仕様書</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">SFORM16 · 技術資料</div>
+  <h1>MSX SCSI/IDE パーティション形式 比較仕様書</h1>
+  <p class="lead">V0.09a 似非ASPI形式 / V0.09a MEGA-SCSIネイティブ形式 / Nextor形式</p><div class="legend"><span><span class="tag ok">確認済</span> 実機ダンプで確認</span><span><span class="tag est">推定</span> ダンプから導いた規則</span><span><span class="tag std">FAT規格</span> FAT一般の規則</span><span><span class="tag todo">要確認</span> 未確認</span></div>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t1"><a href="#s1">1. 共通の前提知識</a></li><li class="t1"><a href="#s2">2. V0.09a 似非ASPI形式</a></li><li class="t2"><a href="#s2.1">2.1 全体構成</a></li><li class="t2"><a href="#s2.2">2.2 隠しFAT12ミニファイルシステム(Sector 0-19)</a></li><li class="t2"><a href="#s2.3">2.3 基本パーティション・拡張パーティション(FAT16)</a></li><li class="t1"><a href="#s3">3. V0.09a MEGA-SCSIネイティブ形式</a></li><li class="t2"><a href="#s3.1">3.1 全体構成</a></li><li class="t2"><a href="#s3.2">3.2 ブートセクタのフィールド(全パーティション共通)</a></li><li class="t2"><a href="#s3.3">3.3 MBRエントリの規則</a></li><li class="t2"><a href="#s3.4">3.4 FAT・ルートディレクトリ・MEGASCSI.TBL</a></li><li class="t1"><a href="#s4">4. Nextor形式</a></li><li class="t2"><a href="#s4.1">4.1 全体構成</a></li><li class="t2"><a href="#s4.2">4.2 Sector0(MBR)</a></li><li class="t2"><a href="#s4.3">4.3 EBR(拡張ブートレコード)セクタ</a></li><li class="t2"><a href="#s4.4">4.4 各パーティション自身のブートセクタ(実データ)</a></li><li class="t2"><a href="#s4.5">4.5 パーティションタイプの自動判定基準(実機確認)</a></li><li class="t1"><a href="#s5">5. FAT12パーティション時の仕様</a></li><li class="t2"><a href="#s5.1">5.1 FAT12共通の規則 [FAT規格]</a></li><li class="t2"><a href="#s5.2">5.2 SFORM-2(V0.09a)のFAT12フォーマット</a></li><li class="t2"><a href="#s5.3">5.3 Nextor形式のFAT12パーティション</a></li><li class="t1"><a href="#s6">6. 3方式の比較表</a></li><li class="t1"><a href="#appendix">付録: ブートプログラム(138byte、V0.09a系で共通使用)</a></li><li class="t2"><a href="#h12">既知の注意点(V0.09a系共通)</a></li></ul></nav>
+<main class="docbody">
+<p>3つのパーティション形式を並べて比較できるようにまとめたもの。いずれも実機ダンプ解析に基づく。フォーマッタの再実装に必要な情報を網羅している。</p>
+<h2 id="s1">1. 共通の前提知識</h2>
+<p>3方式とも、Sector0(またはパーティション自身の先頭)の<code>0x1BE</code>以降に、以下の16byte構造(標準MBRパーティションエントリと同一レイアウト)を1〜2個持つ。</p>
+<div class="scroll"><pre>+0-3  : status/CHS開始(3方式とも未使用、常に0)
++4    : パーティション種別(type)
++5-7  : CHS終了(3方式とも未使用、常に0)
++8-11 : 開始LBA(4byte, リトルエンディアン)
++12-15: サイズ(4byte, リトルエンディアン、セクタ数)</pre></div>
+<p>エントリ配置は <code>0x1BE</code>(エントリ1)、<code>0x1CE</code>(エントリ2)。標準MBRは最大4エントリ(<code>0x1BE</code>〜<code>0x1FD</code>)だが、3方式とも実際に使うのは先頭2つまで。</p>
+<p>代表的なtype値(Nextorの公式ドキュメントに準拠):</p>
+<div class="scroll"><pre>0x00 : 無し(空エントリ)
+0x01 : FAT12
+0x05 : Extended(CHS、拡張パーティション/EBRチェーンへのリンク)
+0x06 : FAT16(CHS)
+0x0E : FAT16(LBA)</pre></div>
+<h2 id="s2">2. V0.09a 似非ASPI形式</h2>
+<p>作者による命名。Adaptec系のSCSI I/F(ASPI)との互換性、PC-AT機からの認識を目的とした形式。</p>
+<h3 id="s2.1">2.1 全体構成</h3>
+<div class="scroll"><pre>Sector 0-19          : 隠しFAT12ミニファイルシステム(MBR兼用)
+Sector 20-           : 基本パーティション(FAT16)
+基本パーティションの後ろ : 拡張パーティションチェーン(FAT16、可変個数)</pre></div>
+<p>隠し領域(Sector0-19)自身も「パーティション0」として扱われる(基本パーティションが「パーティション1」、以降が「パーティション2,3...」)。</p>
+<h3 id="s2.2">2.2 隠しFAT12ミニファイルシステム(Sector 0-19)</h3>
+<h4 id="h1">パラメータ</h4>
+<div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>総セクタ数</td><td>20</td></tr><tr><td>bytes/sector</td><td>512</td></tr><tr><td>sectors/cluster</td><td>8</td></tr><tr><td>reserved sectors</td><td>1</td></tr><tr><td>FATs</td><td>2</td></tr><tr><td>root entries</td><td>16</td></tr><tr><td>sectors/FAT</td><td>1</td></tr><tr><td>media ID</td><td class="off">0xF0</td></tr></tbody></table></div>
+<p>セクタ配置:</p>
+<div class="scroll"><pre>Sector 0      : ブートセクタ(MBR兼用)
+Sector 1-2    : FAT ×2
+Sector 3      : エントリーテーブル(ルートディレクトリ、1セクタ)
+Sector 4-11   : クラスタ2 = MEGASCSI.TBL の実データ(8セクタ)
+Sector 12-19  : クラスタ3 = MEGASCSI.PNT の実データ(8セクタ)</pre></div>
+<h4 id="h2">Sector0(ブートセクタ兼MBR)のフィールド</h4>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td>ジャンプ命令 <code>00 FE 90</code>(<span class="star">★</span>通常のFAT16パーティションと異なる)</td></tr><tr><td class="off">0x03-0x0A</td><td>OEM名 <code>&quot;MEGASCSI&quot;</code>(8byte)</td></tr><tr><td class="off">0x0B-0x0C</td><td>bytes/sector = 512 (LE)</td></tr><tr><td class="off">0x0D</td><td>sectors/cluster = 8</td></tr><tr><td class="off">0x0E-0x0F</td><td>reserved sectors = 1</td></tr><tr><td class="off">0x10</td><td>FATs = 2</td></tr><tr><td class="off">0x11-0x12</td><td>root entries = 16</td></tr><tr><td class="off">0x13-0x14</td><td>total sectors(16bit) = 20(非ゼロ。拡張BPB不要)</td></tr><tr><td class="off">0x15</td><td>media ID = 0xF0</td></tr><tr><td class="off">0x16-0x17</td><td>sectors/FAT = 1</td></tr><tr><td class="off">0x18-0x19</td><td>sectors/track = 0</td></tr><tr><td class="off">0x1A-0x1B</td><td>heads = 0</td></tr><tr><td class="off">0x1C-0x1D</td><td>hidden sectors(2byte) = 0</td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 16</code>(JR命令、+22 → 0x36へジャンプ)</td></tr><tr><td class="off">0x20-0x25</td><td>文字列 <code>&quot;VOL_ID&quot;</code></td></tr><tr><td class="off">0x26</td><td class="off">0x00</td></tr><tr><td class="off">0x27-0x2A</td><td>ボリュームID(4byte、任意値)</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NO NAME    &quot;</code>(11byte)</td></tr><tr><td>0x36-</td><td>ブートプログラム(138byte、§付録参照)</td></tr><tr><td class="off">0x1B8-0x1BB</td><td>ディスクシグネチャ(4byte、任意値)</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>エントリ1: 基本パーティション。type=0x06、開始LBA=20(絶対)、サイズ=基本パーティションのセクタ数</td></tr><tr><td class="off">0x1CE-0x1DD</td><td>エントリ2: 拡張パーティション。type=0x05、開始LBA=最初の拡張パーティションの絶対LBA、サイズ=0(拡張パーティションが無ければ全ゼロ)</td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<h4 id="h3">MEGASCSI.TBL(実データ、512byte、16byteレコード×32個)</h4>
+<div class="scroll"><pre>+0    : ドライブ種別(実パーティションは0)
++1    : フラグ。bit6=書込禁止。パーティション0(隠し領域自身)のみ0x40
++2-4  : 開始LBA(3byte, ビッグエンディアン, 絶対値)
++5-7  : サイズ(3byte, ビッグエンディアン)
++8-9  : ブロック長(2byte, ビッグエンディアン) = 512
++10-15: 予約(0)</pre></div>
+<p>実パーティション数をNとすると、レコードNは終端マーカー(開始=総容量,サイズ=0xFFFFFF, ブロック長=0, 予約=<code>00 00 FF FF FF FF</code>)を1つだけ置き、以降は<code>00 00 00 00 FF FF FF FF</code>を8byte単位で末尾まで繰り返す。この実データは隠し領域自身に加え、基本・全拡張パーティションのクラスタ2にも複製する。</p>
+<h4 id="h4">MEGASCSI.PNT(実データ、512byte)</h4>
+<p>16byteレコード×最大32個。<code>ASCII 2桁の番号 + スペース14byte</code>。隠し領域自身も含めて連番。<strong>隠し領域にのみ存在し、基本・拡張パーティションには置かない。</strong></p>
+<h3 id="s2.3">2.3 基本パーティション・拡張パーティション(FAT16)</h3>
+<h4 id="h5">パラメータ(実装値の一例。用途に応じて変更可)</h4>
+<div class="scroll"><table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>sectors/cluster</td><td>16 (8KB/cluster)</td></tr><tr><td>reserved sectors</td><td>1</td></tr><tr><td>FATs</td><td>2</td></tr><tr><td>root entries</td><td>512</td></tr><tr><td>max clusters</td><td>用途により変更(例: 4078=約32MB、65501=約512MB、131005=約1GB)</td></tr><tr><td>sectors/FAT</td><td>ceil(max_clusters×2/512)</td></tr></tbody></table></div>
+<h4 id="h6">ブートセクタのフィールド(基本・拡張とも共通)</h4>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td><code>EB FE 90</code></td></tr><tr><td class="off">0x03-0x0A</td><td>OEM名(8byte、任意)</td></tr><tr><td class="off">0x0B-0x0C</td><td>512</td></tr><tr><td class="off">0x0D</td><td>sectors/cluster</td></tr><tr><td class="off">0x0E-0x0F</td><td>reserved = 1</td></tr><tr><td class="off">0x10</td><td>FATs = 2</td></tr><tr><td class="off">0x11-0x12</td><td>root entries</td></tr><tr><td class="off">0x13-0x14</td><td>0(拡張BPB使用)</td></tr><tr><td class="off">0x15</td><td>media ID = 0xF0</td></tr><tr><td class="off">0x16-0x17</td><td>sectors/FAT</td></tr><tr><td class="off">0x18-0x19</td><td>0</td></tr><tr><td class="off">0x1A-0x1B</td><td>0</td></tr><tr><td class="off">0x1C-0x1D</td><td>hidden sectors(2byte) = <strong>常に0</strong></td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 1E</code>(JR命令、+30 → 0x3Eへジャンプ)</td></tr><tr><td class="off">0x20-0x23</td><td>総セクタ数(32bit拡張、LE)</td></tr><tr><td class="off">0x24</td><td>0</td></tr><tr><td class="off">0x25</td><td>0</td></tr><tr><td class="off">0x26</td><td class="off">0x29</td></tr><tr><td class="off">0x27-0x2A</td><td>ボリュームシリアル(4byte、任意)</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NO NAME    &quot;</code></td></tr><tr><td class="off">0x36-0x3D</td><td><code>&quot;FAT16   &quot;</code></td></tr><tr><td>0x3E-</td><td>ブートプログラム(138byte)</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>エントリ1(自分自身): type=0x06、開始LBA=<strong>常に0</strong>(自己相対)、サイズ=自分のセクタ数</td></tr><tr><td class="off">0x1CE-0x1DD</td><td>エントリ2(次のパーティション): <a class="xref" href="#s2.4">§2.4</a>参照</td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<h4 id="s2.4">2.4 エントリ2(次のパーティション)の規則</h4>
+<ul><li><strong>基本パーティション</strong>: 拡張パーティションが1つ以上あれば<code>type=0x05, 開始LBA=最初の拡張パーティションの絶対LBA, サイズ=0</code>。無ければ全ゼロ。</li><li><strong>拡張パーティション(最後以外)</strong>: <code>type=0x05, 開始LBA=(次の拡張パーティションの絶対LBA − 最初の拡張パーティションの絶対LBA), サイズ=0</code> (<strong>最初の拡張パーティションを基準にした相対LBA</strong>)。</li><li><strong>拡張パーティション(最後)</strong>: 全ゼロ。</li></ul>
+<h4 id="s2.5">2.5 FAT・ルートディレクトリ・MEGASCSI.TBL</h4>
+<p>各パーティション(基本・拡張とも)は、ブートセクタ→FAT×2(先頭4byteは<code>F0 FF FF FF</code>、残りゼロ)→ルートディレクトリ(先頭32byteにMEGASCSI.TBLのディレクトリエントリ、クラスタ2、サイズ=パーティション総数×16byte、残りゼロ)→クラスタ2(MEGASCSI.TBLの実データ、<a class="xref" href="#s2.2">§2.2</a>と同一内容を複製)、という構成。MEGASCSI.PNTは置かない。</p>
+<h2 id="s3">3. V0.09a MEGA-SCSIネイティブ形式</h2>
+<p>隠しFAT12領域を持たない、よりシンプルな構成。Sector0自身がそのまま使える実パーティション(パーティション0)である。</p>
+<h3 id="s3.1">3.1 全体構成</h3>
+<div class="scroll"><pre>Sector 0    : パーティション0(FAT16)。同時にMBRを兼ねる。
+Sector xxx  : パーティション1(FAT16)。チェーンの基準点。
+Sector xxx  : パーティション2以降(FAT16)。拡張チェーン本体。</pre></div>
+<h3 id="s3.2">3.2 ブートセクタのフィールド(全パーティション共通)</h3>
+<p><a class="xref" href="#s2.3">§2.3</a>の表と<strong>同一</strong>(media ID=0xF0、0x1C-1Dは常に0、0x1E-1Fは<code>18 1E</code>で0x3Eへジャンプ、拡張BPB使用、等)。ただし以下2点が異なる:</p>
+<ul><li><strong><code>0x1B8-0x1BB</code>(ディスクシグネチャ)は Sector0のみに存在</strong>、他のパーティションは全ゼロ。</li><li>MBRエントリの規則が<a class="xref" href="#s3.3">§3.3</a>の通り(0.09a似非ASPI形式とは基準点が異なる)。</li></ul>
+<h3 id="s3.3">3.3 MBRエントリの規則</h3>
+<h4 id="h7">エントリ1(自分自身、0x1BE-0x1CD)</h4>
+<p><strong>全パーティション例外無く</strong>: <code>type=0x06, 開始LBA=0(常に自己相対),サイズ=自分のセクタ数</code>。Sector0(パーティション0)も例外ではない。</p>
+<h4 id="h8">エントリ2(次のパーティション、0x1CE-0x1DD)</h4>
+<p>基準点は<strong>常にパーティション1の絶対LBA</strong>(<code>chain_start</code>)。</p>
+<ul><li><strong>パーティション0</strong>: 次(パーティション1)が存在すれば<code>type=0x05, 開始LBA=chain_start(絶対値), サイズ=0</code>。</li><li><strong>パーティション1以降(最後以外)</strong>: <code>type=0x05,開始LBA=(次パーティションの絶対LBA − chain_start), サイズ=0</code> (<strong>パーティション1からの相対LBA</strong>)。</li><li><strong>最後のパーティション</strong>: 全ゼロ。</li></ul>
+<h3 id="s3.4">3.4 FAT・ルートディレクトリ・MEGASCSI.TBL</h3>
+<p><a class="xref" href="#s2.5">§2.5</a>と同一構成。<strong>全パーティション(パーティション0含む)がMEGASCSI.TBLを持つ</strong>(隠し領域が無いため、レコード0=パーティション0自身から始まる)。MEGASCSI.PNTは存在しない。</p>
+<h2 id="s4">4. Nextor形式</h2>
+<p>Nextor(MSX-DOS2の後継OS)が使う、<strong>標準的なPC-AT MBR/EBR方式</strong>。実機ダンプ解析(8MB/64MB/4GB、複数パーティション構成)により確認。</p>
+<h3 id="s4.1">4.1 全体構成</h3>
+<div class="scroll"><pre>未パーティション時: Sector0が直接そのままFAT12ボリューム(MBRエントリ無し)
+パーティション時  : Sector0がMBR(基本パーティション1個+拡張パーティション
+                     1個の、最大2エントリ)
+                     拡張パーティション内は、論理パーティションごとに
+                     専用のEBR(拡張ブートレコード)セクタ+実データ
+                     セクタの組で構成される</pre></div>
+<p><strong>SFORM-2系(<a class="xref" href="#s2">§2</a>,3)と異なり、パーティション自身のブートセクタにはチェーン情報を一切持たない(MBR/EBRのエントリは全て独立した専用セクタに分離されている)。</strong></p>
+<h3 id="s4.2">4.2 Sector0(MBR)</h3>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td><code>EB FE 90</code>(未パーティション時も同じ)</td></tr><tr><td class="off">0x03-0x0A</td><td>OEM名 <code>&quot;NEXTOR20&quot;</code>(8byte)</td></tr><tr><td>その他BPBフィールド</td><td><a class="xref" href="#s4.4">§4.4</a>参照(内包する1パーティション目と同じ規則)</td></tr><tr><td class="off">0x1B8-0x1BB</td><td>ディスクシグネチャ</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>エントリ1: 基本パーティション。type=0x01(FAT12)/0x0E(FAT16,LBA)、開始LBA=1(絶対、Sector0直後から)、サイズ=基本パーティションのセクタ数</td></tr><tr><td class="off">0x1CE-0x1DD</td><td>エントリ2: 拡張パーティション。type=0x05、開始LBA=拡張パーティション全体の絶対開始位置、サイズ=拡張パーティション全体のセクタ数(基本パーティション+拡張領域の合計ではなく、拡張領域自体の合計サイズ)</td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<p>未パーティション時はエントリ1・2とも全ゼロ(単一ボリュームがSector0直後から直接始まる)。</p>
+<h3 id="s4.3">4.3 EBR(拡張ブートレコード)セクタ</h3>
+<p>各論理パーティション(基本パーティションの次、パーティション2以降)の<strong>実データ直前の1セクタ</strong>に、独立したEBRを配置する。EBR自身は非実行セクタで、ジャンプ命令・OEM名等のBPBフィールドは全てゼロ。パーティションテーブル部分のみ意味を持つ。</p>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x1BD</td><td>全ゼロ</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>エントリ0: このEBRが指す論理パーティション。type=0x01(FAT12)/0x0E(FAT16,LBA)、開始LBA=<strong>常に1</strong>(このEBR自身からの相対位置。直後のセクタが実データ)、サイズ=そのパーティションのセクタ数</td></tr><tr><td class="off">0x1CE-0x1DD</td><td>エントリ1: 次のEBR。type=0x05(次があれば)、開始LBA=<strong>拡張パーティション全体の開始位置(Sector0のエントリ2の絶対値)からの相対LBA</strong>、サイズ=0。最後の論理パーティションの場合は全ゼロ</td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<p>実データ検証例(8パーティション構成、拡張パーティション開始=絶対LBA 262145):</p>
+<div class="scroll"><pre>EBR@Sector262145: entry0=(type01,LBA=1,size=61440)  → 実データ@262146
+                  entry1=(type05,LBA=61441)          → 次EBR@262145+61441=323586
+EBR@Sector323586: entry0=(type0E,LBA=1,size=1935360) → 実データ@323587
+                  entry1=(type05,LBA=1996802)        → 次EBR@262145+1996802=2258947</pre></div>
+<h3 id="s4.4">4.4 各パーティション自身のブートセクタ(実データ)</h3>
+<p>標準的なMSX-DOS2 BPB。FAT12/FAT16問わず、<strong>独特のハイブリッド構成</strong>をとる(VOL_ID文字列とファイルシステム種別文字列が両方存在する)。</p>
+<div class="scroll"><table><thead><tr><th>offset</th><th>内容</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td><code>EB FE 90</code></td></tr><tr><td class="off">0x03-0x0A</td><td><code>&quot;NEXTOR20&quot;</code></td></tr><tr><td class="off">0x0B-0x0C</td><td>512</td></tr><tr><td class="off">0x0D</td><td>sectors/cluster(パーティションサイズに応じて可変)</td></tr><tr><td class="off">0x0E-0x0F</td><td>reserved sectors = 1</td></tr><tr><td class="off">0x10</td><td>FATs = 2</td></tr><tr><td class="off">0x11-0x12</td><td>root entries</td></tr><tr><td class="off">0x13-0x14</td><td>total sectors(16bit)。<strong>FAT12の場合は非ゼロ(実値)、FAT16の場合は0(拡張BPB使用)</strong></td></tr><tr><td class="off">0x15</td><td>media ID = 0xF0</td></tr><tr><td class="off">0x16-0x17</td><td>sectors/FAT</td></tr><tr><td class="off">0x18-0x19</td><td>0</td></tr><tr><td class="off">0x1A-0x1B</td><td>0</td></tr><tr><td class="off">0x1C-0x1D(or 1F)</td><td>hidden sectors。<strong>常に0</strong>(実際の位置情報はMBR/EBR側で管理)</td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 1E</code>(JR命令、+30 → 0x3Eへジャンプ)</td></tr><tr><td class="off">0x20-0x25</td><td>文字列 <code>&quot;VOL_ID&quot;</code>(FAT12・FAT16問わず常に存在)</td></tr><tr><td class="off">0x26</td><td>FAT12: 0x00 / FAT16: 0x29(拡張ブートシグネチャ)</td></tr><tr><td class="off">0x27-0x2A</td><td>ボリュームシリアル(4byte)</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NEXTOR 2.0 &quot;</code>(11byte、ボリュームラベル)</td></tr><tr><td class="off">0x36-0x3D</td><td><code>&quot;FAT12   &quot;</code> または <code>&quot;FAT16   &quot;</code>(8byte)</td></tr><tr><td>0x3E-</td><td>ブートプログラム</td></tr><tr><td class="off">0x1BE-0x1DD</td><td><strong>全パーティション、全ゼロ(MBR/EBRエントリを一切持たない)</strong></td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<p><span class="star">★</span>注目点: FAT16の場合でも<code>0x20-0x25</code>に<code>&quot;VOL_ID&quot;</code>という文字列が残っている(総セクタ数の数値ではない)。これはSFORM-2系(<a class="xref" href="#s2">§2</a>,3)が0x20-0x23を32bit総セクタ数として使うのと対照的で、Nextorは<strong>base仕様のVOL_ID文字列と、拡張的なファイルシステム種別文字列を両方保持するハイブリッド構成</strong>を取っていることが分かる。総セクタ数はFAT12なら0x13-14(16bit)、FAT16ならMBR/EBRのエントリのサイズ値から得る設計と考えられる。</p>
+<h3 id="s4.5">4.5 パーティションタイプの自動判定基準(実機確認)</h3>
+<div class="scroll"><table><thead><tr><th>パーティションサイズ</th><th>type値</th></tr></thead><tbody><tr><td>〜約32MB</td><td>0x01 (FAT12)</td></tr><tr><td>約32MB〜</td><td>0x0E (FAT16, LBA)</td></tr></tbody></table></div>
+<h2 id="s5">5. FAT12パーティション時の仕様</h2>
+<p><a class="xref" href="#s2">§2</a>〜4は主にFAT16パーティションの実機ダンプに基づく。本章はFAT12時の仕様をまとめる。出典は <code>FAT12フォーマット調査.txt</code>(8MB/64MB/256MB SDでの実機ダンプ、2026/09)。</p>
+<p>記号の意味:</p>
+<ul><li><strong><span class="tag ok">確認済</span></strong> 実機ダンプで確認済み</li><li><strong><span class="tag std">FAT規格</span></strong> FATファイルシステム一般の規則</li><li><strong><span class="tag est">推定</span></strong> ダンプから導いた規則。観測範囲内では全て一致するが、範囲外は未検証</li><li><strong><span class="tag todo">要確認</span></strong> 未確認</li></ul>
+<h3 id="s5.1">5.1 FAT12共通の規則 <span class="tag std">FAT規格</span></h3>
+<div class="scroll"><table><thead><tr><th>項目</th><th>FAT12</th><th>FAT16(参考)</th></tr></thead><tbody><tr><td>FAT種別の判定</td><td>データクラスタ数 ≤ 4084</td><td>4085 ≤ データクラスタ数 ≤ 65524</td></tr><tr><td>FATエントリ長</td><td>12bit(2エントリを3byteにpacking)</td><td>16bit</td></tr><tr><td>sectors/FAT</td><td>ceil((クラスタ数+2)×1.5 / 512)</td><td>ceil((クラスタ数+2)×2 / 512)</td></tr><tr><td>EOC値</td><td>0xFF8〜0xFFF</td><td>0xFFF8〜0xFFFF</td></tr><tr><td>総セクタ数の格納</td><td>0x13-14(16bit、最大65535)</td><td>通常は32bit拡張フィールド</td></tr></tbody></table></div>
+<p>12bit packingの規則(クラスタnのエントリ):</p>
+<div class="scroll"><pre>offset = n + n/2 (切り捨て)
+n が偶数: 値 = word[offset] &amp; 0x0FFF
+n が奇数: 値 = word[offset] &gt;&gt; 4</pre></div>
+<h3 id="s5.2">5.2 SFORM-2(V0.09a)のFAT12フォーマット</h3>
+<p><span class="star">★</span><strong>SFORM-2はFAT12専用のフォーマッタ</strong>であり、1パーティションの最大セクタ数は65288 <span class="tag ok">確認済</span>。以下は似非ASPI形式・ネイティブ形式の両方に共通する。</p>
+<h4 id="s5.2.1">5.2.1 パーティションのブートセクタ(BPB)<span class="tag ok">確認済</span></h4>
+<div class="scroll"><table><thead><tr><th>offset</th><th>値</th></tr></thead><tbody><tr><td class="off">0x00-0x02</td><td><code>EB FE 90</code></td></tr><tr><td class="off">0x03-0x0A</td><td><code>&quot;MEGASCSI&quot;</code></td></tr><tr><td class="off">0x0B-0x0C</td><td>512</td></tr><tr><td class="off">0x0D</td><td>sectors/cluster(<a class="xref" href="#s5.2.3">§5.2.3</a>)</td></tr><tr><td class="off">0x0E-0x0F</td><td>1</td></tr><tr><td class="off">0x10</td><td>2</td></tr><tr><td class="off">0x11-0x12</td><td>root entries(<a class="xref" href="#s5.2.3">§5.2.3</a>。可変)</td></tr><tr><td class="off">0x13-0x14</td><td>総セクタ数(16bit、実値)</td></tr><tr><td class="off">0x15</td><td>media ID。<strong>似非ASPI形式=0xF8、ネイティブ形式=0xF0</strong></td></tr><tr><td class="off">0x16-0x17</td><td>sectors/FAT</td></tr><tr><td class="off">0x18-0x1D</td><td>0</td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 16</code>(JR +22 → 0x36へジャンプ)</td></tr><tr><td class="off">0x20-0x25</td><td><code>&quot;VOL_ID&quot;</code></td></tr><tr><td class="off">0x26</td><td class="off">0x00</td></tr><tr><td class="off">0x27-0x2A</td><td>ボリュームシリアル(4byte、任意)</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NO NAME    &quot;</code></td></tr><tr><td>0x36-</td><td>ブートプログラム(付録と同一の138byte)。<strong><code>&quot;FAT12   &quot;</code>文字列は無い</strong></td></tr><tr><td class="off">0x1B8-0x1BB</td><td>ディスクシグネチャ。ネイティブ形式のパーティション0のみ非ゼロ。似非ASPI形式はSector0もゼロ</td></tr><tr><td class="off">0x1BE-0x1CD</td><td>エントリ1。type=<strong>0x01</strong></td></tr><tr><td class="off">0x1CE-0x1DD</td><td>エントリ2。type=0x05。<a class="xref" href="#s5.2.4">§5.2.4</a></td></tr><tr><td class="off">0x1FE-0x1FF</td><td><code>55 AA</code></td></tr></tbody></table></div>
+<p>隠し領域(似非ASPI形式のSector0)は<a class="xref" href="#s2.2">§2.2</a>の表と同じ構成だが、FAT12ダンプでは以下が異なる:media ID=<strong>0xF8</strong>(FATも <code>F8 FF FF FF FF FF</code>)、0x1B8-0x1BB=ゼロ、エントリ1のtype=<strong>0x01</strong>。</p>
+<h4 id="s5.2.2">5.2.2 FAT先頭 <span class="tag ok">確認済</span></h4>
+<div class="scroll"><pre>似非ASPI形式: F8 FF FF FF 0F 00 ...   (entry0=0xFF8, entry1=0xFFF, entry2=0xFFF)
+ネイティブ形式: F0 FF FF FF 0F 00 ...  (entry0=0xFF0, entry1=0xFFF, entry2=0xFFF)</pre></div>
+<p>クラスタ2(MEGASCSI.TBL用)は<strong>FAT上で使用中(EOC)</strong>になっている。パーティションが1個だけ(ネイティブ形式8MB)でも同じ。MSX-DOS2でファイルを書き込むと、クラスタ3から使われる(書込後 <code>F8 FF FF FF FF FF</code>)。</p>
+<h4 id="s5.2.3">5.2.3 ジオメトリの決定規則 <span class="tag est">推定</span></h4>
+<p>観測値(ts=総セクタ数、spc=sectors/cluster、spf=sectors/FAT、rd=ルートディレクトリのセクタ数):</p>
+<div class="scroll"><table><thead><tr><th>ts</th><th>spc</th><th>spf</th><th>root entries (rd)</th><th>データ開始</th><th>クラスタ数</th></tr></thead><tbody><tr><td>11499</td><td>4</td><td>9</td><td>128 (8)</td><td>27</td><td>2868</td></tr><tr><td>11519</td><td>4</td><td>9</td><td>128 (8)</td><td>27</td><td>2873</td></tr><tr><td>13259</td><td>4</td><td>10</td><td>160 (10)</td><td>31</td><td>3307</td></tr><tr><td>13279</td><td>4</td><td>10</td><td>160 (10)</td><td>31</td><td>3312</td></tr><tr><td>16384</td><td>4</td><td>12</td><td>752 (47)</td><td>72</td><td>4078</td></tr><tr><td>32768</td><td>8</td><td>12</td><td>1904 (119)</td><td>144</td><td>4078</td></tr><tr><td>63488</td><td>16</td><td>12</td><td>112 (7)</td><td>32</td><td>3966</td></tr></tbody></table></div>
+<p>全観測値と一致する規則:</p>
+<div class="scroll"><pre>spc      = ts/spc ≤ 4096 となる最小の2のべき(観測範囲は4〜16)
+clusters = min(4078, floor((ts − 1 − 2×spf − 7) / spc))
+spf      = ceil((clusters+2)×1.5 / 512)
+rd       = ts − 1 − 2×spf − clusters×spc   (最小7セクタ=112エントリ)</pre></div>
+<p>つまり、<strong>ルートディレクトリを伸ばして端数セクタを吸収し、データ領域をクラスタサイズでちょうど割り切れるようにする</strong>。クラスタ数の上限は4078 (FAT12上限4084より少し小さい)。<a class="xref" href="#s2.3">§2.3</a>のFAT16用例「max clusters 4078」は、この値に由来すると考えられる。</p>
+<p>最大セクタ数65288の場合は spc=16、クラスタ4078、rd=15(240エントリ)になる計算だが、未検証 <span class="tag todo">要確認</span>。</p>
+<h4 id="s5.2.4">5.2.4 MBRエントリ(チェーン)の規則 <span class="tag ok">確認済</span></h4>
+<p><strong>似非ASPI形式</strong>(64MB例: 隠し0-19, P1@20(16384), P2@16404(32768), P3@49172(63488), P4@112660(11499)):</p>
+<div class="scroll"><table><thead><tr><th>セクタ</th><th>エントリ1</th><th>エントリ2</th></tr></thead><tbody><tr><td>Sector0(隠し)</td><td>(01, 20, 16384) = P1絶対</td><td>(05, 16404, 0) = P2絶対</td></tr><tr><td>P1@20</td><td>(01, 0, 16384) 自己</td><td>(05, <strong>0</strong>, 0)</td></tr><tr><td>P2@16404</td><td>(01, 0, 32768) 自己</td><td>(05, 32768, 0) = P3−P2</td></tr><tr><td>P3@49172</td><td>(01, 0, 63488) 自己</td><td>(05, 96256, 0) = P4−P2</td></tr><tr><td>P4@112660</td><td>(01, 0, 11499) 自己</td><td>全ゼロ</td></tr></tbody></table></div>
+<p>チェーンの相対基準はP2(最初の拡張パーティション)で、<a class="xref" href="#s2.4">§2.4</a>と同じ。ただし<strong>P1のエントリ2は <code>(05, 0, 0)</code></strong>(最初の拡張パーティションの相対LBA=0)で、<a class="xref" href="#s2.4">§2.4</a>(FAT16)の「最初の拡張パーティションの絶対LBA」とは異なる。</p>
+<p><strong>ネイティブ形式</strong>(64MB例: P0@0(16384), P1@16384(32768), P2@49152(63488), P3@112640(11519)):</p>
+<div class="scroll"><table><thead><tr><th>セクタ</th><th>エントリ1</th><th>エントリ2</th></tr></thead><tbody><tr><td>Sector0(P0)</td><td>(01, <strong>20</strong>, 32768) <span class="star">★</span></td><td>(05, 49152, 0) = P2絶対</td></tr><tr><td>P1@16384</td><td>(01, 0, 32768) 自己</td><td>(05, 0, 0)</td></tr><tr><td>P2@49152</td><td>(01, 0, 63488) 自己</td><td>(05, 63488, 0) = P3−P2</td></tr><tr><td>P3@112640</td><td>(01, 0, 11519) 自己</td><td>全ゼロ</td></tr></tbody></table></div>
+<p>ネイティブ形式は<strong>似非ASPI形式の隠し領域をP0に置き換えた構造</strong>になっている(P0↔隠し領域、P1↔基本パーティション、P2以降↔拡張パーティション)。Sector0のエントリ1は、自分自身ではなく<strong>P1を指す</strong>(サイズ=P1のサイズ)。チェーンの相対基準はP2。これは<a class="xref" href="#s3.3">§3.3</a>(FAT16、基準=P1)とは異なる。</p>
+<h4 id="s5.2.5">5.2.5 SFORM-2の不具合と思われる点</h4>
+<ol><li><strong><span class="star">★</span>ネイティブ形式 Sector0 の 0x1C6-0x1C9(エントリ1の開始LBA)=20(0x14)</strong>似非ASPI形式の値(隠し領域20セクタの直後=P1の開始位置)がそのまま書かれていると考えられる。上記の対応関係から、正しくはP1の絶対LBA(64MB例では16384=<code>00 40 00 00</code>)であるべき。サイズ(0x1CA)は正しくP1のサイズになっているため、開始LBAだけが似非ASPI形式の固定値で上書きされている可能性が高い。</li><li><strong>ネイティブ形式でパーティションが1個だけの場合(8MB)、Sector0のエントリ1が <code>(01, 20, 3883322)</code></strong>。P1が存在しないにもかかわらずエントリがあり、サイズ(<code>3A 41 3B 00</code>)はメディア容量を超える無意味な値(未初期化の変数と思われる)。本来は全ゼロであるべき。</li><li><strong>似非ASPI形式でパーティションがP1だけの場合(8MB)、Sector0のエントリ2が<code>(05, 13279, 0)</code></strong>。拡張パーティションが無いのに、P1の末尾(=デバイス末尾)を指している。</li><li><strong>MEGASCSI.TBLのファイルサイズ以降(レコードN以降)の内容が不定</strong>。空白埋め、SFORM-2のメッセージ文字列の断片、FFパターンなどケースによって異なる(<a class="xref" href="#s5.2.6">§5.2.6</a>)。未初期化バッファの内容がそのまま書かれていると思われる。ファイルサイズ(N×16byte)の外なので、実害は無い可能性が高い。</li></ol>
+<p>これらがMEGA-SCSIの動作に影響するかどうかは <span class="tag todo">要確認</span>。</p>
+<h4 id="s5.2.6">5.2.6 MEGASCSI.TBL / MEGASCSI.PNT <span class="tag ok">確認済</span></h4>
+<p>N = パーティション総数(似非ASPI形式は隠し領域を含む)。</p>
+<h5 id="h9">意味のある部分(全ケース共通)</h5>
+<div class="scroll"><pre>rec0 〜 rec(N-1): 各パーティション  (種別00, フラグ, 開始3byte BE, サイズ3byte BE, 0200, 予約0×6)
+rec N の +2〜+4 : 最終パーティションの末尾LBA(=最終パーティションの開始+サイズ)</pre></div>
+<ul><li>フラグ0x40(書込禁止)は似非ASPI形式の隠し領域(rec0)のみ。ネイティブ形式のrec0(P0)は0x00。</li><li>ルートディレクトリにはMEGASCSI.TBLのエントリのみ(属性0x27、クラスタ2、サイズ=N×16)。PNTのエントリは隠し領域のみ。</li><li><strong>全パーティションのクラスタ2に、rec0〜rec(N-1)が同一内容で複製される</strong> (似非ASPI形式・ネイティブ形式とも)。</li><li><strong>パーティションが1個だけでもTBLを作成する</strong>(ネイティブ形式8MB: N=1、ファイルサイズ16)。</li></ul>
+<p>64MB似非ASPI形式(N=5):</p>
+<div class="scroll"><pre>rec0: 00 40 000000 000014 0200   隠し領域(書込禁止)
+rec1: 00 00 000014 004000 0200   P1
+rec2: 00 00 004014 008000 0200   P2
+rec3: 00 00 00C014 00F800 0200   P3
+rec4: 00 00 01B814 002CEB 0200   P4
+rec5: ?? ?? 01E4FF ...           最終パーティション末尾=124159</pre></div>
+<p>64MBネイティブ形式(N=4):</p>
+<div class="scroll"><pre>rec0: 00 00 000000 004000 0200   P0
+rec1: 00 00 004000 008000 0200   P1
+rec2: 00 00 00C000 00F800 0200   P2
+rec3: 00 00 01B800 002CFF 0200   P3
+rec4: ?? ?? 01E4FF ...           最終パーティション末尾=124159</pre></div>
+<p>8MBネイティブ形式(N=1):</p>
+<div class="scroll"><pre>rec0: 00 00 000000 0033DF 0200   P0
+rec1: ?? ?? 0033DF ...           最終パーティション末尾=13279</pre></div>
+<h5 id="h10">レコードN以降(ファイルサイズ外)の実際の内容</h5>
+<div class="scroll"><table><thead><tr><th>ケース</th><th>rec N の残り</th><th>rec N+1以降</th></tr></thead><tbody><tr><td>64MB似非ASPI 隠し領域</td><td><code>00 00 / 000009 / 0200 / 0×6</code>(残り9セクタ)</td><td><code>00 00 00 00 FF FF FF FF</code> の繰り返し</td></tr><tr><td>64MB似非ASPI P1〜P4</td><td>空白(0x20)</td><td>空白+SFORM-2のメッセージ文字列(<code>&quot;(for MSX-DOS2)&quot;</code> <code>&quot;Copyright (c) by K.Tsujikawa.&quot;</code> <code>&quot;Something error happened !&quot;</code> 等)</td></tr><tr><td>8MB似非ASPI 隠し領域</td><td>空白</td><td>空白</td></tr><tr><td>8MB似非ASPI P1</td><td>空白</td><td>0x29以降にメッセージ文字列(<code>&quot;SCSI device logical formatter ver 0.09a&quot;</code> 等)</td></tr><tr><td>64MBネイティブ 全P</td><td>空白</td><td>空白</td></tr><tr><td>8MBネイティブ P0</td><td>空白</td><td>0x29以降にメッセージ文字列</td></tr></tbody></table></div>
+<ul><li>64MB似非ASPIの隠し領域だけが「未使用領域レコード+FFパターン」という整った形になっている。<a class="xref" href="#s2.2">§2.2</a>(FAT16)の終端マーカー(開始=総容量、サイズ=0xFFFFFF、ブロック長=0)とはどのケースも異なる。</li><li>メッセージ文字列の断片は、SFORM-2の画面表示用バッファ等の残骸と思われる。</li><li>再実装する場合は、rec Nの開始フィールドに最終パーティション末尾を書き、それ以外(rec Nの残りとrec N+1以降)は <a class="xref" href="#s2.2">§2.2</a> の形式、またはゼロ埋めにするのが無難 <span class="tag est">推定</span>。</li></ul>
+<h5 id="h11">MEGASCSI.PNT(似非ASPI形式の隠し領域のみ)</h5>
+<p>各レコードの先頭を <code>&quot;NN&quot;</code>+空白14byteに置き換えたもの。レコードN以降は同じ隠し領域のTBLと同じ内容になっている(TBLのバッファを再利用していると思われる)。</p>
+<h3 id="s5.3">5.3 Nextor形式のFAT12パーティション</h3>
+<h4 id="s5.3.1">5.3.1 ブートセクタ(BPB)<span class="tag ok">確認済</span></h4>
+<p><a class="xref" href="#s4.4">§4.4</a>のとおり。FAT12時の値:</p>
+<div class="scroll"><table><thead><tr><th>offset</th><th>値</th></tr></thead><tbody><tr><td class="off">0x0D</td><td>sectors/cluster(<a class="xref" href="#s5.3.3">§5.3.3</a>)</td></tr><tr><td class="off">0x11-0x12</td><td>root entries = <strong>112(常に)</strong></td></tr><tr><td class="off">0x13-0x14</td><td>総セクタ数(16bit、実値)</td></tr><tr><td class="off">0x15</td><td class="off">0xF0</td></tr><tr><td class="off">0x1E-0x1F</td><td><code>18 1E</code>(→0x3E)</td></tr><tr><td class="off">0x20-0x25</td><td><code>&quot;VOL_ID&quot;</code></td></tr><tr><td class="off">0x26</td><td class="off">0x00</td></tr><tr><td class="off">0x2B-0x35</td><td><code>&quot;NEXTOR 2.0 &quot;</code></td></tr><tr><td class="off">0x36-0x3D</td><td><code>&quot;FAT12   &quot;</code></td></tr><tr><td>0x3E-</td><td>Nextor独自のブートプログラム(SFORM-2とは異なる)</td></tr><tr><td class="off">0x1B8-0x1DD</td><td>全ゼロ</td></tr></tbody></table></div>
+<p>FAT先頭は <code>F0 FF FF</code>(クラスタ2は未使用)。</p>
+<h4 id="s5.3.2">5.3.2 MBR・EBR <span class="tag ok">確認済</span></h4>
+<p>64MB例(4MB/8MB/16MB/31MB):</p>
+<div class="scroll"><pre>Sector0 (MBR): entry1=(status 0x80, type01, LBA=1, size=8192)
+               entry2=(type05, LBA=8193, size=112643)
+EBR@8193 : entry0=(01, 1, 16384)  entry1=(05, 16385)  → 次EBR@8193+16385=24578
+EBR@24578: entry0=(01, 1, 32768)  entry1=(05, 49154)  → 次EBR@8193+49154=57347
+EBR@57347: entry0=(01, 1, 63488)  entry1=全ゼロ</pre></div>
+<ul><li><strong>MBRエントリ1のstatus(+0)は0x80(アクティブ)</strong>。<a class="xref" href="#s1">§1</a>の「+0は常に0」はNextorには当てはまらない。</li><li>パーティションありのSector0は <code>EB FE 90</code> + <code>&quot;NEXTOR20&quot;</code> 以外のBPBフィールドが全てゼロ。ディスクシグネチャ(0x1B8)もゼロ。</li><li>パーティション無し(8MB)の場合、Sector0がそのままFAT12ボリュームのブートセクタになる(0x1B8-0x1DDは全ゼロ)。</li></ul>
+<h4 id="s5.3.3">5.3.3 ジオメトリ [確認済/一部要確認]</h4>
+<div class="scroll"><table><thead><tr><th>パーティション</th><th>ts16</th><th>spc</th><th>spf</th><th>クラスタ数</th></tr></thead><tbody><tr><td>パーティション無し(8MB SD, 13279セクタ)</td><td>13278</td><td>16</td><td>3</td><td>829</td></tr><tr><td>4MB(8192)</td><td>8182</td><td>8</td><td>3</td><td>1021</td></tr><tr><td>8MB(16384)</td><td>16350</td><td>16</td><td>3</td><td>1021</td></tr><tr><td>16MB(32768)</td><td>32686</td><td>32</td><td>3</td><td>1021</td></tr><tr><td>31MB(63488)</td><td>63488</td><td>16</td><td>12</td><td>3966</td></tr></tbody></table></div>
+<ul><li><strong>BPBの総セクタ数 = データ開始 + クラスタ数×spc</strong>。パーティションの端数セクタはBPB上は切り捨てられる(ts16 &lt; パーティションサイズ)。</li><li>16MBまではFATを3セクタ(最大1021クラスタ)に収めるようにspcを選んでいるように見える <span class="tag est">推定</span>。</li><li>31MBではspc=16、sectors/FAT=12(3966クラスタ)。端数は無くts16=パーティションサイズ。16MB以下の「FAT3セクタ」の規則からどう切り替わるかの境界は <span class="tag todo">要確認</span>。</li></ul>
+<h4 id="s5.3.4">5.3.4 FAT12/FAT16の境界 <span class="tag ok">確認済</span></h4>
+<p>256MB SDで確認:</p>
+<ul><li>31MB、32MB、32767KB → FAT12(type=0x01)</li><li>33MB → FAT16</li><li>32768KB → FDISKで指定不可</li></ul>
+<h2 id="s6">6. 3方式の比較表</h2>
+<div class="scroll"><table><thead><tr><th>項目</th><th>V0.09a 似非ASPI形式</th><th>V0.09a MEGA-SCSIネイティブ形式</th><th>Nextor形式</th></tr></thead><tbody><tr><td>準拠する外部規格</td><td>Adaptec ASPI系を意識(独自拡張)</td><td>無し(MEGA-SCSI独自)</td><td>PC-AT標準MBR/EBR(実質そのもの)</td></tr><tr><td>隠し領域</td><td>あり(Sector0-19、FAT12)</td><td>無し</td><td>無し</td></tr><tr><td>Sector0の役割</td><td>隠し領域自身のブートセクタ兼MBR</td><td>パーティション0自身のブートセクタ兼MBR</td><td>純粋なMBR(それ自体はどのパーティションのデータも含まない)</td></tr><tr><td>チェーン情報の置き場所</td><td>各パーティション自身のブートセクタ内(0x1BE-0x1DD)</td><td>各パーティション自身のブートセクタ内(0x1BE-0x1DD)</td><td><strong>各論理パーティションの直前にある専用EBRセクタ</strong>(パーティション自身のブートセクタは無関係)</td></tr><tr><td>エントリ1(自分自身)の開始LBA</td><td>常に0(自己相対)</td><td>常に0(自己相対)</td><td>(該当無し。EBRのエントリ0が"直後"を指す形で代替)</td></tr><tr><td>拡張チェーンの相対基準</td><td>最初の拡張パーティション</td><td>パーティション1</td><td>拡張パーティション全体の絶対開始位置(Sector0のエントリ2)</td></tr><tr><td>media ID</td><td class="off">0xF0</td><td class="off">0xF0</td><td class="off">0xF0</td></tr><tr><td>FAT12/FAT16判定</td><td>FAT16(<a class="xref" href="#s2">§2</a>)。SFORM-2本体はFAT12専用(<a class="xref" href="#s5.2">§5.2</a>)</td><td>FAT16(<a class="xref" href="#s3">§3</a>)。SFORM-2本体はFAT12専用(<a class="xref" href="#s5.2">§5.2</a>)</td><td>サイズで自動判定(32MBまでFAT12、33MBからFAT16。<a class="xref" href="#s5.3.4">§5.3.4</a>)</td></tr><tr><td>FAT12時のチェーン相対基準</td><td>P2(最初の拡張)</td><td>P2(<a class="xref" href="#s3.3">§3.3</a>のFAT16はP1)</td><td>拡張パーティション全体の開始位置</td></tr><tr><td>VOL_ID文字列の有無</td><td>隠し領域のみ(0x20-25)</td><td>無し(0x20-23は総セクタ数)</td><td><strong>全パーティションに存在</strong>(0x20-25)</td></tr><tr><td>ボリュームラベル</td><td><code>&quot;NO NAME    &quot;</code></td><td><code>&quot;NO NAME    &quot;</code></td><td><code>&quot;NEXTOR 2.0 &quot;</code></td></tr><tr><td>MEGASCSI.TBL相当</td><td>あり(独自)</td><td>あり(独自)</td><td>無し(標準ファイルシステムのみ)</td></tr></tbody></table></div>
+<h2 id="appendix">付録: ブートプログラム(138byte、V0.09a系で共通使用)</h2>
+<div class="scroll"><pre>d0 ed 53 70 c0 32 7a c0 36 6d 23 36 c0 31 1f f5 11 b4 c0 0e 0f cd 7d f3
+b7 20 28 11 00 01 0e 1a cd 7d f3 21 01 00 22 c2 c0 21 00 3f 11 b4 c0 0e
+27 cd 7d f3 c3 00 01 6f c0 cd 00 00 79 e6 fe fe 02 20 06 3e 00 b7 ca 22
+40 11 8e c0 0e 09 cd 7d f3 0e 07 cd 7d f3 18 b5 42 6f 6f 74 20 65 72 72
+6f 72 0d 0a 50 72 65 73 73 20 61 6e 79 20 6b 65 79 20 66 6f 72 20 72 65
+74 72 79 0d 0a 24 00 4d 53 58 44 4f 53 20 20 53 59 53</pre></div>
+<p>(SFORM-2オリジナルのIPLを流用。MSXDOS.SYSをロードする処理。Nextorは独自のブートプログラムを使用しており、上記とは異なる)</p>
+<h3 id="h12">既知の注意点(V0.09a系共通)</h3>
+<ul><li>CP-004.COM(CP.COMへのパッチ版)には、パーティション番号→ファームウェアレコードの対応にオフバイワンのバグが複数箇所確認されている(少なくとも5つの異なるコードパスが存在し、うち3つはオリジナルCP.COMには無い、パッチによる追加)。<code>CP.COM</code>(パッチ無し版)は、MEGASCSI.TBLに正しいサイズ情報がある限り問題なく動作することを確認済み。</li><li>合計パーティション容量は約2GB(SD規格のStandard Capacityクラス上限、2^31byte)以内に収めることを推奨。これを超える領域は、MEGA-SCSI+ SCSI2SDの組み合わせでは正常動作しないことを実機確認済み。</li></ul>
+</main>
+</div>
+</body>
+</html>

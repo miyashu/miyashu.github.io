@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MICRO CABIN MUSIC PLAYER Ver 0.10</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a><a class="alt" href="mcplayer_readme_en.html" hreflang="en">English</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">MCPLAYER · README</div>
+  <h1>MICRO CABIN MUSIC PLAYER Ver 0.10</h1>
+  <p class="lead">マイクロキャビンのゲームの曲を、MSX の ROM カートリッジ（メガロム）にまとめて聴くためのツールです。曲は、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">対応しているゲーム</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">ROM の作り方</a></li><li class="t2"><a href="#h5">動かし方</a></li><li class="t2"><a href="#h7">プレイリストを直す</a></li><li class="t2"><a href="#h10">フォルダの中身</a></li><li class="t2"><a href="#h11">クレジット</a></li></ul></nav>
+<main class="docbody">
+<p>この配布物には、曲・ドライバ・ゲームの画面などのマイクロキャビンのデータは入っていません。<strong>ご自分で持っているゲームのディスクイメージ</strong>から曲とドライバを取り出して、ROM を作ります。</p>
+<h3 id="h1">対応しているゲーム</h3>
+<div class="scroll"><table><thead><tr><th>フォルダ</th><th>ゲーム</th><th>ディスク</th></tr></thead><tbody><tr><td>XAK</td><td>Xak</td><td>3 枚</td></tr><tr><td>XAKII</td><td>Xak II</td><td>6 枚</td></tr><tr><td>FRAY_M2</td><td>FRAY（MSX2 版）</td><td>4 枚</td></tr><tr><td>FRAY_TR</td><td>FRAY（MSX turboR 版）</td><td>5 枚</td></tr><tr><td>GAZZEL</td><td>ガゼルの塔</td><td>4 枚</td></tr><tr><td>ILLUSION</td><td>幻影都市</td><td>8 枚</td></tr><tr><td>FFANTASY</td><td>ファイナルファンタジー</td><td>1 枚</td></tr><tr><td>RISK2</td><td>キャンペーン版大戦略II</td><td>2 枚</td></tr><tr><td>PMAKER</td><td>プリンセスメーカー</td><td>7 枚</td></tr><tr><td>CABIN</td><td>The Tower of Cabin</td><td>3 枚</td></tr></tbody></table></div>
+<p>持っていないゲームは飛ばして構いません（持っているゲームの曲だけで ROM を作ります）。</p>
+<h3 id="h2">必要なもの</h3>
+<ul><li>Python 3.8 以降と Pillow（<code>pip install pillow</code>）</li><li>ゲームのディスクイメージ（.dsk）</li><li>アセンブラ sjasmplus は不要です（組み立て済みの <code>player/player.bin</code> を使います。<code>player/player.asm</code> を直したときだけ必要）</li></ul>
+<h3 id="h3">ROM の作り方</h3>
+<p>この README のあるフォルダで、次のように実行します。</p>
+<ol><li>ディスクイメージを入れるフォルダを作る
+<div class="scroll"><pre>python tools/extract_disks.py</pre></div>
+<p><code>disk_image</code> の下にゲームごとのフォルダができます。</p></li><li>それぞれのフォルダに、そのゲームのディスクイメージ（.dsk）を入れる
+<ul><li>ディスクの番号はファイル名の順です（「Disk 1 of 3」のような名前ならそのままで構いません）。</li></ul></li><li>曲を取り出す（もう一度同じコマンド）
+<div class="scroll"><pre>python tools/extract_disks.py</pre></div>
+<ul><li><code>data/ゲームのフォルダ/</code> に曲（.MCM）ができます。FM 音源を使う曲と、データベースに登録した PSG の曲だけを取り出します。</li><li><code>player/playlist.txt</code>（プレイリスト）と <code>extract_log.txt</code>（取り出した曲の一覧）ができます。</li></ul></li><li>ROM を作る
+<div class="scroll"><pre>cd player
+python build_rom.py</pre></div>
+<p><code>player/MCPLAYER.ROM</code>（1MB、ASCII16 マッパー）ができます。</p></li></ol>
+<h4 id="h4">オプション（build_rom.py）</h4>
+<div class="scroll"><table><thead><tr><th>オプション</th><th>内容</th></tr></thead><tbody><tr><td><code>--autoplay</code></td><td>自動再生（下を参照）</td></tr><tr><td><code>--loops 3</code></td><td>ループ回数の既定値（既定 2）</td></tr><tr><td><code>--lang en</code> / <code>ja</code></td><td>表示を英語 / 日本語に固定（既定は本体の文字セットで決める）</td></tr><tr><td><code>--size auto</code></td><td>ROM の大きさを必要最小限にする（既定 1024KB）</td></tr><tr><td><code>-o 名前.rom</code></td><td>出力するファイル名</td></tr><tr><td><code>リスト.txt</code></td><td>別のプレイリストを使う</td></tr></tbody></table></div>
+<p><code>--autoplay</code> で作った ROM は、起動時の曲が終わったら（起動時の曲がなければ起動してすぐ）リストの先頭の曲から順に鳴らし続けます。キーボードのない環境（1chipMSX など）向けです。途中でキーを押せば、ふだんどおり操作できます。</p>
+<h3 id="h5">動かし方</h3>
+<ul><li>MSX のメガロムカートリッジ（ASCII16）として動かします。エミュレータでは ROM の種類（マッパー）に <strong>ASCII16</strong> を指定してください。</li><li>MSX1 / MSX2 / MSX2+ / turboR で動きます。RAM 32KB 以上が必要です（ファイナルファンタジーの曲は 64KB。ページ1の RAM でドライバを動かすため）。</li><li>FM 音源（内蔵の MSX-MUSIC か FM-PAC）を自動で見つけます。FM 音源がないときは、FM 音源用の曲データのうち PSG のパートだけが鳴ります（ゲームが FM 音源のないときに使う PSG 用の曲データは使いません）。</li><li>CG（ゲームの絵）は MSX2 以降で表示します。V9990（GFX9000）があるときは、CG は常に V9990 にだけ表示し、内蔵 VDP 側は曲選択の画面（リスト）だけになります（MSX1 でも CG を表示できます）。</li></ul>
+<h4 id="h6">キー操作</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>動作</th></tr></thead><tbody><tr><td>↑ ↓</td><td>曲を選ぶ（SHIFT で 10 曲ずつ）</td></tr><tr><td>← →</td><td>ゲームを選ぶ</td></tr><tr><td>SPACE</td><td>選んだ曲を鳴らす / 鳴っている曲を止める</td></tr><tr><td>E</td><td>再生の範囲（ALL / GAME / ONE）</td></tr><tr><td>R</td><td>リピート（REPEAT / ONCE）</td></tr><tr><td>V</td><td>CG とリストを切り替える（MSX2 以降、CG があるとき）</td></tr><tr><td>H</td><td>ヘルプ</td></tr></tbody></table></div>
+<p>テンキーの 8・2・4・6 でも ↑↓←→ と同じ操作ができます。</p>
+<h3 id="h7">プレイリストを直す</h3>
+<p><code>player/playlist.txt</code> は 1 行に 1 曲のファイルを書いたリストです。行の順に曲が並びます。</p>
+<div class="scroll"><pre>@game Xak
+../data/XAK/XAK101.MCM	# オープニング１
+../data/XAK/XAK102.MCM	# ...</pre></div>
+<ul><li>曲を外すには、行を消すか行頭に <code>#</code> を付けます。並べ替えは行を入れ替えるだけです。</li><li>曲名・英語の曲名・ループ回数は、ROM を作るときにデータベース（<code>tools/mcm_db.csv</code>）から引きます。行末の <code>#</code> の後ろはメモなので、直しても ROM には反映されません。</li><li>曲のドライバと音色は、<strong>曲ファイルのフォルダ</strong>のゲームのものになります（<code>@game</code> の行は表示するゲーム名だけ）。同じ曲を何度入れても、ROM に入る曲データは 1 つです。</li><li><code>@game ゲーム名</code>: それ以降の曲のゲーム名（<code>@game ゲーム名 | English name</code> で英語の名前も）</li><li><code>@cg 画像</code>（<code>@game</code> の後）: そのゲームの CG</li><li><code>@song_cg 画像</code>（曲の行の次の行）: その曲を鳴らしている間だけ替える CG</li><li><code>@startup 曲ファイル</code>: 起動時に鳴らす曲 / <code>@startup_cg 画像</code>: 起動時の CG（なければ標準の CG）</li><li>CG は各自で用意してください（使える画像は下の「CG に使える画像」を参照）。</li><li>もう一度 <code>extract_disks.py</code> を実行すると、今の <code>playlist.txt</code> は残し、新しいリストを <code>playlist_new.txt</code> に書きます。</li></ul>
+<h4 id="h8">CG に使える画像</h4>
+<p>ゲームの画面でなくても、好きな画像を表示できます。ただし次の制限があります。</p>
+<ul><li>ファイル: PNG・JPEG・BMP・GIF など（Pillow で読めるもの）と、BSAVE 形式の .SC5 / .SC8。透明な部分は黒になります。</li><li>大きさ:
+<ul><li>256×212 はそのまま、256×192 は下を黒で埋めます。512×212 は横 512 ドットの画面（16 色）になります。</li><li>320×240 と 640×480 はエミュレータのスクリーンショットとみなして、周りの枠を切り取ります。</li><li>それ以外の大きさは 256×212 に引き伸ばします（縦横比は保たれません）。ネットの画像などは、あらかじめ 256×212 に切り抜いて縮小しておいてください。</li></ul></li><li>縦横比: 画像の 1 ピクセルが MSX の 1 ドットになりますが、MSX のドットは正方形ではありません。実機（NTSC のテレビ・モニター）では 1 ドットが約 1.14:1 の横長なので、正方形のピクセルの画像は約 14% 横に伸びて見えます。4:3 の画像なら、縦横比を気にせず 256×212 にそのまま縮小すると、実機でほぼ 4:3 に見えます。PAL の本体ではドットがさらに横長（約 1.37:1）になり、ゲームの絵も含めて横に広く見えます。エミュレータでは、設定によってドットが正方形のまま表示されることがあります。</li><li>色:
+<ul><li>MSX2 の 512 色に直して 16 色以下なら、色はそのまま（SCREEN 5）です。</li><li>それより多い画像（写真など）は、決まった 256 色（SCREEN 8）に減らすので、色が粗くなります。横 512 ドットの画像は 16 色に減らします。</li></ul></li><li>容量: CG は圧縮して ROM に入れますが、写真のような絵はあまり縮まず（1 枚最大約 53KB）、表示にも 1〜2 秒かかります。ROM の容量（既定 1MB）が足りないときは <code>--size 2048</code> などで大きくできます（最大 4MB）。</li><li>表示中は、一番下の行に曲名を重ねて表示します。</li><li>ゲームの画面は、エミュレータのスクリーンショット（openMSX なら <code>screenshot -raw</code>）から作るのが確実です。スキャンラインやぼかしを入れた画像は色が増えて SCREEN 8 になってしまいます。</li></ul>
+<h4 id="h9">曲名を直す</h4>
+<p><code>extract_log.txt</code> で曲の id（S0001 など）を調べ、<code>tools/mcm_db.csv</code>（UTF-8。Excel でも開けます）のその行の曲名（title / title_en）を直して、ROM を作り直してください。同じ曲がほかのゲームにもあるときは、ゲームごとに行があります。</p>
+<h3 id="h10">フォルダの中身</h3>
+<div class="scroll"><table><thead><tr><th>場所</th><th>内容</th></tr></thead><tbody><tr><td><code>tools/extract_disks.py</code></td><td>ディスクイメージから曲を取り出し、プレイリストを作る</td></tr><tr><td><code>tools/mcm_db.csv</code></td><td>曲のデータベース（曲名・英語の曲名・並び・ループ回数・除外など）</td></tr><tr><td><code>tools/mcm_db.py</code> ほか</td><td>データベースと MCM を扱うモジュール</td></tr><tr><td><code>player/build_rom.py</code></td><td>ROM を作る</td></tr><tr><td><code>player/player.asm</code> / <code>player.bin</code> / <code>player.sym</code></td><td>プレーヤーのプログラム（ソースと組み立て済みのもの）</td></tr><tr><td><code>player/drivers.json</code></td><td>使えるドライバの版の情報（番地と照合用の値だけ）</td></tr><tr><td><code>player/default_cg.png</code></td><td>標準の起動時の CG（<code>make_default_cg.py</code> で描いたもの）</td></tr><tr><td><code>player/TECHNICAL.md</code> / <code>TECHNICAL_en.md</code></td><td>技術的な説明（ドライバの扱い、ROM の構成など）</td></tr><tr><td><code>font/</code></td><td>フォント（k8x12、k6x8）</td></tr></tbody></table></div>
+<h3 id="h11">クレジット</h3>
+<ul><li>Thanks: Manuel Pazos（MCDRV.COM、Windows 版 PCPLAYER）、Patriek Lesparre</li><li>ドライバの逆アセンブル: Roberto Vargas
+<ul><li>ドライバの番地などは、Roberto Vargas さんによる幻影都市のドライバの逆アセンブル（Manuel Pazos さんのサイトで公開されている mcdrv.asm）と命令列を突き合わせて求めました。</li></ul></li><li>フォント: 門真 なむ氏の「k8x12」「k6x8」（自由に利用・改変・再配布できるフォントです。<code>font/</code> の中の説明を参照）</li><li>曲・ドライバ・ゲームの画面の著作権はマイクロキャビンにあります。作った ROM は個人で楽しむ範囲で使い、配布しないでください。</li></ul>
+<p>All music (C) MICRO CABIN Corp. Thank you for the wonderful music!</p>
+</main>
+</div>
+</body>
+</html>

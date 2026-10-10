@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+<meta charset="UTF-8">
+		
+		<TITLE>
+		I want more !
+		</TITLE>
+	
+<link rel="icon" href="../image/favicon.ico" type="image/x-icon">
+</HEAD>
+	<BODY bgcolor="#000040" text="#00A0FF" link="#00FFFF" vlink="#7F00FF" alink="#FFFF00">
+		<B>
+		<FONT color="#00FFFF">
+		11．配線の山場（１／４）
+		<BR>
+		</FONT>
+		　ここからが配線の山場です。ここでの配線は回路図で青でかかれている部分です。<BR>
+		<BR>
+		<IMG src="image/escc2-7.png" alt="図11"><BR>
+		<BR>
+		　回路図を見れば分かりますが、実体図で直交している線同士はつながっていないので注意してください。<BR>
+		　1. まず2212P003の42ピンにスロットからの/RESET信号が来ていますので、それをHC74の1ピンにつなげ、さらにHC139(2)の13、14ピンにつなげます。<BR>
+		　2. 同様に2212P003の26ピンにスロットからのD4信号が来ていますので、それをHC74の2ピンにつなげます。<BR>
+		　3. 2212P003の12ピン(/WR)とHC139(2)の7ピンをつなげます。<BR>
+		　5. SRAMの29ピン(/WE)とHC139(2)の5ピンをつなげます。<BR>
+		<BR>
+		　6. 最後に2212P003の10ピンにスロットからの/SLTSL信号が来ていますので、それをHC139(1)の15ピンにつなげます。<BR>
+		　そしてHC139(1)の15ピンからさらにHC139(2)の15ピンにつなげます。<BR>
+		<BR>
+		<A href="esc2_12.html" target="_self">
+			<IMG src="../image/go.png" alt="次へ">
+			次へ
+		</A>
+		<BR>
+		</B>
+		<BR>
+	</BODY>
+</HTML>
