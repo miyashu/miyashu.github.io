@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MICRO CABIN MUSIC PLAYER Ver 0.10</title>
+<title>MICRO CABIN MUSIC PLAYER Ver 0.20</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,7 +13,7 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · README</div>
-  <h1>MICRO CABIN MUSIC PLAYER Ver 0.10</h1>
+  <h1>MICRO CABIN MUSIC PLAYER Ver 0.20</h1>
   <p class="lead">マイクロキャビンのゲームの曲を、MSX の ROM カートリッジ（メガロム）にまとめて聴くためのツールです。曲は、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">対応しているゲーム</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">ROM の作り方</a></li><li class="t2"><a href="#h5">動かし方</a></li><li class="t2"><a href="#h7">プレイリストを直す</a></li><li class="t2"><a href="#h10">フォルダの中身</a></li><li class="t2"><a href="#h11">クレジット</a></li></ul></nav>
@@ -39,9 +39,9 @@ python build_rom.py</pre></div>
 <div class="scroll"><table><thead><tr><th>オプション</th><th>内容</th></tr></thead><tbody><tr><td><code>--autoplay</code></td><td>自動再生（下を参照）</td></tr><tr><td><code>--loops 3</code></td><td>ループ回数の既定値（既定 2）</td></tr><tr><td><code>--lang en</code> / <code>ja</code></td><td>表示を英語 / 日本語に固定（既定は本体の文字セットで決める）</td></tr><tr><td><code>--size auto</code></td><td>ROM の大きさを必要最小限にする（既定 1024KB）</td></tr><tr><td><code>-o 名前.rom</code></td><td>出力するファイル名</td></tr><tr><td><code>リスト.txt</code></td><td>別のプレイリストを使う</td></tr></tbody></table></div>
 <p><code>--autoplay</code> で作った ROM は、起動時の曲が終わったら（起動時の曲がなければ起動してすぐ）リストの先頭の曲から順に鳴らし続けます。キーボードのない環境（1chipMSX など）向けです。途中でキーを押せば、ふだんどおり操作できます。</p>
 <h3 id="h5">動かし方</h3>
-<ul><li>MSX のメガロムカートリッジ（ASCII16）として動かします。エミュレータでは ROM の種類（マッパー）に <strong>ASCII16</strong> を指定してください。</li><li>MSX1 / MSX2 / MSX2+ / turboR で動きます。RAM 32KB 以上が必要です（ファイナルファンタジーの曲は 64KB。ページ1の RAM でドライバを動かすため）。</li><li>FM 音源（内蔵の MSX-MUSIC か FM-PAC）を自動で見つけます。FM 音源がないときは、FM 音源用の曲データのうち PSG のパートだけが鳴ります（ゲームが FM 音源のないときに使う PSG 用の曲データは使いません）。</li><li>CG（ゲームの絵）は MSX2 以降で表示します。V9990（GFX9000）があるときは、CG は常に V9990 にだけ表示し、内蔵 VDP 側は曲選択の画面（リスト）だけになります（MSX1 でも CG を表示できます）。</li></ul>
+<ul><li>MSX のメガロムカートリッジ（ASCII16）として動かします。エミュレータでは ROM の種類（マッパー）に <strong>ASCII16</strong> を指定してください。ASCII16 以外（ESERAMair などを 8KB バンクにしたままなど）で起動すると、「The ROM is not in ASCII16 mode.」と表示して止まります（暴走はしません）。</li><li>MSX1 / MSX2 / MSX2+ / turboR で動きます。RAM 32KB 以上が必要です（ファイナルファンタジーの曲は 64KB。ページ1の RAM でドライバを動かすため）。</li><li>FM 音源（内蔵の MSX-MUSIC か FM-PAC）を自動で見つけます。FM 音源がないときは、FM 音源用の曲データのうち PSG のパートだけが鳴ります（ゲームが FM 音源のないときに使う PSG 用の曲データは使いません）。</li><li>CG（ゲームの絵）は MSX2 以降で表示します。V9990（GFX9000）か、I/O 88h の VDP（V9968 カートリッジなど）があるときは、CG は常にそちらにだけ表示し、内蔵 VDP 側は曲選択の画面（リスト）だけになります（MSX1 でも CG を表示できます。両方あるときは V9990）。</li></ul>
 <h4 id="h6">キー操作</h4>
-<div class="scroll"><table><thead><tr><th>キー</th><th>動作</th></tr></thead><tbody><tr><td>↑ ↓</td><td>曲を選ぶ（SHIFT で 10 曲ずつ）</td></tr><tr><td>← →</td><td>ゲームを選ぶ</td></tr><tr><td>SPACE</td><td>選んだ曲を鳴らす / 鳴っている曲を止める</td></tr><tr><td>E</td><td>再生の範囲（ALL / GAME / ONE）</td></tr><tr><td>R</td><td>リピート（REPEAT / ONCE）</td></tr><tr><td>V</td><td>CG とリストを切り替える（MSX2 以降、CG があるとき）</td></tr><tr><td>H</td><td>ヘルプ</td></tr></tbody></table></div>
+<div class="scroll"><table><thead><tr><th>キー</th><th>動作</th></tr></thead><tbody><tr><td>↑ ↓</td><td>曲を選ぶ（SHIFT で 10 曲ずつ）</td></tr><tr><td>← →</td><td>ゲームを選ぶ</td></tr><tr><td>SPACE</td><td>選んだ曲を鳴らす / 鳴っている曲を止める</td></tr><tr><td>E</td><td>再生の範囲（ALL / GAME / ONE）</td></tr><tr><td>R</td><td>リピート（REPEAT / ONCE）</td></tr><tr><td>V</td><td>CG とリストを切り替える（MSX2 以降、CG があるとき）</td></tr><tr><td>H</td><td>ヘルプ（起動時の CG の表示中に押すと、曲を止めずに曲選択の画面にしてヘルプを出す）</td></tr></tbody></table></div>
 <p>テンキーの 8・2・4・6 でも ↑↓←→ と同じ操作ができます。</p>
 <h3 id="h7">プレイリストを直す</h3>
 <p><code>player/playlist.txt</code> は 1 行に 1 曲のファイルを書いたリストです。行の順に曲が並びます。</p>

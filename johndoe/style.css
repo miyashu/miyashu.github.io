@@ -155,3 +155,13 @@ a.xref { text-decoration: none; border-bottom: 1px dotted currentColor; }
   .docwrap { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .toc { position: static; max-height: none; border: 1px solid var(--line); border-radius: 6px; padding: 8px; background: var(--panel); }
 }
+
+/* 履歴 */
+.history { max-width: 72ch; }
+.history h3 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 700; }
+.history dl { margin: 0; }
+.history dt { font-family: var(--f-mono); font-size: 14px; font-weight: 700; margin-top: 8px; }
+.history dt span { font-weight: 400; color: var(--muted); margin-left: .6em; }
+.history dd { margin: 2px 0 0; }
+.history ul { margin: 0; padding-left: 1.2em; font-size: 14px; }
+.history li + li { margin-top: 2px; }

@@ -111,7 +111,7 @@
 <section class="soft" id="mcplayer" aria-labelledby="mcplayer-name">
   <div class="soft-head">
     <h2 id="mcplayer-name">MCPLAYER</h2>
-    <span class="ver">Ver 0.10</span>
+    <span class="ver">Ver 0.20</span>
     <span class="platform">MSX ROM</span>
   </div>
   <p class="tagline" lang="ja">MICRO CABIN MUSIC PLAYER — マイクロキャビンのゲーム音楽をメガロムで聴く</p>
@@ -163,16 +163,16 @@
       <ul lang="ja">
         <li>MSX1 / 2 / 2+ / turboR、RAM 32KB以上</li>
         <li>MSX-MUSIC・FM-PACを自動で検出(無ければPSGのパートだけ)</li>
-        <li>MSX2以降ではゲームのCGを表示、V9990にも対応</li>
+        <li>MSX2以降ではゲームのCGを表示、V9990・V9968(I/O 88h)にも対応</li>
         <li>レベルメーター、ループ回数・再生範囲の切り替え、自動再生</li>
-        <li>実機ではFS-A1GT(turboR)+ESERAMair(WiFi付き似非RAMディスク、ASCII16)で起動・再生を確認</li>
+        <li>実機ではFS-A1GT(turboR)+ESERAMair(WiFi付き似非RAMディスク、ASCII16)で起動・再生を確認。V9968カートリッジでのCG表示も確認</li>
       </ul>
       <ul lang="en">
         <li>MSX1 / 2 / 2+ / turboR, 32 KB RAM or more</li>
         <li>Finds MSX-MUSIC or FM-PAC (PSG parts only without FM)</li>
-        <li>Shows game pictures on MSX2 and later, and on V9990</li>
+        <li>Shows game pictures on MSX2 and later, and on V9990 or V9968 (I/O 88h)</li>
         <li>Level meters, loop count and play-range modes, autoplay</li>
-        <li>Tested on real hardware: FS-A1GT (turboR) with an ESERAMair (WiFi ESE-RAM cartridge, ASCII16)</li>
+        <li>Tested on real hardware: FS-A1GT (turboR) with an ESERAMair (WiFi ESE-RAM cartridge, ASCII16), and pictures on a V9968 cartridge</li>
       </ul>
     </div>
     <div>
@@ -191,22 +191,63 @@
 
   <div class="memo" lang="ja">
     <span class="memo-label">作業メモ — J.D.</span>
-    <p>依頼内容は「マイクロキャビンの曲を、それぞれのゲーム自身のドライバで鳴らすメガロムを」。できあがった頃に「やっぱりマイクロキャビンのコードは配布物に入れたくない」と言い出したので、ドライバをユーザーのディスクから取り出して手を入れる方式に作り直しました。ドライバ10版、全255曲で動作を確認済み。依頼人いわく「音そのものは耳でまだ十分に確かめていない」そうです。私の仕事は終わっています。</p>
+    <p>依頼内容は「マイクロキャビンの曲を、それぞれのゲーム自身のドライバで鳴らすメガロムを」。できあがった頃に「やっぱりマイクロキャビンのコードは配布物に入れたくない」と言い出したので、ドライバをユーザーのディスクから取り出して手を入れる方式に作り直しました。ドライバ10種類、全255曲で動作を確認済み。依頼人いわく「音そのものは耳でまだ十分に確かめていない」そうです。私の仕事は終わっています。</p>
   </div>
   <div class="memo" lang="en">
     <span class="memo-label">Work log — J.D.</span>
-    <p>The brief: "A MegaROM that plays Micro Cabin music with each game's own sound driver." Right when it was done, the client decided no Micro Cabin code should ship in the package, so I rebuilt it to pull the drivers out of the user's own disks and patch them at build time. Ten driver versions, all 255 songs checked. The client admits they "haven't properly listened to it yet." My part is finished.</p>
+    <p>The brief: "A MegaROM that plays Micro Cabin music with each game's own sound driver." Right when it was done, the client decided no Micro Cabin code should ship in the package, so I rebuilt it to pull the drivers out of the user's own disks and patch them at build time. Ten game drivers and all 255 songs checked. The client admits they "haven't properly listened to it yet." My part is finished.</p>
   </div>
 
   <p class="caution" lang="ja"><strong>著作権:</strong> 曲・ドライバ・ゲームの画面の著作権はマイクロキャビンにあります。作ったROMは個人で楽しむ範囲で使い、配布しないでください。</p>
   <p class="caution" lang="en"><strong>Copyright:</strong> the music, drivers and game graphics are © MICRO CABIN Corp. Use the ROM you build for your own enjoyment only, and do not distribute it.</p>
 
   <div class="links">
-    <a class="btn primary" href="MCPLAYER_v0.10.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 322 KB</small></a>
+    <a class="btn primary" href="MCPLAYER_v0.20.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 327 KB</small></a>
     <a class="btn ghost" href="mcplayer_readme.html" lang="ja">使い方</a>
     <a class="btn ghost" href="mcplayer_readme_en.html" lang="en">How to use</a>
     <a class="btn ghost" href="mcplayer_tech.html" lang="ja">技術資料</a>
     <a class="btn ghost" href="mcplayer_tech_en.html" lang="en">Technical notes</a>
+  </div>
+
+  <div class="history" lang="ja">
+    <h3>履歴</h3>
+    <dl>
+      <dt>Ver 0.20 <span>2026-10-10</span></dt>
+      <dd>
+        <ul>
+          <li>I/O 88h の VDP(V9968 カートリッジなど)にもCGを出せるようにした(V9990 と同じく、CGはそちらに、内蔵VDPは曲選択の画面)</li>
+          <li>起動時にマッパーが ASCII16 か確かめ、違えばメッセージを出して止まるようにした(ESERAMair を8KBバンクのまま起動したときなど。以前は暴走していた)</li>
+          <li>起動時のCGの表示中に H キーを押すと、曲を止めずに曲選択の画面にしてヘルプを出すようにした</li>
+          <li>再生中にヘルプを閉じると、またヘルプが開くことがあった不具合を直した</li>
+        </ul>
+      </dd>
+      <dt>Ver 0.10 <span>2026-10-08</span></dt>
+      <dd>
+        <ul>
+          <li>最初の公開版</li>
+        </ul>
+      </dd>
+    </dl>
+  </div>
+  <div class="history" lang="en">
+    <h3>History</h3>
+    <dl>
+      <dt>Ver 0.20 <span>2026-10-10</span></dt>
+      <dd>
+        <ul>
+          <li>Pictures can be shown on a VDP at I/O 88h (V9968 cartridge etc.), like the V9990: pictures there, the song list on the built-in VDP</li>
+          <li>Checks at boot that the mapper is ASCII16, and stops with a message if not (e.g. an ESERAMair left in 8KB bank mode, which used to crash)</li>
+          <li>Pressing H on the startup picture goes to the song list with the help, without stopping the song</li>
+          <li>Fixed: closing the help during playback could open it again</li>
+        </ul>
+      </dd>
+      <dt>Ver 0.10 <span>2026-10-08</span></dt>
+      <dd>
+        <ul>
+          <li>First release</li>
+        </ul>
+      </dd>
+    </dl>
   </div>
 </section>
 
