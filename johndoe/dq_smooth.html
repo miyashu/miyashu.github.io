@@ -45,7 +45,7 @@
 <h3 id="s7">7. パッチプログラム</h3>
 <p>配布するのは、Python で書いたパッチプログラム1本(DQ1・DQ2 それぞれ)。</p>
 <ul><li>ゲームの ROM の内容は含まない。パッチで変えたバイトだけを持ち、ゲームの ROM と同じ並び(16バイト以上)の部分は、当てるときに利用者の ROM から写す。V9968 の案内画面のフォントも、利用者の ROM から写す</li><li>当てた結果が、開発で作った ROM とまったく同じになることを、チェックサムで確かめてから書き出す</li><li>DQ2 のオプション
-<ul><li><code>--r800</code>: R800 版にする(<a class="xref" href="#s5">§5</a>)</li><li><code>--names 王子,王女</code>: 仲間2人の名前を固定する。元のゲームは主人公の名前の文字コードの和から、表の中の名前を選んでいる</li><li><code>--debugpw ファイル</code>: デバッグ起動用の復活の呪文を4つまで入れる。タイトル画面で F1 を押しながら 1〜4 の数字キーを押すと、その呪文を自動で入力して再開する(入力はキーを順に押したことにして行う)</li></ul></li><li>DQ1 のオプション: 1歩のフレーム数(8〜16)と、左端の隠し方(MSK 0〜2)</li></ul>
+<ul><li><code>--r800</code>: R800 版にする(<a class="xref" href="#s5">§5</a>)</li><li><code>--names 王子,王女</code>: 仲間2人の名前を固定する。元のゲームは主人公の名前の文字コードの和から、表の中の名前を選んでいる</li><li><code>--debugpw ファイル</code>: デバッグ起動用の復活の呪文を4つまで入れる。タイトル画面(ロゴと START・CONTINUE などの選択肢が表示されているところ)で F1 を押しながら 1〜4 の数字キーを押すと、その呪文を自動で入力して再開する(入力はキーを順に押したことにして行う)</li></ul></li><li>DQ1 のオプション: 1歩のフレーム数(8〜16)と、左端の隠し方(MSK 0〜2)</li></ul>
 <h3 id="s8">8. 確認</h3>
 <div class="scroll"><table><thead><tr><th>項目</th><th>確認</th></tr></thead><tbody><tr><td>DQ2 の滑らかなスクロール、NPC、混雑時の点滅</td><td>実機 turbo R(Z80・R800)、openMSX</td></tr><tr><td>DQ2 の V9968(カートリッジ)</td><td>実機 V9968 カートリッジ(Z80・R800)</td></tr><tr><td>DQ2 の V9968 内蔵、MSX1 + V9968</td><td>openMSX のみ(V9968 内蔵の機種は、VDP を V9968 にした試験用の機種設定)</td></tr><tr><td>DQ2 の Panasonic の高速モード</td><td>実機(3倍速改造機)、openMSX FS-A1WX</td></tr><tr><td>DQ2 の V9938 での元の動き</td><td>openMSX(C-BIOS MSX2)</td></tr><tr><td>DQ1</td><td>openMSX のみ</td></tr></tbody></table></div>
 </main>
