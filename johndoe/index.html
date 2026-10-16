@@ -377,7 +377,88 @@
 
 <hr class="divider">
 
+<!-- ======================================================= V9968 test programs -->
+<section class="soft" id="v9968test" aria-labelledby="v9968test-name">
+  <div class="soft-head">
+    <h2 id="v9968test-name" lang="ja">V9968 テストプログラム</h2>
+    <h2 id="v9968test-name-en" lang="en">V9968 test programs</h2>
+    <span class="ver">v1.00 · 2026-10-16</span>
+    <span class="platform">MSX-DOS / V9968</span>
+  </div>
+  <p class="tagline" lang="ja">組み立てた V9968 カートリッジが、ちゃんと動いているかを確かめる</p>
+  <p class="tagline" lang="en">Check that the V9968 cartridge you built really works</p>
+  <p lang="ja">V9968 は、HRA! 氏が FPGA で作った V9958 上位互換の VDP です。そのカートリッジ(I/O 88h)を組み立てた人のための、MSX-DOS 用のテストプログラム 3 本です。VRAM 256KB の試験と全画面モードの表示、パレットやページ切り替えのタイミングと速さ、FPGA に入っている 3D 補助プロセッサ Geo3D の確認ができます。本体の VDP(V9938 / V9958)でも、V9968 の機能を除いて動きます。</p>
+  <p lang="en">The V9968 is HRA!'s FPGA VDP, upward compatible with the V9958. These are three MSX-DOS test programs for people who have built its cartridge (I/O 88h): a 256 KB VRAM test with every screen mode, timing and speed tests for palette writes and page flips, and a check of Geo3D, the 3D coprocessor in the FPGA. They also run on the machine's own VDP (V9938 / V9958), without the V9968-only parts.</p>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">プログラム</h3>
+      <h3 lang="en">Programs</h3>
+      <ul lang="ja">
+        <li><code>V9968TST</code>: VRAM 全体をバンク単位で試験(アドレス線の重なりも分かる)、SCREEN 0〜12・インターレース・FIL・EPAL のテスト画面</li>
+        <li><code>V9968TIM</code>: パレットのラスター / snow、ページ切り替えのタイミング、走査線割り込みでの分割、速さ、turbo R の R800 での VRAM の読み書き</li>
+        <li><code>V9968G3D</code>: Geo3D の有無、頂点の計算 10 通りの照合、回転する立方体とフレームレート</li>
+        <li>VDP は 88h / 98h を自動で判定。turbo R では Z80 に切り替えて動かす(<code>/R</code> で R800 のまま)</li>
+      </ul>
+      <ul lang="en">
+        <li><code>V9968TST</code>: tests the whole VRAM bank by bank (it also catches address lines that alias), then test screens for SCREEN 0-12, interlace, FIL and EPAL</li>
+        <li><code>V9968TIM</code>: palette rasters and snow, page-flip timing, line-interrupt splits, speed, and VRAM reads and writes from the turbo R's R800</li>
+        <li><code>V9968G3D</code>: whether Geo3D is there, ten vertex calculations checked against known answers, and a rotating cube with its frame rate</li>
+        <li>The VDP at 88h or 98h is found automatically. On a turbo R the programs switch to the Z80 (<code>/R</code> keeps the R800)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">実機で分かったこと</h3>
+      <h3 lang="en">Found on real hardware</h3>
+      <ul lang="ja">
+        <li>R800 では VRAM の読み出しが化ける(書き込みは問題なし)</li>
+        <li>R#2(表示ページ)は表示の途中でもすぐ効く。EPAL 768 バイトは Z80 では帰線に収まらない</li>
+        <li>S#2 の HR / VR は、マニュアルの記述と違い V9938 と同じ向き</li>
+        <li>Geo3D は 2026-10-05 の版から入っていて、立方体は 59.9fps</li>
+      </ul>
+      <ul lang="en">
+        <li>VRAM reads from the R800 come back corrupted (writes are fine)</li>
+        <li>R#2 (display page) takes effect at once, even mid-frame. A 768-byte EPAL write does not fit in the blanking on a Z80</li>
+        <li>S#2 HR / VR work as on the V9938, not as the manual says</li>
+        <li>Geo3D is already in the 2026-10-05 FPGA, and the cube runs at 59.9 fps</li>
+      </ul>
+      <h3 lang="ja">V9968 に対応したほかのソフト</h3>
+      <h3 lang="en">Other software that supports the V9968</h3>
+      <ul lang="ja">
+        <li><a href="#mcplayer">MCPLAYER</a>: ゲームの絵(CG)を 88h の V9968 に出し、本体の画面は曲の一覧に</li>
+        <li><a href="#dqsmooth">ドラクエ スクロール改善パッチ</a>: DQ2 を V9968 に出して、1 ラインに 8 人まで点滅なし</li>
+      </ul>
+      <ul lang="en">
+        <li><a href="#mcplayer">MCPLAYER</a>: shows the game pictures (CG) on a V9968 at 88h and keeps the song list on the main screen</li>
+        <li><a href="#dqsmooth">Dragon Quest smooth scroll patches</a>: DQ2 runs on the V9968 with up to 8 characters on a line without flicker</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼人がカートリッジを組み上げて、最初の一言は「VRAM が 256KB しかない?」。256KB で合っています。その次は「ノイズが見える」「インターレースもちらつく」と続き、気付けばパレットを書くタイミングをライン単位で測り、R800 で VRAM を読むとビットが化けるのを突き止め、作者への報告文まで書いていました。最後は「Geo3D なるものが追加されたらしい」。テストプログラムを頼んだはずが、いつの間にかカートリッジの調査になっていました。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The client finished building the cartridge, and the first thing they said was "only 256 KB of VRAM?" 256 KB is right. Then came "I see noise" and "interlace flickers too," and before I knew it I was timing palette writes line by line, tracking down the bits that flip when the R800 reads VRAM, and drafting a report to the designer. The last request: "apparently they added something called Geo3D." I was asked for a test program and somehow ended up auditing the cartridge.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 非公式のテストプログラムです。使用は自己責任でお願いします。報告書と説明書は日本語のみです。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> unofficial test programs; use at your own risk. The report and the manual are in Japanese only.</p>
+
+  <div class="links">
+    <a class="btn primary" href="v9968test.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 24 KB</small></a>
+    <a class="btn ghost" href="v9968test.html"><span lang="ja">開発報告</span><span lang="en">Report (Japanese)</span></a>
+    <a class="btn ghost" href="v9968test_readme.html"><span lang="ja">説明書</span><span lang="en">Manual (Japanese)</span></a>
+  </div>
+</section>
+
+<hr class="divider">
+
 <footer class="colophon">
+  <p lang="ja">V9968 は HRA! 氏の作品です(<a href="https://github.com/hra1129/V9968_Cartridge">V9968_Cartridge</a>)。Geo3D は Alex Moncks 氏の作品です。</p>
+  <p lang="en">The V9968 is HRA!'s work (<a href="https://github.com/hra1129/V9968_Cartridge">V9968_Cartridge</a>). Geo3D is Alex Moncks' work.</p>
   <p lang="ja">MCPLAYERのドライバの番地などは、Roberto Vargasさんによる幻影都市のドライバの逆アセンブル(Manuel Pazosさんのサイトで公開されている mcdrv.asm)と突き合わせて求めました。Thanks: Manuel Pazos(MCDRV.COM、Windows版 PCPLAYER)、Patriek Lesparre。フォント: 門真なむ氏の「k8x12」「k6x8」。</p>
   <p lang="en">MCPLAYER's driver addresses were found by matching against Roberto Vargas' disassembly of the Illusion City driver (mcdrv.asm, published on Manuel Pazos' website). Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre. Fonts: "k8x12" and "k6x8" by Num Kadoma.</p>
   <p>All music © MICRO CABIN Corp. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD. MSX is a trademark of MSX Licensing Corporation.</p>

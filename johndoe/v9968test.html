@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V9968 テストプログラム 開発報告</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">V9968 · 開発報告</div>
+  <h1>V9968 テストプログラム 開発報告</h1>
+  <p class="lead">V9968 カートリッジを組み立てた人が、自分のカートリッジがちゃんと動いているかを確かめるための MSX-DOS 用プログラムを 3 本作った。VRAM と全画面モードを見る V9968TST、パレット・ページ切り替え・割り込み・速さを測る V9968TIM、FPGA に入っている 3D 補助プロセッサ Geo3D を確かめる V9968G3D である。実機(turbo R + V9968 カートリッジ)で試して分かったこともあわせて報告する。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. V9968 について</a></li><li class="t2"><a href="#s2">2. プログラムの一覧</a></li><li class="t2"><a href="#s3">3. V9968TST(機能の確認)</a></li><li class="t2"><a href="#s4">4. V9968TIM(タイミングの確認)</a></li><li class="t2"><a href="#s5">5. V9968G3D(Geo3D の確認)</a></li><li class="t2"><a href="#s6">6. 実機で分かったこと</a></li><li class="t2"><a href="#s7">7. 確かめた環境</a></li><li class="t2"><a href="#s8">8. V9968 に対応したほかのソフト</a></li></ul></nav>
+<main class="docbody">
+<h3 id="s1">1. V9968 について</h3>
+<p>V9968 は HRA! 氏が FPGA(Tang Nano 20K)で作った、V9958 の上位互換の VDP である。カートリッジ版は MSX のスロットに挿して使い、絵は HDMI で出る。</p>
+<ul><li>I/O は Port#0-3 が V9958 と同じで、Port#4(先頭 + 4)が新しく増えた。カートリッジの既定は 88h-8Ch で、スイッチで 98h-9Ch にもできる</li><li>VRAM は 256KB。リセット直後は V9958 として振る舞い(VRAM 128KB、ID 2)、Port#4 で拡張レジスタのロックを外して R#21 の V58 を 0 にすると V9968 になる(ID 3)</li><li>V9958 にない機能: 32768 色から選ぶ 256 色のパレット(EPAL)、インターレースの 424 ラインを VRAM に順に並べる FIL、1 ラインに 16 枚のスプライト(S16)、VDP コマンドの高速モード(HS)など</li><li>2026-10-05 の版の FPGA から、Alex Moncks 氏の 3D 補助プロセッサ Geo3D が入っている(ポートは先頭 + 5 と先頭 + 7)</li></ul>
+<p>参考: HRA! 氏の <a href="https://github.com/hra1129/V9968_Cartridge">V9968_Cartridge</a>、Alex Moncks 氏の <a href="https://github.com/alexmoncks/V9968_Cartridge/tree/main/geo3d">Geo3D</a></p>
+<h3 id="s2">2. プログラムの一覧</h3>
+<div class="scroll"><table><thead><tr><th>ファイル</th><th>内容</th></tr></thead><tbody><tr><td><code>V9968TST.COM</code></td><td>機能の確認: VRAM 試験と、全画面モードの表示</td></tr><tr><td><code>V9968TIM.COM</code></td><td>タイミングの確認: パレットの書き換え、ページの切り替え、走査線割り込み、速さ、R800 での VRAM の読み書き</td></tr><tr><td><code>V9968G3D.COM</code></td><td>Geo3D が載っているかの確認と、回転する立方体</td></tr></tbody></table></div>
+<ul><li>MSX-DOS / MSX-DOS2 / Nextor で動く。確かめたのは MSX2+ 相当(openMSX)と turbo R(実機)</li><li>本体の VDP(98h の V9938 / V9958)でも、V9968 の機能を除いて動く</li><li>起動時と終了時に、本体の画面(DOS)に VDP の種類・I/O・VRAM 容量・CPU と結果を出す。88h のときは本体の VDP に触らない</li></ul>
+<div class="scroll"><pre>V9968TST [/8] [/9] [/R]
+V9968TIM [/8] [/9] [/R]
+V9968G3D [/8] [/9] [/R]</pre></div>
+<div class="scroll"><table><thead><tr><th>オプション</th><th>意味</th></tr></thead><tbody><tr><td>なし</td><td>88h に VDP があれば 88h、なければ 98h を使う</td></tr><tr><td><code>/8</code></td><td>88h を使う</td></tr><tr><td><code>/9</code></td><td>98h を使う</td></tr><tr><td><code>/R</code></td><td>turbo R で R800 のまま動かす。指定しなければ Z80 に切り替えて、終わったら元に戻す</td></tr></tbody></table></div>
+<h3 id="s3">3. V9968TST(機能の確認)</h3>
+<p>最初に VRAM 試験、そのあと SCREEN 0 から SCREEN 12 までの全画面モードを 1 枚ずつ出す。SPACE で次、BS で前、RETURN でもう一度、ESC で終わり。</p>
+<h4 id="s3.1">3.1 VRAM 試験</h4>
+<p>VRAM 全体(V9968 は 256KB、V9938 / V9958 は 128KB)を 16KB のバンク単位で調べる。</p>
+<ul><li>書く値は、乱数の並べ替え表を行とバンクごとにずらして引いたもの。どのアドレス線が切れていても、ほかの線とつながっていても、違う値になるようにした</li><li>乱数のパターンとその反転の 2 回で、全ビットの 0 と 1 を確かめる</li><li>「全部書いてから全部読む」ので、アドレス線の不良で別のバンクに重なっていると分かる。文字の画面を置くバンクも途中で移して、そこも調べる</li><li>結果はバンクごとに <code>OK</code> か、誤りのあったビットと数。最初の誤りのアドレスと、書いた値・読んだ値も出す</li></ul>
+<p>画面に絵を出すだけでは、使っていない領域や、128KB から先が 0 番地の写しになっているような不良に気付けない。それで、試験は表示とは別にした。</p>
+<div class="shots"><figure><img src="v9968_vramtest.png" alt="VRAM 試験の画面(openMSX の V9958 なので 128KB = 8 バンク)" loading="lazy"><figcaption>VRAM 試験の画面(openMSX の V9958 なので 128KB = 8 バンク)</figcaption></figure></div>
+<h4 id="s3.2">3.2 画面</h4>
+<div class="scroll"><table><thead><tr><th>モード</th><th>内容</th></tr></thead><tbody><tr><td>SCREEN 0(40 / 80 桁)、1、3</td><td>桁の目盛り、外周の枠、256 文字、1 ドットの模様、16 色、ブリンク</td></tr><tr><td>SCREEN 2 / 4</td><td>格子・同心円・対角線、16 色のバー、スプライト(1 ラインに 9 個並べて 8 個だけ見える)</td></tr><tr><td>SCREEN 5 / 6 / 7 / 8</td><td>テストカード(カラーバー、階調、解像度、円、格子)と幾何パターン</td></tr><tr><td>SCREEN 7 インターレース</td><td>512x424。左上に片方のフィールドだけの横じま</td></tr><tr><td>SCREEN 7 + FIL</td><td>同じ絵を、VRAM に 424 ラインが順に並ぶ形で(V9968 のみ)</td></tr><tr><td>SCREEN 8 / 8 + EPAL</td><td>256 色の表 / 32768 色から 256 色(V9968 のみ)</td></tr><tr><td>SCREEN 10 / 11 / 12</td><td>YJK の色の平面、Y の階調、カラーバー(V9958 以降)</td></tr></tbody></table></div>
+<ul><li>円は、MSX の 256 ドットのモードの画素の縦横比(8:7)で丸く見えるように描いた</li><li>SCREEN 5-8 の絵は VDP コマンド(HMMV / LMMV / LINE / LMMC、XOR と TIMP)で描くので、コマンドの確認にもなる</li><li>V9968 では、SCREEN 5-8 を VRAM の上半分などのページに描いて表示する。128KB から先が本当に使えるかも見える</li></ul>
+<div class="shots"><figure><img src="v9968_scr5.png" alt="SCREEN 5 のテストカード(openMSX で撮影)" loading="lazy"><figcaption>SCREEN 5 のテストカード(openMSX で撮影)</figcaption></figure><figure><img src="v9968_scr2.png" alt="SCREEN 2 の格子と同心円(openMSX)" loading="lazy"><figcaption>SCREEN 2 の格子と同心円(openMSX)</figcaption></figure><figure><img src="v9968_interlace.png" alt="SCREEN 7 インターレース 512x424(openMSX)" loading="lazy"><figcaption>SCREEN 7 インターレース 512x424(openMSX)</figcaption></figure><figure><img src="v9968_yjk.png" alt="SCREEN 12 の YJK(openMSX)" loading="lazy"><figcaption>SCREEN 12 の YJK(openMSX)</figcaption></figure></div>
+<h3 id="s4">4. V9968TIM(タイミングの確認)</h3>
+<p>動画の再生やラスター処理のような「表示に合わせてレジスタを書く」使い方を想定して、反映のタイミングと速さを測る。CPU の速さで結果が変わるので、Z80(既定)と R800(<code>/R</code>)の両方で見るとよい。SPACE で次のテスト、RETURN でモード切り替え、↑↓ で調整。</p>
+<div class="scroll"><table><thead><tr><th>#</th><th>テスト</th><th>見方</th></tr></thead><tbody><tr><td>1</td><td>パレットのラスター(SCREEN 5)</td><td>毎ライン、水平帰線の始まりでパレット 0 を書き換える。色の変わり目の位置とゆれを見る。表示中に書き続けて点(snow)が出ないかも見られる。V9968 は EPAL でも</td></tr><tr><td>2</td><td>ページ切り替えのタイミング</td><td>毎フレーム、垂直帰線の始まり + N ラインで「これから出すページの色 = 灰色、今のページの色 = 赤」をパレットに書いてから R#2 を切り替える。灰色なら間に合っている</td></tr><tr><td>3</td><td>走査線割り込みでの分割</td><td>R#19 のラインで縦スクロールとパレットを変える</td></tr><tr><td>4</td><td>速さ</td><td>1 フレームと垂直帰線のライン数、パレット 32 バイト、EPAL 768 バイト、VRAM 16KB の読み書き、SCREEN 8 の VDP コマンド(V9968 は通常 / 高速)</td></tr><tr><td>5</td><td>CPU からの VRAM アクセス(turbo R のみ)</td><td>「R800 で書いて Z80 で読む」と「Z80 で書いて R800 で読む」に分けて、誤りの数を数える</td></tr></tbody></table></div>
+<div class="shots"><figure><img src="v9968_raster.png" alt="テスト 1 パレットのラスター(openMSX)" loading="lazy"><figcaption>テスト 1 パレットのラスター(openMSX)</figcaption></figure></div>
+<h3 id="s5">5. V9968G3D(Geo3D の確認)</h3>
+<p>Geo3D は、頂点の座標変換と透視の計算をして、VDP の LINE コマンドで線を引いたり面を塗ったりする補助プロセッサである。結果は DOS の画面に出す。</p>
+<ol><li>状態のポートを読む。FFh なら Geo3D がない(古い FPGA)ので終わる</li><li>レジスタに値を書いて読み返す</li><li>頂点 1 つの計算を 10 通り(中心、回転、移動、512x424、手前すぎ、あふれ、画面外など)させて、前もって計算した答えと比べる。答えは作者の検証用モデルとも一致を確かめてある</li><li>全部合えば、キーを押すと V9968 の画面に回転する立方体を描かせる。終わると最初のフレームの描いた線の数(12 / 0 / 0 のはず)、フレーム数、時間、平均のフレームレートを出す</li></ol>
+<p>Geo3D からの読み出しも VDP と同じく後からデータを返す作りなので、既定の Z80 で動かす(<code>/R</code> は付けない)。</p>
+<h3 id="s6">6. 実機で分かったこと</h3>
+<p>turbo R、MSX-DOS2、V9968 カートリッジ(I/O 88h)で試した。機能(全画面モード、VRAM 256KB、EPAL、インターレース / FIL、VDP コマンド)はどれも問題なく動いた。そのうえで気付いたことを挙げる。</p>
+<h4 id="s6.1">6.1 測った値</h4>
+<div class="scroll"><table><thead><tr><th>項目(ライン数、1 ライン 約 64µs)</th><th>Z80</th><th>R800</th></tr></thead><tbody><tr><td>1 フレーム / 垂直帰線</td><td>262 / 51</td><td>262 / 51</td></tr><tr><td>パレット 32 バイト</td><td>5</td><td>1</td></tr><tr><td>EPAL 768 バイト</td><td>81</td><td>22</td></tr><tr><td>VRAM 書き込み 16KB</td><td>1715</td><td>479</td></tr><tr><td>SCREEN 8 256x212 の HMMV / LMMV / HMMM / LMMM</td><td>50 / 154 / 133 / 225</td><td>同じ</td></tr></tbody></table></div>
+<h4 id="s6.2">6.2 気付いたこと</h4>
+<ul><li><strong>R#2(表示ページ)はすぐ効く</strong>: 表示の途中で書いても、その場から切り替わる(V9938 / V9958 と同じ扱い)。パレット 4 バイトなら垂直帰線の始まりから 49 ラインまでに書けば間に合う。EPAL の 768 バイトは Z80 では 81 ラインかかって帰線(51 ライン)に収まらないので、毎フレーム 256 色を入れ替えるなら R800 が要る</li><li><strong>R800 では VRAM の読み出しが化ける</strong>: R800 で Port#0 から VRAM を読むと、16KB あたり数十個の誤りが出る(書き込みは R800 でも誤り 0、Z80 なら読み書きとも 0)。誤りはどれも 0 のビットが 1 になり(85h が 87h など)、1 バイトごとに待ちを入れても減らない。turbo R は 98h の VDP には R800 でも待ちを入れるが 88h には入れないこと、FPGA 側が読まれてから VRAM を読みに行く作り(先読みがない)であることから、R800 の短い IN の間にデータが出揃っていないと考えられる。R800 で使うソフトは、VRAM を読まない作りにすれば問題ない</li><li><strong>S#2 の HR / VR</strong>: プログラマーズマニュアルでは「負論理」とあるが、実物は V9938 と同じく帰線の間が 1 である</li><li><strong>S#1 の FH</strong>: R#0 の IE1 が 0 でも立つので、割り込みを使わずに走査線の位置を待てる</li><li><strong>インターレースの HDMI 出力</strong>: 2 つのフィールドを合成せず、フィールドごとに片方のラインだけを光らせる。CRT と同じく、片方のフィールドにしかない 1 ラインの横線は 30Hz でちらつく。HDMI の絵には走査線のような縞が常に入る</li><li><strong>1 ラインに 16 枚のスプライト(S16)</strong>: ドラゴンクエストII のパッチを V9968 に対応させたときに、スプライトの表に終わりの印がなく 32 枚すべてを調べる場合に、一部のスプライトが出ないことがあった。専用のテストプログラムで、実機で再現した</li><li><strong>Geo3D</strong>: 2026-10-05 の版の FPGA にはすでに入っていた。回転する立方体は、描いた線 12 / 0 / 0、平均 59.9fps(NTSC のフレームごとに 1 枚、取りこぼしなし)で描けた</li></ul>
+<h3 id="s7">7. 確かめた環境</h3>
+<div class="scroll"><table><thead><tr><th>対象</th><th>確かめた環境</th></tr></thead><tbody><tr><td>全画面、VRAM 試験、V9968TIM のテスト 1-4</td><td>openMSX(Panasonic FS-A1ST、本体の V9958 を 98h で)</td></tr><tr><td>V9968 の機能(88h、256KB、EPAL、FIL、HS)、テスト 5</td><td>実機: turbo R + V9968 カートリッジ(88h)</td></tr><tr><td>V9968G3D</td><td>実機: turbo R + V9968 カートリッジ(88h)。Geo3D がない場合は openMSX</td></tr></tbody></table></div>
+<p>openMSX には V9968 も Geo3D もないので、V9968 だけの処理は実機でしか確かめていない。</p>
+<h3 id="s8">8. V9968 に対応したほかのソフト</h3>
+<ul><li><strong>MCPLAYER</strong>(マイクロキャビンのゲームの曲を、ゲームのディスクから鳴らすプレイヤー): I/O 88h の VDP(V9968 カートリッジなど)があると、ゲームの絵(CG)はそちらに出し、本体の画面は曲の一覧だけにする。MSX1 でも CG を見られる。→ <a href="index.html#mcplayer">MCPLAYER</a></li><li><strong>ドラゴンクエストII スクロール改善パッチ</strong>(MSX2 版): 起動時に VDP を判定し、V9938 / V9958 / V9968 カートリッジ / V9968 内蔵の機種に ROM 1 本で対応する。V9968 では 1 ラインに 8 人まで点滅せずに出し、カートリッジにゲームを出している間、本体の画面に案内を出す。ゲームもパッチも VRAM を読まないので、R800 でも使える。→ <a href="index.html#dqsmooth">ドラクエ スクロール改善パッチ</a></li></ul>
+</main>
+</div>
+</body>
+</html>
