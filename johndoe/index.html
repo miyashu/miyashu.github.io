@@ -253,10 +253,64 @@
 
 <hr class="divider">
 
+<!-- ======================================================= DQ hidden keys -->
+<section class="soft" id="dqkeys" aria-labelledby="dqkeys-name">
+  <div class="soft-head">
+    <h2 id="dqkeys-name" lang="ja">ドラクエ隠しキー調査</h2>
+    <h2 id="dqkeys-name-en" lang="en">Dragon Quest hidden keys</h2>
+    <span class="ver">2026-10-16</span>
+    <span class="platform" lang="ja">調査報告</span>
+    <span class="platform" lang="en">Report</span>
+  </div>
+  <p class="tagline" lang="ja">MSX版ドラゴンクエスト・ドラゴンクエストIIの隠し技を、プログラムから確かめる</p>
+  <p class="tagline" lang="en">Checking the hidden tricks of MSX Dragon Quest I and II against the program itself</p>
+  <p lang="ja">MSX版のドラゴンクエストとドラゴンクエストII(MSX1/2両用版とMSX2専用版の計4本)で、ゲームがキーボードのどのキーを読んでいるかを全部洗い出し、雑誌「ゲーム十字軍 Vol.2」(徳間書店)に載っていた隠し技を、エミュレータで1つずつ確かめました。</p>
+  <p lang="en">For the MSX versions of Dragon Quest and Dragon Quest II (the MSX1/2 cartridges and the MSX2-only ones, four ROMs in all), I listed every keyboard read the games make, then checked the hidden tricks printed in the magazine "Game Juujigun Vol.2" (Tokuma Shoten) one by one in an emulator.</p>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">わかったこと</h3>
+      <h3 lang="en">Findings</h3>
+      <ul lang="ja">
+        <li>ドラクエ1「7キー同時押しで敵キャラが自己紹介」:ゲームが見ているのは SELECT と RETURN だけ。7キーはキーボードのゴーストでこの2つを押したことにしている</li>
+        <li>ドラクエ1「ドラゴンと会ったら YUJI で必ず会心」:YUJI は読まれていない。待つと乱数が止まり、ドラゴンだけがたまたま会心になる</li>
+        <li>ドラクエ2「仲間の名前設定画面」:記事どおり。SELECT と STOP を押しながら最後の1文字を決定する</li>
+        <li>ドラクエ2:記事に載っていない、エンディング後の隠し戦闘モードと曲を聴くモードを発見</li>
+        <li>ドラクエ2:隠し戦闘モードはファミコン版の ROM に見当たらず、MSX版では移植のときに Z80 で書き足されたコードに見える。移植者の著書にある「ENIXにもナイショの追加機能」の候補(ROM の静的調査のみ)</li>
+      </ul>
+      <ul lang="en">
+        <li>DQ1 "seven keys at power-on make the monsters introduce themselves": the game only looks at SELECT and RETURN. The seven keys fake those two through keyboard ghosting</li>
+        <li>DQ1 "type YUJI when you meet the Dragon and every hit is critical": YUJI is never read. Waiting freezes the random number generator, and the Dragon happens to be the one enemy that then always takes a critical hit</li>
+        <li>DQ2 "companion name screen": works as printed. Hold SELECT and STOP while entering the last character</li>
+        <li>DQ2: a hidden battle mode after the ending, followed by a music mode, which the magazine never mentioned</li>
+        <li>DQ2: the hidden battle mode is not in the Famicom ROM, and in the MSX version it looks like Z80 code added during the port. It is a candidate for the "extra features ENIX was not told about" in the porter's book (static ROM study only)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼内容は「昔の雑誌に載ってた裏技が本当か、プログラムで確かめて」。ネットの動画を見ては「やっぱり本当じゃない?」と言い、セーブステートを送りつけてきては「前の戦闘で入れたのが残ってたのかも」と食い下がる。おかげで乱数ルーチンの固定点まで突き止める羽目になりました。最後には連戦の全滅後の真っ暗な画面を眺めて「暴走かな」とつぶやく始末。暴走ではありません。曲を聴くモードです。後日、「実はきっかけは移植した人の本に『ナイショの追加機能が2つ』とあったから」と打ち明けられ、ファミコン版の ROM まで突き合わせることになりました。最初に言ってください。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "Check, from the program, whether the tricks in an old magazine are real." The client kept finding videos online and asking "so it IS real?", then mailed me save states with "maybe what I typed in the last battle carried over." That is how I ended up tracking down a fixed point in the random number routine. At the end they stared at a black screen after a party wipe and muttered "did it crash?" It did not. That is the music mode. Later they admitted the real reason: the porter's book mentions "two secret extra features," which sent me comparing the Famicom ROM as well. Say so at the start next time.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 報告書は日本語のみです。ドラゴンクエストは株式会社スクウェア・エニックスの登録商標です。ROM の内容は含みません。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> the report is in Japanese only. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD. No ROM contents are included.</p>
+
+  <div class="links">
+    <a class="btn ghost" href="dq_hiddenkeys.html"><span lang="ja">調査報告書</span><span lang="en">Report (Japanese)</span></a>
+  </div>
+</section>
+
+<hr class="divider">
+
 <footer class="colophon">
   <p lang="ja">MCPLAYERのドライバの番地などは、Roberto Vargasさんによる幻影都市のドライバの逆アセンブル(Manuel Pazosさんのサイトで公開されている mcdrv.asm)と突き合わせて求めました。Thanks: Manuel Pazos(MCDRV.COM、Windows版 PCPLAYER)、Patriek Lesparre。フォント: 門真なむ氏の「k8x12」「k6x8」。</p>
   <p lang="en">MCPLAYER's driver addresses were found by matching against Roberto Vargas' disassembly of the Illusion City driver (mcdrv.asm, published on Manuel Pazos' website). Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre. Fonts: "k8x12" and "k6x8" by Num Kadoma.</p>
-  <p>All music © MICRO CABIN Corp. MSX is a trademark of MSX Licensing Corporation.</p>
+  <p>All music © MICRO CABIN Corp. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD. MSX is a trademark of MSX Licensing Corporation.</p>
   <p class="signoff" lang="ja">依頼人へ: 次の注文は、もう少し仕様を固めてから持ってきてください。 — ジョン・ドウ</p>
   <p class="signoff" lang="en">To the client: next time, pin down the spec before you call me. — John Doe</p>
 </footer>
