@@ -411,15 +411,15 @@
       <h3 lang="ja">実機で分かったこと</h3>
       <h3 lang="en">Found on real hardware</h3>
       <ul lang="ja">
-        <li>R800 では VRAM の読み出しが化ける(書き込みは問題なし)</li>
+        <li>R800 では VRAM の読み出しが化ける(書き込みは問題なし)。読むときは一時的に Z80 に切り替えるのがよい</li>
         <li>R#2(表示ページ)は表示の途中でもすぐ効く。EPAL 768 バイトは Z80 では帰線に収まらない</li>
-        <li>S#2 の HR / VR は、マニュアルの記述と違い V9938 と同じ向き</li>
+        <li>S#1 の FH は IE1 = 0 でも立つので、割り込みなしで走査線を待てる</li>
         <li>Geo3D は 2026-10-05 の版から入っていて、立方体は 59.9fps</li>
       </ul>
       <ul lang="en">
-        <li>VRAM reads from the R800 come back corrupted (writes are fine)</li>
+        <li>VRAM reads from the R800 come back corrupted (writes are fine). Switch to the Z80 for the reads</li>
         <li>R#2 (display page) takes effect at once, even mid-frame. A 768-byte EPAL write does not fit in the blanking on a Z80</li>
-        <li>S#2 HR / VR work as on the V9938, not as the manual says</li>
+        <li>S#1 FH is set even with IE1 = 0, so you can wait for a line without interrupts</li>
         <li>Geo3D is already in the 2026-10-05 FPGA, and the cube runs at 59.9 fps</li>
       </ul>
       <h3 lang="ja">V9968 に対応したほかのソフト</h3>
@@ -444,8 +444,8 @@
     <p>The client finished building the cartridge, and the first thing they said was "only 256 KB of VRAM?" 256 KB is right. Then came "I see noise" and "interlace flickers too," and before I knew it I was timing palette writes line by line, tracking down the bits that flip when the R800 reads VRAM, and drafting a report to the designer. The last request: "apparently they added something called Geo3D." I was asked for a test program and somehow ended up auditing the cartridge.</p>
   </div>
 
-  <p class="caution" lang="ja"><strong>注意:</strong> 非公式のテストプログラムです。使用は自己責任でお願いします。報告書と説明書は日本語のみです。</p>
-  <p class="caution" lang="en"><strong>Note:</strong> unofficial test programs; use at your own risk. The report and the manual are in Japanese only.</p>
+  <p class="caution" lang="ja"><strong>注意:</strong> V9968 は開発中です。報告書の内容は 2026-10-09〜10-13 ごろの FPGA で確かめたもので、挙げたことも挙げていないことも、今後の更新で直ったり変わったりすることがあります。非公式のテストプログラムです。使用は自己責任でお願いします。報告書と説明書は日本語のみです。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> the V9968 is still in development. The report reflects the FPGA of around 2026-10-09 to 10-13; anything in it, and anything not in it, may be fixed or changed by later updates. Unofficial test programs; use at your own risk. The report and the manual are in Japanese only.</p>
 
   <div class="links">
     <a class="btn primary" href="v9968test.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 24 KB</small></a>
