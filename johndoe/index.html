@@ -253,6 +253,76 @@
 
 <hr class="divider">
 
+<!-- ======================================================= DQ smooth scroll -->
+<section class="soft" id="dqsmooth" aria-labelledby="dqsmooth-name">
+  <div class="soft-head">
+    <h2 id="dqsmooth-name" lang="ja">ドラクエ スクロール改善パッチ</h2>
+    <h2 id="dqsmooth-name-en" lang="en">Dragon Quest smooth scroll patches</h2>
+    <span class="ver">2026-10-16</span>
+    <span class="platform">MSX2+ / turbo R / V9968</span>
+  </div>
+  <p class="tagline" lang="ja">MSX2 版ドラゴンクエストI・II のスクロールを、ファミコン版のように 1 ドットずつ滑らかに</p>
+  <p class="tagline" lang="en">Smooth, dot-by-dot scrolling for the MSX2 versions of Dragon Quest I and II</p>
+  <p lang="ja">MSX2 版のドラゴンクエストII は、フィールドや町のスクロールが 8 ドット単位でカクカクし、1 歩もファミコン版より遅い。V9958(MSX2+、turbo R)の横スクロール機能を使って滑らかにするパッチです。ドラゴンクエスト(I)はその練習として先に作りました。DQ2 は、歩き出しなどの操作の反応、人の多い町での処理の重さ、V9968 への対応もあわせて改善しています。ROM の内容は含まず、各自の ROM イメージに当てる Python のパッチプログラムです。</p>
+  <p lang="en">In the MSX2 version of Dragon Quest II the map moves in jerky 8-dot jumps, and a step takes longer than on the Famicom. These patches use the horizontal scroll of the V9958 (MSX2+, turbo R) to make it smooth. Dragon Quest (I) came first, as practice. For DQ2 the patch also makes walking respond faster, removes the slowdowns in crowded towns, and supports the V9968. They are Python programs that you apply to your own ROM image; no ROM contents are included.</p>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">ドラゴンクエストII</h3>
+      <h3 lang="en">Dragon Quest II</h3>
+      <ul lang="ja">
+        <li>1 フレームに 1 ドット、1 歩 16 フレームで途切れずに歩く(元は 1 歩 25〜28 フレーム)</li>
+        <li>6502 の命令をまねる補助ルーチンの呼び出し約 3,100 か所を Z80 命令に置き換え、NPC の移動処理も Z80 で書き直した</li>
+        <li>短く押しても一歩進む。歩き出しの待ちは平均 13 → 7 フレーム。メッセージの速さを F1〜F3 でいつでも切り替え</li>
+        <li>VDP を起動時に判定し、V9938 / V9958 / V9968(カートリッジ・内蔵)に ROM 1 本で対応。V9968 では 1 ラインに 8 人まで点滅しない</li>
+        <li>turbo R の R800、Panasonic MSX2+ の高速モード、仲間の名前の固定、デバッグ用の復活の呪文に対応</li>
+      </ul>
+      <ul lang="en">
+        <li>One dot per frame, 16 frames per step, no stops between steps (the original takes 25-28 frames)</li>
+        <li>About 3,100 calls to the 6502-emulation helpers replaced with Z80 instructions; NPC movement rewritten in Z80</li>
+        <li>Short taps now take a step, the start of a walk waits 7 frames instead of 13 on average, and F1-F3 set the message speed at any time</li>
+        <li>The VDP is detected at boot: one ROM runs on the V9938, V9958 and V9968 (cartridge or built in). On the V9968, up to 8 characters on a line without flicker</li>
+        <li>Options for the turbo R's R800, the Panasonic MSX2+ turbo, fixed companion names and debug passwords</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">ドラゴンクエスト</h3>
+      <h3 lang="en">Dragon Quest</h3>
+      <ul lang="ja">
+        <li>1 歩ごとに画面全体をコピーしていたのを、1 ドットずつのスクロールに</li>
+        <li>1 歩のフレーム数は 8〜16 で選べる(16 がファミコン版と同じ)</li>
+        <li>NPC もゲームの中の本当の位置で表示</li>
+        <li>実機ではまだ確かめていない(エミュレータのみ)</li>
+      </ul>
+      <ul lang="en">
+        <li>The whole-screen copy per step becomes a dot-by-dot scroll</li>
+        <li>Frames per step selectable from 8 to 16 (16 matches the Famicom)</li>
+        <li>NPCs are shown at their true positions</li>
+        <li>Not yet tried on real hardware (emulator only)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼は「MSX2 版ドラクエ2 のスクロールがファミコンに負けてるのが悔しい」。滑らかにしたら今度は「町だと引っかかる」。原因は、移植のときに 6502 の命令を 1 つずつ真似る作りにしたことでした。おかげで 3,000 か所以上を書き換え、NPC の処理まで書き直す羽目に。さらに V9968 を挿したり、3 倍速に改造した本体を持ち出したり、「黒い線が出る」と言っておいて実はリセットし忘れだったり。動くものを渡せば、次の注文がもう決まっている依頼人です。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "It bugs me that MSX2 Dragon Quest II scrolls worse than the Famicom." Once it was smooth: "it stutters in towns." The cause turned out to be the port itself, which imitates the 6502 one instruction at a time. So I rewrote more than 3,000 places and then the NPC code. After that came a V9968 cartridge, a machine overclocked to triple speed, and a report of "black lines" that turned out to be a missed reset. Hand this client something that works and the next order is already waiting.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 非公式のパッチです。ゲームの ROM イメージは含まれていません。使用は自己責任でお願いします。報告書と説明書は日本語のみです。ドラゴンクエストは株式会社スクウェア・エニックスの登録商標です。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> unofficial patches. No game ROM image is included; use at your own risk. The report and manuals are in Japanese only. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD.</p>
+
+  <div class="links">
+    <a class="btn primary" href="dq_smooth_patch.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 95 KB</small></a>
+    <a class="btn ghost" href="dq_smooth.html"><span lang="ja">報告書</span><span lang="en">Report (Japanese)</span></a>
+    <a class="btn ghost" href="dq2patch_readme.html"><span lang="ja">DQ2 パッチの使い方</span><span lang="en">DQ2 manual (Japanese)</span></a>
+    <a class="btn ghost" href="dq1patch_readme.html"><span lang="ja">DQ1 パッチの使い方</span><span lang="en">DQ1 manual (Japanese)</span></a>
+  </div>
+</section>
+
 <!-- ======================================================= DQ hidden keys -->
 <section class="soft" id="dqkeys" aria-labelledby="dqkeys-name">
   <div class="soft-head">
