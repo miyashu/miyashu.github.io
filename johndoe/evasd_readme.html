@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVASD / EV9SD / EV6SD - SD カードの動画プレーヤー (v0.10)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a><a class="alt" href="evasd_readme_en.html" hreflang="en">English</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">EVASD · README</div>
+  <h1>EVASD / EV9SD / EV6SD - SD カードの動画プレーヤー (v0.10)</h1>
+  <p class="lead">MSX turboR で、SD カードの動画を約 12 コマ / 秒・PCM 音声付きで再生するプレーヤーと、Windows 用の変換プログラムです。本体の V9958、V9990 (GFX9000 など)、HRA! 氏の V9968 カートリッジの 3 種類の VDP に対応しています。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">必要なもの</a></li><li class="t2"><a href="#h2">パッケージの中身</a></li><li class="t2"><a href="#s1">1. 変換 (Windows)</a></li><li class="t2"><a href="#s2">2. 再生 (MSX turboR)</a></li><li class="t2"><a href="#h3">MegaFlashROM SCC+ SD について</a></li><li class="t2"><a href="#h4">V9968 について</a></li><li class="t2"><a href="#h5">ライセンスとクレジット</a></li><li class="t2"><a href="#h6">履歴</a></li></ul></nav>
+<main class="docbody">
+<p>元になったのは d4.princess.ne.jp の EVASD (ESE Video Authorizer) です。この版は Lefty Serve が手を加えたもので、V9990 版と V9968 版の追加、音のタイミングの作り直し、古い MegaFlashROM SCC+ SD への対応などを行っています。</p>
+<h3 id="h1">必要なもの</h3>
+<div class="scroll"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>MSX</td><td>MSX turboR (Z80 モードで動かします)、Nextor</td></tr><tr><td>SD カード</td><td>ESE-SDisk、または MegaFlashROM SCC+ SD (FW v3 より前の古い FW にも対応)</td></tr><tr><td>VDP</td><td>本体の V9958 (EVASD)、V9990 カートリッジ (EV9SD)、V9968 カートリッジ I/O 88h (EV6SD)</td></tr><tr><td>PC</td><td>Windows 10 / 11、ffmpeg と ffprobe (コマンドプロンプトから実行できるように PATH を通す)。Python は不要</td></tr></tbody></table></div>
+<h3 id="h2">パッケージの中身</h3>
+<div class="scroll"><table><thead><tr><th>ファイル</th><th>内容</th></tr></thead><tbody><tr><td><code>MSX\EVASD.COM</code></td><td>本体の V9958 で .EVA を再生 (SCREEN12 / SCREEN8)</td></tr><tr><td><code>MSX\EV9SD.COM</code></td><td>V9990 で .EV9 を再生 (64 色)</td></tr><tr><td><code>MSX\EV6SD.COM</code></td><td>V9968 (I/O 88h) で .EV6 を再生 (SCREEN8 + 拡張パレット 256 色)</td></tr><tr><td><code>WIN\EVACONV.BAT</code></td><td>動画 → .EVA (V9958 SCREEN12)。動画ファイルをドラッグ＆ドロップ</td></tr><tr><td><code>WIN\EVA8CONV.BAT</code></td><td>動画 → .EVA (V9958 SCREEN8)</td></tr><tr><td><code>WIN\EV9CONV.BAT</code></td><td>動画 → .EV9 (V9990)</td></tr><tr><td><code>WIN\EV6CONV.BAT</code></td><td>動画 → .EV6 (V9968)</td></tr><tr><td><code>WIN\EVACONV\</code></td><td>変換プログラム本体 (EVACONV.exe と DLL。フォルダごとこの位置に置いておく)</td></tr><tr><td><code>WIN\EVACONV\LICENSES\</code></td><td>変換プログラムに含まれるほかのソフトのライセンス</td></tr></tbody></table></div>
+<h3 id="s1">1. 変換 (Windows)</h3>
+<p>動画ファイルを、作りたい形式のバッチファイル (<code>EV6CONV.BAT</code> など) にドラッグ＆ドロップします。複数のファイルをまとめて落とせます。動画と同じ場所に、同じ名前で変換したファイルができます。</p>
+<ul><li>縦横比を自動で判定して、4:3 なら 124x108、16:9 なら 144x93 ドットにします</li><li>変換の時間の目安は、動画 1 分で 2〜3 分 (V9968 / V9990。V9958 はもっと速い)</li><li>MSX-DOS で扱えるように、ファイル名は半角英数 8 文字以内にしてください (長い名前のときは変換後に付け直すか、下の <code>-o</code> を使う)</li></ul>
+<p>オプションを付けるときは、コマンドプロンプトで EVACONV.exe を直接使います。</p>
+<div class="scroll"><pre>WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 -o MOVIE          出力名を MOVIE.EV6 にする
+WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 --ss 60 -t 30     60 秒目から 30 秒だけ
+WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 --autocrop        焼き込まれた黒帯を除く
+WIN\EVACONV\EVACONV.exe ev6 -h                          オプションの一覧</pre></div>
+<p>形式の指定は <code>eva</code> = V9958 SCREEN12、<code>eva8</code> = V9958 SCREEN8、<code>ev9</code> = V9990、<code>ev6</code> = V9968 です。</p>
+<h3 id="s2">2. 再生 (MSX turboR)</h3>
+<p>プレーヤーと変換したファイルを SD カードにコピーし、MSX-DOS で実行します。</p>
+<div class="scroll"><pre>EVASD MOVIE.EVA      V9958
+EV9SD MOVIE.EV9      V9990
+EV6SD MOVIE.EV6      V9968 (映像は V9968 の HDMI 出力に出ます)</pre></div>
+<p>ESC で中断、STOP を押している間は一時停止です。</p>
+<div class="scroll"><table><thead><tr><th>オプション</th><th>内容</th></tr></thead><tbody><tr><td><code>/Sx</code></td><td>x フレーム目から再生 (1 秒 = 約 12 フレーム)</td></tr><tr><td><code>/Ex</code></td><td>x フレーム目で終わる</td></tr><tr><td><code>/Nx</code></td><td>x フレーム分だけ再生</td></tr><tr><td><code>/Px</code></td><td>x 回繰り返す (<code>/P0</code> で止めるまで繰り返す)</td></tr><tr><td><code>/Ox</code></td><td>パレットを書く時刻の調整 (EV9SD / EV6SD。0〜44、既定 22。普通は使わない)</td></tr><tr><td><code>/O</code> <code>/H</code> <code>/W</code></td><td>古い形式の .EVA の大きさの指定 (EVASD。128x106 / 156x86 / 144x94。普通は自動で判定)</td></tr><tr><td><code>/M</code></td><td>古い MegaFlashROM SCC+ SD 用の読み方を強制する (普通は自動で判定。下の「MegaFlashROM SCC+ SD について」)。EVASD には FW v3 より前の専用の <code>/M2</code> もある</td></tr></tbody></table></div>
+<ul><li><strong>動画ファイルは、SD カード上で連続した場所 (連続したクラスタ) に置く必要があります。</strong> フォーマット直後の SD カードにコピーするのが確実です</li><li>終了時に <code>timing violation count</code> が表示されたときは、SD カードの応答が間に合わなかった所があります (そこで音が乱れています)</li><li>元の EVASD 用の .EVA (128x106 / 156x86 など) も EVASD で再生できます</li></ul>
+<h3 id="h3">MegaFlashROM SCC+ SD について</h3>
+<p>FW v3 より前の古い MegaFlashROM SCC+ SD は、SD カードの読み出しの間隔が短いと待ちを入れるので、そのままでは1 フレームが長くなって、画面の途中で絵が切り替わる (ティアリング) ことがあります。プレーヤーは起動時に読み出しの速さを測り、古い FW なら、待ちが入っても間に合う読み方に切り替えます。音も絵も、新しい FW と同じように再生できます。このとき、終了時に次のように表示します (最後の数字は測った値)。</p>
+<div class="scroll"><pre>MegaSD (before FW v3) mode 2, SD timing:0254</pre></div>
+<p>Nextor 3 の MegaFlashROM SCC+ SD ドライバは、版によって SD スロットのデバイス番号が違います (v1.6 以前と v1.7 以降)。プレーヤーはドライバの名前と版を見て、正しいスロットを選びます。</p>
+<h3 id="h4">V9968 について</h3>
+<ul><li>V9968 カートリッジは I/O 88h (スイッチ左) で使います。本体の画面には起動時のメッセージだけが出ます</li><li>SCREEN8 + 拡張パレット (32768 色中 256 色)。1 フレームで書き換える色は 80 色までで、場面が切り替わると、色が 3〜4 フレームに分けて入れ替わります</li><li>V9968 は本体と別の発振器で動くので、プレーヤーが垂直帰線を見て、音のサンプルを時々 1 つ足し引きしてずれを合わせます</li><li>音は turboR 本体の PCM から出ます (V9968 の HDMI 出力には音が乗りません)</li></ul>
+<h3 id="h5">ライセンスとクレジット</h3>
+<ul><li>元の EVASD: d4.princess.ne.jp。この版: Lefty Serve</li><li>変換プログラム (<code>WIN\EVACONV\EVACONV.exe</code>) は Nuitka で作った EXE で、Python、numpy、Pillow を含んでいます。それぞれのライセンス文は <code>WIN\EVACONV\LICENSES</code> にあります (一覧は <code>LICENSES\README.txt</code>)。ffmpeg は含んでいません</li><li>MegaFlashROM SCC+ SD の読み出しのタイミングは、Manuel Pazos 氏の資料と実機での確認によります</li><li>V9968 は HRA! 氏の作品です</li><li>使用は自己責任でお願いします</li></ul>
+<h3 id="h6">履歴</h3>
+<div class="scroll"><table><thead><tr><th>版</th><th>日付</th><th>内容</th></tr></thead><tbody><tr><td>v0.10</td><td>2026-10-20</td><td>最初の公開版。V9958 / V9990 / V9968 の 3 種類のプレーヤーと変換プログラム (EXE)。古い MegaFlashROM SCC+ SD (FW v3 より前) への対応、Nextor 3 の MegaFlashROM SCC+ SD ドライバ (v1.6 以前 / v1.7 以降) への対応、EVASD の起動時に一瞬出ていた緑の線の修正</td></tr></tbody></table></div>
+</main>
+</div>
+</body>
+</html>

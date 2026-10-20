@@ -427,10 +427,12 @@
       <ul lang="ja">
         <li><a href="#mcplayer">MCPLAYER</a>: ゲームの絵(CG)を 88h の V9968 に出し、本体の画面は曲の一覧に</li>
         <li><a href="#dqsmooth">ドラクエ スクロール改善パッチ</a>: DQ2 を V9968 に出して、1 ラインに 8 人まで点滅なし</li>
+        <li><a href="#evasd">EV6SD</a>: SD カードの動画を V9968 の 256 色で再生</li>
       </ul>
       <ul lang="en">
         <li><a href="#mcplayer">MCPLAYER</a>: shows the game pictures (CG) on a V9968 at 88h and keeps the song list on the main screen</li>
         <li><a href="#dqsmooth">Dragon Quest smooth scroll patches</a>: DQ2 runs on the V9968 with up to 8 characters on a line without flicker</li>
+        <li><a href="#evasd">EV6SD</a>: plays video from an SD card on the V9968 in 256 colours</li>
       </ul>
     </div>
   </div>
@@ -456,9 +458,90 @@
 
 <hr class="divider">
 
+<!-- ======================================================= EVASD (video players) -->
+<section class="soft" id="evasd" aria-labelledby="evasd-name">
+  <div class="soft-head">
+    <h2 id="evasd-name">EVASD / EV9SD / EV6SD</h2>
+    <span class="ver">v0.10 · 2026-10-20</span>
+    <span class="platform">MSX turboR + Windows</span>
+  </div>
+  <p class="tagline" lang="ja">SD カードの動画を、turboR で PCM の音付きで再生する</p>
+  <p class="tagline" lang="en">Play video from an SD card on a turboR, with PCM sound</p>
+  <p lang="ja">MSX turboR で、SD カードの動画を約 12 コマ / 秒・PCM 音声付きで再生するプレーヤーと、Windows 用の変換プログラムです。本体の V9958(SCREEN12 / SCREEN8)、V9990(GFX9000 など、64 色)、HRA! 氏の V9968 カートリッジ(256 色)の 3 種類の VDP に対応しています。元になったのは d4.princess.ne.jp の EVASD(ESE Video Authorizer)で、この版はそれに V9990 版と V9968 版を加え、音のタイミングを作り直し、古い MegaFlashROM SCC+ SD でも再生できるようにしたものです。</p>
+  <p lang="en">Players that stream video from an SD card on an MSX turboR at about 12 frames per second with PCM sound, and a video converter for Windows. Three VDPs are supported: the built-in V9958 (SCREEN12 / SCREEN8), the V9990 (GFX9000 etc., 64 colours) and HRA!'s V9968 cartridge (256 colours). It is based on EVASD (ESE Video Authorizer) from d4.princess.ne.jp; this edition adds the V9990 and V9968 players, rebuilds the sound timing, and plays on older MegaFlashROM SCC+ SD cartridges too.</p>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">できること</h3>
+      <h3 lang="en">Features</h3>
+      <ul lang="ja">
+        <li>動画を 4:3 は 124×108、16:9 は 144×93 ドットに変換(縦横比は自動判定)。動画ファイルをバッチファイルにドラッグ&ドロップするだけ</li>
+        <li>音は 15.7kHz 8 ビット。turboR の PCM の周期(CPU 228 クロック = 走査線 1 本)に合わせて書くので、プチノイズが出ない</li>
+        <li>V9990 / V9968 は別の水晶で動くので、垂直帰線を見てずれを合わせ、パレットの書き換えも帰線の中に収める</li>
+        <li>元の EVASD 用の .EVA(128×106、156×86 など)もそのまま再生できる</li>
+      </ul>
+      <ul lang="en">
+        <li>Converts video to 124×108 dots (4:3) or 144×93 (16:9), detecting the aspect ratio. Just drag and drop the video onto a batch file</li>
+        <li>15.7 kHz 8-bit sound, written in step with the turboR PCM period (228 CPU clocks = one scan line), so no clicking noise</li>
+        <li>The V9990 and V9968 have their own crystals, so the players follow their vertical blanking and keep palette writes inside it</li>
+        <li>.EVA files made for the original EVASD (128×106, 156×86 etc.) still play</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">必要なもの</h3>
+      <h3 lang="en">Requirements</h3>
+      <ul lang="ja">
+        <li>MSX turboR と Nextor</li>
+        <li>ESE-SDisk、または MegaFlashROM SCC+ SD(FW v3 より前でも可。起動時に読み出しの速さを測って自動で切り替える)</li>
+        <li>再生する VDP: 本体の V9958 / V9990 カートリッジ / V9968 カートリッジ(I/O 88h)</li>
+        <li>変換: Windows 10 / 11 と ffmpeg・ffprobe(Python は不要)</li>
+      </ul>
+      <ul lang="en">
+        <li>MSX turboR and Nextor</li>
+        <li>ESE-SDisk, or MegaFlashROM SCC+ SD (FW before v3 is fine too: the players measure the read speed at startup and switch modes)</li>
+        <li>A VDP to play on: the built-in V9958 / a V9990 cartridge / a V9968 cartridge (I/O 88h)</li>
+        <li>Converting: Windows 10 / 11 with ffmpeg and ffprobe (no Python needed)</li>
+      </ul>
+      <h3 lang="ja">実機で確かめたこと</h3>
+      <h3 lang="en">Tested on real hardware</h3>
+      <ul lang="ja">
+        <li>FS-A1ST + ESE-SDisk で V9958 / V9990 / V9968 の再生</li>
+        <li>MegaFlashROM SCC+ SD の FW v3 と、それより前の FW(Manuel Pazos 氏による確認)</li>
+      </ul>
+      <ul lang="en">
+        <li>V9958 / V9990 / V9968 playback on an FS-A1ST with an ESE-SDisk</li>
+        <li>MegaFlashROM SCC+ SD with FW v3 and with an older FW (tested by Manuel Pazos)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼内容は「EVASD を V9990 でも動かしたい」。動いたと思ったら「たまにプチっと鳴る」。調べていくと、turboR の PCM は 15750Hz ではなく、CPU の 228 クロックちょうど(走査線 1 本)で鳴っていました。そこから V9958 版も作り直し、V9968 版が増え、変換プログラムは「中身を読める形で配りたくない」と EXE になりました。最後は「古い MegaFlashROM SCC+ SD でも動かないか」。作者の Manuel Pazos 氏が実機で測ってくれた値から、SD の読み出しが 10 クロックより詰まると待たされることが分かり、待たされても間に合う読み方を足しました。起動時に一瞬見える緑の線まで指摘されたので、それも直してあります。周辺色でした。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "make EVASD work on the V9990 too." It worked, and then: "it clicks now and then." Digging in, the turboR PCM does not run at 15750 Hz at all; it ticks every 228 CPU clocks, exactly one scan line. So the V9958 player got rebuilt as well, a V9968 player appeared, and the converter became an EXE because the client "doesn't want to ship the internals in readable form." The last request: "can it run on old MegaFlashROM SCC+ SD cartridges?" From the values its designer, Manuel Pazos, measured on real hardware, reads closer than 10 clocks get stretched with waits, so I added a way of reading that keeps time even with the waits. The client even spotted a green line flashing for one frame at startup. Fixed. It was the border colour.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 動画ファイルは、SD カード上で連続した場所(連続したクラスタ)に置く必要があります。フォーマット直後の SD カードにコピーするのが確実です。変換した動画の扱いは、元の動画の権利に従ってください。変換プログラムの途中の表示は日本語のみです。非公式のソフトです。使用は自己責任でお願いします。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> the video file must be stored in consecutive clusters on the SD card; copying it to a freshly formatted card is the safest way. Converted videos remain subject to the rights of the original material. The converter's progress messages are in Japanese only. Unofficial software; use at your own risk.</p>
+
+  <div class="links">
+    <a class="btn primary" href="EVA_v010.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 27.7 MB</small></a>
+    <a class="btn ghost" href="evasd_readme.html" lang="ja">説明書</a>
+    <a class="btn ghost" href="evasd_readme_en.html" lang="en">Manual</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+
 <footer class="colophon">
   <p lang="ja">V9968 は HRA! 氏の作品です(<a href="https://github.com/hra1129/V9968_Cartridge">V9968_Cartridge</a>)。Geo3D は Alex Moncks 氏の作品です。</p>
   <p lang="en">The V9968 is HRA!'s work (<a href="https://github.com/hra1129/V9968_Cartridge">V9968_Cartridge</a>). Geo3D is Alex Moncks' work.</p>
+  <p lang="ja">EVASD / EV9SD / EV6SD の元は d4.princess.ne.jp の EVASD(ESE Video Authorizer)です。MegaFlashROM SCC+ SD の読み出しのタイミングは、Manuel Pazos 氏の資料と実機での確認によります。変換プログラムは Python、numpy、Pillow を含みます(ライセンスは配布物の LICENSES フォルダ)。</p>
+  <p lang="en">EVASD / EV9SD / EV6SD are based on EVASD (ESE Video Authorizer) from d4.princess.ne.jp. The MegaFlashROM SCC+ SD read timing is based on notes and real-hardware tests by Manuel Pazos. The converter contains Python, numpy and Pillow (licenses in the LICENSES folder of the package).</p>
   <p lang="ja">MCPLAYERのドライバの番地などは、Roberto Vargasさんによる幻影都市のドライバの逆アセンブル(Manuel Pazosさんのサイトで公開されている mcdrv.asm)と突き合わせて求めました。Thanks: Manuel Pazos(MCDRV.COM、Windows版 PCPLAYER)、Patriek Lesparre。フォント: 門真なむ氏の「k8x12」「k6x8」。</p>
   <p lang="en">MCPLAYER's driver addresses were found by matching against Roberto Vargas' disassembly of the Illusion City driver (mcdrv.asm, published on Manuel Pazos' website). Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre. Fonts: "k8x12" and "k6x8" by Num Kadoma.</p>
   <p>All music © MICRO CABIN Corp. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD. MSX is a trademark of MSX Licensing Corporation.</p>

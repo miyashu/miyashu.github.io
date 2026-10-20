@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVASD / EV9SD / EV6SD - video players for SD cards (v0.10)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← John Doe's Reports</a><a class="alt" href="evasd_readme.html" hreflang="ja">日本語</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">EVASD · README</div>
+  <h1>EVASD / EV9SD / EV6SD - video players for SD cards (v0.10)</h1>
+  <p class="lead">Players that stream video from an SD card on an MSX turboR at about 12 frames per second with PCM sound, and a video converter for Windows. Three VDPs are supported: the built-in V9958, the V9990 (GFX9000 etc.) and HRA!'s V9968 cartridge.</p>
+</header>
+<nav class="toc" aria-label="Contents"><ul><li class="t2"><a href="#h1">Requirements</a></li><li class="t2"><a href="#h2">Package contents</a></li><li class="t2"><a href="#s1">1. Converting (Windows)</a></li><li class="t2"><a href="#s2">2. Playing (MSX turboR)</a></li><li class="t2"><a href="#h3">MegaFlashROM SCC+ SD</a></li><li class="t2"><a href="#h4">About the V9968</a></li><li class="t2"><a href="#h5">Licenses and credits</a></li><li class="t2"><a href="#h6">History</a></li></ul></nav>
+<main class="docbody">
+<p>Based on EVASD (ESE Video Authorizer) from d4.princess.ne.jp. This edition was modified by Lefty Serve: V9990 and V9968 players, rebuilt sound timing, support for older MegaFlashROM SCC+ SD cartridges, and more.</p>
+<h3 id="h1">Requirements</h3>
+<div class="scroll"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>MSX</td><td>MSX turboR (runs in Z80 mode), Nextor</td></tr><tr><td>SD card</td><td>ESE-SDisk, or MegaFlashROM SCC+ SD (also with a FW older than v3)</td></tr><tr><td>VDP</td><td>built-in V9958 (EVASD), V9990 cartridge (EV9SD), V9968 cartridge at I/O 88h (EV6SD)</td></tr><tr><td>PC</td><td>Windows 10 / 11, ffmpeg and ffprobe on the PATH (they must run from the command prompt). No Python needed</td></tr></tbody></table></div>
+<h3 id="h2">Package contents</h3>
+<div class="scroll"><table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>MSX\EVASD.COM</code></td><td>plays .EVA on the built-in V9958 (SCREEN12 / SCREEN8)</td></tr><tr><td><code>MSX\EV9SD.COM</code></td><td>plays .EV9 on a V9990 (64 colours)</td></tr><tr><td><code>MSX\EV6SD.COM</code></td><td>plays .EV6 on a V9968 at I/O 88h (SCREEN8 + extended palette, 256 colours)</td></tr><tr><td><code>WIN\EVACONV.BAT</code></td><td>video -&gt; .EVA (V9958 SCREEN12). Drag and drop video files onto it</td></tr><tr><td><code>WIN\EVA8CONV.BAT</code></td><td>video -&gt; .EVA (V9958 SCREEN8)</td></tr><tr><td><code>WIN\EV9CONV.BAT</code></td><td>video -&gt; .EV9 (V9990)</td></tr><tr><td><code>WIN\EV6CONV.BAT</code></td><td>video -&gt; .EV6 (V9968)</td></tr><tr><td><code>WIN\EVACONV\</code></td><td>the converter (EVACONV.exe and its DLLs; keep the whole folder in this place)</td></tr><tr><td><code>WIN\EVACONV\LICENSES\</code></td><td>licenses of the third-party software in the converter</td></tr></tbody></table></div>
+<h3 id="s1">1. Converting (Windows)</h3>
+<p>Drag and drop video files onto the batch file for the format you want (<code>EV6CONV.BAT</code> etc.). Several files can be dropped at once. The output is written next to each video, with the same name.</p>
+<ul><li>The aspect ratio is detected automatically: 4:3 becomes 124x108 dots, 16:9 becomes 144x93</li><li>Converting takes about 2-3 minutes per minute of video for V9968 / V9990 (V9958 is faster)</li><li>MSX-DOS needs 8.3 file names (up to 8 letters and digits). Rename long names afterwards, or use <code>-o</code> below</li><li>The converter's progress messages are in Japanese (sorry). The last line shows the output file name</li></ul>
+<p>To use options, run EVACONV.exe from the command prompt:</p>
+<div class="scroll"><pre>WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 -o MOVIE          output name MOVIE.EV6
+WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 --ss 60 -t 30     30 seconds from 60 s
+WIN\EVACONV\EVACONV.exe ev6 MOVIE.mp4 --autocrop        remove burnt-in black bars
+WIN\EVACONV\EVACONV.exe ev6 -h                          list of options</pre></div>
+<p>Formats: <code>eva</code> = V9958 SCREEN12, <code>eva8</code> = V9958 SCREEN8, <code>ev9</code> = V9990, <code>ev6</code> = V9968.</p>
+<h3 id="s2">2. Playing (MSX turboR)</h3>
+<p>Copy a player and the converted files to the SD card and run from MSX-DOS:</p>
+<div class="scroll"><pre>EVASD MOVIE.EVA      V9958
+EV9SD MOVIE.EV9      V9990
+EV6SD MOVIE.EV6      V9968 (the picture appears on the V9968&#x27;s HDMI output)</pre></div>
+<p>ESC stops, holding STOP pauses.</p>
+<div class="scroll"><table><thead><tr><th>Option</th><th>Meaning</th></tr></thead><tbody><tr><td><code>/Sx</code></td><td>start at frame x (1 second = about 12 frames)</td></tr><tr><td><code>/Ex</code></td><td>end at frame x</td></tr><tr><td><code>/Nx</code></td><td>play x frames</td></tr><tr><td><code>/Px</code></td><td>repeat x times (<code>/P0</code> repeats until stopped)</td></tr><tr><td><code>/Ox</code></td><td>palette write timing (EV9SD / EV6SD, 0-44, default 22; normally not needed)</td></tr><tr><td><code>/O</code> <code>/H</code> <code>/W</code></td><td>size of an old-format .EVA (EVASD: 128x106 / 156x86 / 144x94; normally detected automatically)</td></tr><tr><td><code>/M</code></td><td>force the reading mode for older MegaFlashROM SCC+ SD cartridges (normally detected automatically; see below). EVASD also has <code>/M2</code>, for pre-v3 FW only</td></tr></tbody></table></div>
+<ul><li><strong>The video file must be stored in consecutive clusters on the SD card.</strong> Copying it to a freshly formatted card is the safest way</li><li>If <code>timing violation count</code> is shown at the end, the SD card answered too late somewhere (the sound is disturbed there)</li><li>EVASD also plays .EVA files made for the original EVASD (128x106, 156x86 etc.)</li></ul>
+<h3 id="h3">MegaFlashROM SCC+ SD</h3>
+<p>On a MegaFlashROM SCC+ SD with a FW older than v3, the SD interface inserts waits when reads are close together, so frames became longer and the picture could change in the middle of the screen (tearing). The players measure the read speed at startup and, on an older FW, switch to a way of reading that keeps the timing even with the waits. Sound and picture play the same as on the new FW. In this mode the player shows at the end (the last number is the measured value):</p>
+<div class="scroll"><pre>MegaSD (before FW v3) mode 2, SD timing:0254</pre></div>
+<p>The Nextor 3 drivers for the MegaFlashROM SCC+ SD number the SD slots differently by version (v1.6 and older, v1.7 and newer). The players read the driver name and version and choose the right slot.</p>
+<h3 id="h4">About the V9968</h3>
+<ul><li>Use the V9968 cartridge at I/O 88h (switch to the left). The MSX screen only shows the startup messages</li><li>SCREEN8 with the extended palette (256 of 32768 colours). Up to 80 colours are changed per frame, so on a scene change the colours are replaced over 3-4 frames</li><li>The V9968 runs on its own oscillator, so the player watches its vertical blanking and occasionally adds or drops one sound sample to stay in step</li><li>Sound comes from the turboR's built-in PCM (the V9968's HDMI output has no sound)</li></ul>
+<h3 id="h5">Licenses and credits</h3>
+<ul><li>Original EVASD: d4.princess.ne.jp. This edition: Lefty Serve</li><li>The converter (<code>WIN\EVACONV\EVACONV.exe</code>) is an EXE made with Nuitka and contains Python, numpy and Pillow. Their licenses are in <code>WIN\EVACONV\LICENSES</code> (see <code>LICENSES\README.txt</code> for the list). ffmpeg is not included</li><li>The MegaFlashROM SCC+ SD read timing is based on notes and real-hardware tests by Manuel Pazos</li><li>The V9968 is HRA!'s work</li><li>Use at your own risk</li></ul>
+<h3 id="h6">History</h3>
+<div class="scroll"><table><thead><tr><th>Version</th><th>Date</th><th>Changes</th></tr></thead><tbody><tr><td>v0.10</td><td>2026-10-20</td><td>First public release. Players for V9958 / V9990 / V9968 and the converter (EXE). Support for older MegaFlashROM SCC+ SD (FW before v3) and for the Nextor 3 MegaFlashROM SCC+ SD drivers (v1.6 and older / v1.7 and newer). Fixed a green line that flashed when EVASD started</td></tr></tbody></table></div>
+</main>
+</div>
+</body>
+</html>
