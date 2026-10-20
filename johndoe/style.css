@@ -69,6 +69,11 @@ pre.plain { font-family: var(--f-mono); }
 .masthead h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(32px, 6vw, 48px); line-height: 1.15; margin: 0; letter-spacing: .02em; }
 .masthead .sub { font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
 .masthead p { margin: 0; max-width: 64ch; color: var(--muted); }
+.masthead .note { max-width: 64ch; margin-top: 6px; padding: 14px 18px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 6px; }
+.masthead .note h2 { font-size: 14px; margin: 0 0 8px; color: var(--accent); letter-spacing: .04em; }
+.masthead .note blockquote { margin: 0; display: grid; gap: 8px; }
+.masthead .note blockquote p { color: var(--fg); }
+.masthead .note blockquote::after { content: "— John Doe"; display: block; text-align: right; color: var(--muted); font-size: 13px; }
 .langs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--panel); }
 .langs button { font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--muted); padding: 4px 14px; cursor: pointer; }
 .langs button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
