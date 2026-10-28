@@ -555,13 +555,13 @@
   <div class="soft-head">
     <h2 id="nxms-name" lang="ja">MEGA-SCSI 用 Nextor 3</h2>
     <h2 id="nxms-name-en" lang="en">Nextor 3 for MEGA-SCSI</h2>
-    <span class="ver">v0.1 試験版 · 2026-10-18</span>
+    <span class="ver">v0.3 試験版 · 2026-10-28</span>
     <span class="platform">MSX2 以降 · MEGA-SCSI</span>
   </div>
   <p class="tagline" lang="ja">ドライバのなかった MEGA-SCSI で、Nextor 3 を動かす</p>
   <p class="tagline" lang="en">Run Nextor 3 on the MEGA-SCSI, which never had a driver</p>
-  <p lang="ja">似非職人工房の SCSI カートリッジ MEGA-SCSI は、カーネルを SRAM に入れて動きます。そこで Nextor 3 用のドライバを作り、Nextor 3.0.0 Beta2 のカーネルと合わせた 128KB の ROM イメージにしました。インストーラ NXMSINST で SRAM に書き込めば、MEGA-SCSI が Nextor 3 のカートリッジになります。バックアップを取っておけば、元のカーネルにも戻せます。対象はノーマル版 MEGA-SCSI(アスキー製メガロムコントローラ互換)と SCC 付き版 MEGA-SCSI(コナミ製メガロムコントローラ使用、通称 WAVE-SCSI)です。なお、オリジナルの MEGA-SCSI(MSX-DOS2 カーネルベース)では SRAM に似非 RAM ディスクを作って A: ドライブに割り当てていますが、本バージョンではまだ似非 RAM ディスクはサポートしていません。今後サポートする予定です。</p>
-  <p lang="en">The MEGA-SCSI, an SCSI cartridge by ESE Artists' Factory, runs its kernel from SRAM. So I wrote a Nextor 3 driver for it and combined it with the Nextor 3.0.0 Beta2 kernel into a 128 KB ROM image. Write it to the SRAM with the NXMSINST installer and the MEGA-SCSI becomes a Nextor 3 cartridge. With a backup you can go back to the original kernel. For the normal MEGA-SCSI (ASCII-compatible MegaROM controller) and the MEGA-SCSI with SCC (Konami MegaROM controller, known as WAVE-SCSI). The original MEGA-SCSI (with its MSX-DOS2 based kernel) makes an ESE RAM disk in its SRAM and assigns it to drive A:; this version does not support the ESE RAM disk yet. Support is planned.</p>
+  <p lang="ja">似非職人工房の SCSI カートリッジ MEGA-SCSI は、カーネルを SRAM に入れて動きます。そこで Nextor 3 用のドライバを作り、Nextor 3.0.0 Beta2 のカーネルと合わせた 128KB の ROM イメージにしました。インストーラ NXMGINST で SRAM に書き込めば、MEGA-SCSI が Nextor 3 のカートリッジになります。SRAM 全体のバックアップを取っておけば、元のカーネルにも戻せます。対象はノーマル版 MEGA-SCSI(アスキー製メガロムコントローラ互換)と SCC 付き版 MEGA-SCSI(コナミ製メガロムコントローラ使用、通称 WAVE-SCSI)です。オリジナルの MEGA-SCSI(MSX-DOS2 カーネルベース)が SRAM に作っていた似非 RAM ディスクにも対応しました。SRAM の 128KB 以降を「SRAM ディスク」として使い、インストーラがフォーマットと NEXTOR.SYS / COMMAND3.COM の書き込みまで行うので、そこから Nextor 3 が起動します。</p>
+  <p lang="en">The MEGA-SCSI, an SCSI cartridge by ESE Artists' Factory, runs its kernel from SRAM. So I wrote a Nextor 3 driver for it and combined it with the Nextor 3.0.0 Beta2 kernel into a 128 KB ROM image. Write it to the SRAM with the NXMGINST installer and the MEGA-SCSI becomes a Nextor 3 cartridge. With a backup of the whole SRAM you can go back to the original kernel. For the normal MEGA-SCSI (ASCII-compatible MegaROM controller) and the MEGA-SCSI with SCC (Konami MegaROM controller, known as WAVE-SCSI). The ESE RAM disk that the original MEGA-SCSI (with its MSX-DOS2 based kernel) makes in its SRAM is now supported too: the SRAM after the first 128 KB becomes an "SRAM disk". The installer formats it and copies NEXTOR.SYS / COMMAND3.COM onto it, so Nextor 3 boots from it.</p>
 
   <div class="facts">
     <div>
@@ -571,25 +571,29 @@
         <li>SCSI ID 0〜6 の機器を探して読み書き。セクタ番号は 32 ビットで、2GB を超える SCSI2SD も使える</li>
         <li>読み込みは 512 バイトを待ちなしで一気に読む速さ優先、書き込みは 8 バイトごとに FIFO が空くのを待つ安全側(オリジナルの MEGA-SCSI(MSX-DOS2 カーネルベース)では SCSI2SD / SCSI2CF への書き込みに問題があった)</li>
         <li>SCSI 機器がない、電源が入っていないときも、起動時に止まらない</li>
-        <li>NXMSINST: 書き込み、照合、バックアップ(<code>/B</code>)、復元。カーネルが動いていないときは <code>/S:スロット</code> で指定</li>
+        <li><strong>SRAM ディスク</strong>(似非 RAM ディスクにあたるもの): SRAM の 128KB 以降(256KB 版は 128KB、512KB 版は 384KB、1024KB 版は 896KB)をデバイス 1 として読み書き。電源を切っても中身が残り、ここから起動もできる</li>
+        <li>NXMGINST: 書き込み、照合、SRAM ディスクの作成(<code>/N</code> で作らない)、SRAM 全体のバックアップ(<code>/B</code>)と復元。カーネルが動いていないときは <code>/S:スロット</code> で指定</li>
       </ul>
       <ul lang="en">
         <li>Finds devices on SCSI IDs 0-6 and reads and writes them. 32-bit sector numbers, so an SCSI2SD larger than 2 GB works</li>
         <li>Reads take 512 bytes in one go with no waits, for speed. Writes wait for an empty FIFO every 8 bytes, for safety (the original MEGA-SCSI, with its MSX-DOS2 based kernel, had write problems with SCSI2SD / SCSI2CF)</li>
         <li>Booting does not hang when no SCSI device is connected or powered</li>
-        <li>NXMSINST: writes and verifies, backs up (<code>/B</code>) and restores. Give the slot with <code>/S:slot</code> when the kernel is not running</li>
+        <li><strong>SRAM disk</strong> (the counterpart of the ESE RAM disk): the SRAM after the first 128 KB (128 KB on the 256 KB model, 384 KB on 512 KB, 896 KB on 1024 KB) is device 1. It keeps its contents with the power off, and Nextor can boot from it</li>
+        <li>NXMGINST: writes and verifies, makes the SRAM disk (<code>/N</code> to skip it), backs up the whole SRAM (<code>/B</code>) and restores it. Give the slot with <code>/S:slot</code> when the kernel is not running</li>
       </ul>
       <h3 lang="ja">できないこと</h3>
       <h3 lang="en">What it does not do</h3>
       <ul lang="ja">
         <li>元のカーネルでフォーマットしたディスクは保証しない(<code>CALL FDISK</code> で作り直す)</li>
-        <li>似非 RAM ディスク(今後サポート予定)、CALL 命令など元のカーネルの機能、SPC を直接操作するソフト</li>
-        <li>実機ではまだ: SRAM 128KB / 256KB / 512KB の版、実際のフォーマット、2GB 超、SCSI2SD 以外の機器、FS-A1ST 以外の機種</li>
+        <li>元のカーネルの似非 RAM ディスクの中身はそのまま使えない(インストーラが確認してから SRAM ディスクに作り直す。元に戻すときは <code>/B</code> のバックアップから)</li>
+        <li>CALL 命令など元のカーネルの機能、SPC を直接操作するソフト</li>
+        <li>実機ではまだ: SRAM 256KB / 512KB の版、SCSI のディスクの実際のフォーマット、2GB 超、SCSI2SD 以外の機器、FS-A1ST 以外の機種</li>
       </ul>
       <ul lang="en">
         <li>Disks formatted by the original kernel are not guaranteed (re-create them with <code>CALL FDISK</code>)</li>
-        <li>No ESE RAM disk (planned), CALL commands or other original-kernel features; software that drives the SPC directly does not work</li>
-        <li>Not yet tested on real hardware: models with 128 / 256 / 512 KB SRAM, an actual format, more than 2 GB, devices other than SCSI2SD, machines other than the FS-A1ST</li>
+        <li>The contents of the original kernel's ESE RAM disk are not used as they are (the installer asks, then makes a new SRAM disk; to go back, restore the <code>/B</code> backup)</li>
+        <li>No CALL commands or other original-kernel features; software that drives the SPC directly does not work</li>
+        <li>Not yet tested on real hardware: models with 256 / 512 KB SRAM, an actual format of an SCSI disk, more than 2 GB, devices other than SCSI2SD, machines other than the FS-A1ST</li>
       </ul>
     </div>
     <div>
@@ -606,12 +610,12 @@
       <h3 lang="ja">確かめた環境</h3>
       <h3 lang="en">Tested on</h3>
       <ul lang="ja">
-        <li>実機: FS-A1ST + SCSI2SD V4(2GB)。SCC 付き版とノーマル版 1024KB で、インストール、起動、Z80 / R800 での読み書き</li>
-        <li>openMSX: 3 機種すべてでインストール、復元、起動、読み書き</li>
+        <li>実機: FS-A1ST + SCSI2SD V4(2GB)。SCC 付き版とノーマル版 1024KB で、インストール、起動、Z80 / R800 での読み書き。SRAM ディスクの作成と起動、書いたファイルの照合、電源を切っても残ること。SRAM 全体のバックアップから元のカーネル(似非 RAM ディスクを含む)に戻し、また Nextor に戻すこと。ノーマル版 128KB へのインストール</li>
+        <li>openMSX: ノーマル版 128KB / 256KB / 512KB / 1024KB、SCC 付き版 1024KB で、インストール、SRAM ディスクの作成、バックアップと復元、起動、読み書き</li>
       </ul>
       <ul lang="en">
-        <li>Real hardware: FS-A1ST + SCSI2SD V4 (2 GB). Install, boot, and reads and writes on Z80 / R800 with the SCC model and the normal 1024 KB model</li>
-        <li>openMSX: install, restore, boot, reads and writes on all three models</li>
+        <li>Real hardware: FS-A1ST + SCSI2SD V4 (2 GB). With the SCC model and the normal 1024 KB model: install, boot, reads and writes on Z80 / R800; making and booting the SRAM disk, files compared after copying back, contents kept with the power off; a whole-SRAM backup back to the original kernel (with its ESE RAM disk) and then back to Nextor. Install on the normal 128 KB model</li>
+        <li>openMSX: install, SRAM disk creation, backup and restore, boot, reads and writes on the normal 128 / 256 / 512 / 1024 KB models and the SCC 1024 KB model</li>
       </ul>
     </div>
   </div>
@@ -619,17 +623,19 @@
   <div class="memo" lang="ja">
     <span class="memo-label">作業メモ — J.D.</span>
     <p>始まりは「Nextor が 3 になったのは知ってる?」でした。知っています。続けて「MEGA-SCSI で使えない」。そもそもドライバが存在しないのだから当然です。そこからは元の BIOS の解析、SRAM へのインストーラ、エミュレータでの試験と進み、いざ実機に挿したら、SCSI 機器の電源が入っていないだけで起動が止まり、ノーマル版はインストーラが見つけられず、書き込みが一瞬で終わって画面が緑一色になり「戸惑います」。どれも直しました。ついでに Nextor 3 そのものの癖まで掘り当て、依頼人は作者に Issue まで出しています。注文が多いのは相変わらずですが、全部実機で試してくるのも相変わらずです。</p>
+    <p>追記: 次の注文は「似非 RAM ディスクも」。作りました。ついでに「元のカーネルは 64KB で、残りに RAM ディスクの FAT がある。128KB だけ書き戻すのは怖い」とのことで、バックアップは SRAM 丸ごと 1MB に。フロッピーに入らないと文句を言われる前に、説明書に書いておきました。</p>
   </div>
   <div class="memo" lang="en">
     <span class="memo-label">Work log — J.D.</span>
     <p>It began with "did you know Nextor went to version 3?" I did. Then: "it doesn't work with the MEGA-SCSI." Of course not; there was never a driver. So: disassembling the original BIOS, an SRAM installer, emulator tests. Then on real hardware the boot hung just because the SCSI device was switched off, the installer couldn't find the normal model, and the write finished so fast that the screen went solid green and the client was "puzzled." All fixed. Along the way we dug up quirks of Nextor 3 itself, and the client filed an issue with its author. As many demands as ever, and as ever, every one of them tried on real hardware.</p>
+    <p>Update: the next demand was "the ESE RAM disk too." Done. Then: "the original kernel is 64 KB and the RAM disk's FAT lives in the rest; restoring only 128 KB is scary." So the backup is now the whole SRAM, 1 MB. Before the complaint that it doesn't fit on a floppy arrives, it's already in the manual.</p>
   </div>
 
-  <p class="caution" lang="ja"><strong>注意:</strong> Nextor 3.0.0 はまだベータ版です。ここに書いたこと(できること、できないこと、注意)は 2026-10 時点の Beta2 で確かめたもので、挙げたことも挙げていないことも、今後の Nextor の更新で直ったり変わったりすることがあります。非公式のソフトです。SRAM を書き換えるので、元のカーネルに戻したい人は必ず <code>/B</code> でバックアップを取ってください。使用は自己責任でお願いします。報告書と説明書は日本語のみです。</p>
-  <p class="caution" lang="en"><strong>Note:</strong> Nextor 3.0.0 is still in beta. Everything here (what works, what does not, the notes) was checked with Beta2 as of 2026-10; anything in it, and anything not in it, may be fixed or changed by later Nextor releases. Unofficial software. It rewrites the SRAM, so if you may want the original kernel back, make a backup with <code>/B</code>. Use at your own risk. The report and the manual are in Japanese only.</p>
+  <p class="caution" lang="ja"><strong>注意:</strong> Nextor 3.0.0 はまだベータ版です。ここに書いたこと(できること、できないこと、注意)は 2026-10 時点の Beta2 で確かめたもので、挙げたことも挙げていないことも、今後の Nextor の更新で直ったり変わったりすることがあります。Nextor 3.0 の正式版が出たら、そのカーネルで作り直す予定です。非公式のソフトです。SRAM を書き換えるので、元のカーネルに戻したい人は必ず <code>/B</code> でバックアップを取ってください。使用は自己責任でお願いします。報告書と説明書は日本語のみです。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> Nextor 3.0.0 is still in beta. Everything here (what works, what does not, the notes) was checked with Beta2 as of 2026-10; anything in it, and anything not in it, may be fixed or changed by later Nextor releases. The images will be rebuilt with the kernel of the final Nextor 3.0 release. Unofficial software. It rewrites the SRAM, so if you may want the original kernel back, make a backup with <code>/B</code>. Use at your own risk. The report and the manual are in Japanese only.</p>
 
   <div class="links">
-    <a class="btn primary" href="nxms.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 152 KB</small></a>
+    <a class="btn primary" href="nxms.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 153 KB</small></a>
     <a class="btn ghost" href="nxms.html"><span lang="ja">開発報告</span><span lang="en">Report (Japanese)</span></a>
     <a class="btn ghost" href="nxms_readme.html"><span lang="ja">説明書</span><span lang="en">Manual (Japanese)</span></a>
   </div>
