@@ -410,7 +410,7 @@
   <div class="soft-head">
     <h2 id="v9968test-name" lang="ja">V9968 テストプログラム</h2>
     <h2 id="v9968test-name-en" lang="en">V9968 test programs</h2>
-    <span class="ver">v1.00 · 2026-10-16</span>
+    <span class="ver">v1.01 · 2026-10-31</span>
     <span class="platform">MSX-DOS / V9968</span>
   </div>
   <p class="tagline" lang="ja">組み立てた V9968 カートリッジが、ちゃんと動いているかを確かめる</p>
@@ -424,14 +424,14 @@
       <h3 lang="en">Programs</h3>
       <ul lang="ja">
         <li><code>V9968TST</code>: VRAM 全体をバンク単位で試験(アドレス線の重なりも分かる)、SCREEN 0〜12・インターレース・FIL・EPAL のテスト画面</li>
-        <li><code>V9968TIM</code>: パレットのラスター / snow、ページ切り替えのタイミング、走査線割り込みでの分割、速さ、turbo R の R800 での VRAM の読み書き</li>
-        <li><code>V9968G3D</code>: Geo3D の有無、頂点の計算 10 通りの照合、回転する立方体とフレームレート</li>
+        <li><code>V9968TIM</code>: パレットのラスター / snow、ページ切り替えのタイミング、走査線割り込みでの分割、速さ、turbo R の R800 での VRAM の読み書き(同じ所を 2 回読んで、書き込みと読み出しのどちらの誤りかを見分ける)</li>
+        <li><code>V9968G3D</code>: Geo3D の有無と版(v2.0 など)、頂点の計算 10 通りの照合、回転する立方体とフレームレート</li>
         <li>VDP は 88h / 98h を自動で判定。turbo R では Z80 に切り替えて動かす(<code>/R</code> で R800 のまま)</li>
       </ul>
       <ul lang="en">
         <li><code>V9968TST</code>: tests the whole VRAM bank by bank (it also catches address lines that alias), then test screens for SCREEN 0-12, interlace, FIL and EPAL</li>
-        <li><code>V9968TIM</code>: palette rasters and snow, page-flip timing, line-interrupt splits, speed, and VRAM reads and writes from the turbo R's R800</li>
-        <li><code>V9968G3D</code>: whether Geo3D is there, ten vertex calculations checked against known answers, and a rotating cube with its frame rate</li>
+        <li><code>V9968TIM</code>: palette rasters and snow, page-flip timing, line-interrupt splits, speed, and VRAM reads and writes from the turbo R's R800 (reading each spot twice tells write errors from read errors)</li>
+        <li><code>V9968G3D</code>: whether Geo3D is there and its version (such as v2.0), ten vertex calculations checked against known answers, and a rotating cube with its frame rate</li>
         <li>The VDP at 88h or 98h is found automatically. On a turbo R the programs switch to the Z80 (<code>/R</code> keeps the R800)</li>
       </ul>
     </div>
@@ -442,13 +442,13 @@
         <li>R800 では VRAM の読み出しが化ける(書き込みは問題なし)。読むときは一時的に Z80 に切り替えるのがよい</li>
         <li>R#2(表示ページ)は表示の途中でもすぐ効く。EPAL 768 バイトは Z80 では帰線に収まらない</li>
         <li>S#1 の FH は IE1 = 0 でも立つので、割り込みなしで走査線を待てる</li>
-        <li>Geo3D は 2026-10-05 の版から入っていて、立方体は 59.9fps</li>
+        <li>Geo3D は 2026-10-05 の版から入っていて、立方体は 59.9fps。2026-10-24 の版からは HS = 0 の VDP コマンドが従来の VDP 並みの速さになったので、v1.01 は HS を立てて描く</li>
       </ul>
       <ul lang="en">
         <li>VRAM reads from the R800 come back corrupted (writes are fine). Switch to the Z80 for the reads</li>
         <li>R#2 (display page) takes effect at once, even mid-frame. A 768-byte EPAL write does not fit in the blanking on a Z80</li>
         <li>S#1 FH is set even with IE1 = 0, so you can wait for a line without interrupts</li>
-        <li>Geo3D is already in the 2026-10-05 FPGA, and the cube runs at 59.9 fps</li>
+        <li>Geo3D is already in the 2026-10-05 FPGA, and the cube runs at 59.9 fps. From the 2026-10-24 FPGA, VDP commands with HS = 0 run at the old VDP speed, so v1.01 draws with HS set</li>
       </ul>
       <h3 lang="ja">V9968 に対応したほかのソフト</h3>
       <h3 lang="en">Other software that supports the V9968</h3>
