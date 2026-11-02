@@ -18,8 +18,8 @@
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. MEGA-SCSI について</a></li><li class="t2"><a href="#s2">2. 作ったもの</a></li><li class="t2"><a href="#s3">3. ドライバの仕組み</a></li><li class="t2"><a href="#s4">4. インストーラ NXMSINST(0.2 まで。0.3 からは NXMGINST、8 章)</a></li><li class="t2"><a href="#s5">5. 確かめたこと</a></li><li class="t2"><a href="#s6">6. Nextor 3.0.0 Beta2 での注意</a></li><li class="t2"><a href="#s7">7. できていること・できていないこと</a></li><li class="t2"><a href="#s8">8. その後の更新(ドライバ 0.2 / インストーラ 0.3)</a></li><li class="t2"><a href="#s9">9. 権利</a></li></ul></nav>
 <main class="docbody">
-<p>その後、オリジナルの MEGA-SCSI の似非 RAM ディスクにあたる「SRAM ディスク」に対応し(ドライバ 0.2)、インストーラが SRAM ディスクを作るようにした(インストーラ 0.3、0.2 までの名前は NXMSINST)。バックアップは SRAM 全体を保存するようにした。これらは「8. その後の更新(ドライバ 0.2 / インストーラ 0.3)」にまとめた。</p>
-<p><strong>Nextor 3.0.0 はまだベータ版である。</strong> この報告は Nextor 3.0.0 Beta2 で確かめたものである。「できていること」「できていないこと」、「6. Nextor 3.0.0 Beta2 での注意」に挙げたことはもちろん、挙げていないことも、今後の Nextor の更新で直ったり変わったりすることがある。</p>
+<p>その後、オリジナルの MEGA-SCSI の似非 RAM ディスクにあたる「SRAM ディスク」に対応し(ドライバ 0.2)、インストーラが SRAM ディスクを作るようにした(インストーラ 0.3、0.2 までの名前は NXMSINST)。バックアップは SRAM 全体を保存するようにした。これらは「8. その後の更新(ドライバ 0.2 / インストーラ 0.3)」にまとめた。2026-11-01 に Nextor 3.0 の正式版が出たので、そのカーネルで作り直した(8.5)。</p>
+<p>1〜7 章と 8.1〜8.4 は、Nextor 3.0.0 Beta2 のカーネルで開発・確認したときの記録である。正式版での違いは 8.5 にまとめた。</p>
 <h3 id="s1">1. MEGA-SCSI について</h3>
 <p>MEGA-SCSI は <a href="http://www.hat.hi-ho.ne.jp/tujikawa/ese/">似非職人工房</a> の SCSI カートリッジである。SCSI コントローラ(富士通 MB89352A、以下 SPC)と、カーネルを入れる SRAM を持つ。</p>
 <ul><li>SRAM は 8KB 単位のバンク切り替えで見える。ノーマル版は ASCII8 型、SCC 付き版は SCC 型(コナミ)のバンク切り替え</li><li>カーネル(元は MSX-DOS2 ベース)は ROM ではなく SRAM に入っている。そのため、フラッシュ ROM の書き換えなしで、別のカーネルを入れられる</li><li>SRAM はモデルによって 128KB〜1024KB。カーネルの後ろの SRAM を「似非 RAM ディスク」として A: ドライブに割り当てている(ドライバ 0.2 から「SRAM ディスク」として使える。8 章)</li><li>SPC は 4000h〜5FFFh にしか出せない(6000h〜7FFFh への書き込みはバンク切り替えになるため)</li></ul>
@@ -27,7 +27,7 @@
 <h3 id="s2">2. 作ったもの</h3>
 <div class="scroll"><table><thead><tr><th>ファイル</th><th>内容</th></tr></thead><tbody><tr><td><code>NXMG_A8.ROM</code></td><td>ノーマル版用の Nextor 3 ROM イメージ(128KB)</td></tr><tr><td><code>NXMG_SCC.ROM</code></td><td>SCC 付き版用の Nextor 3 ROM イメージ(128KB)</td></tr><tr><td><code>NXMGINST.COM</code></td><td>インストーラ。SRAM の先頭 128KB に ROM イメージを書き込み、照合する。SRAM ディスクの作成、SRAM 全体のバックアップと復元もできる</td></tr></tbody></table></div>
 <p>(0.2 までは <code>NXMS_A8.ROM</code> / <code>NXMS_SCC.ROM</code> / <code>NXMSINST.COM</code>。元のインストーラ MGINST に合わせて名前を変えた。)</p>
-<ul><li>ROM イメージは、Nextor 3.0.0 Beta2 のカーネル(base ファイル)にドライバを加えたもの。手順は Nextor 付属の mknexrom と同じ</li><li>SRAM 128KB にちょうど収まる大きさにしてある。SRAM がそれより大きいときは、128KB 以降を SRAM ディスクにする(8 章)</li></ul>
+<ul><li>ROM イメージは、Nextor 3 のカーネル(base ファイル。当初は 3.0.0 Beta2、今は 3.0)にドライバを加えたもの。手順は Nextor 付属の mknexrom と同じ</li><li>SRAM 128KB にちょうど収まる大きさにしてある。SRAM がそれより大きいときは、128KB 以降を SRAM ディスクにする(8 章)</li></ul>
 <h3 id="s3">3. ドライバの仕組み</h3>
 <h4 id="s3.1">3.1 SPC の扱い</h4>
 <p>SPC は 4000h〜5FFFh にしか出せないので、ドライバのバンクを前半(4000h〜5FFFh)と後半(6000h〜7FFFh)に分けた。</p>
@@ -53,7 +53,7 @@ NXMSINST /B[:バックアップ] [/S:スロット]</pre></div>
 <h4 id="h3">エミュレータ(openMSX、FS-A1ST)</h4>
 <ul><li>ノーマル版 128KB / 1024KB、SCC 付き版 1024KB の 3 構成で、インストールと復元(バックアップと書き込み前の SRAM の一致、書き込んだ内容の照合、128KB 以降に触れていないこと)</li><li>3 構成で、SCSI ハードディスクのイメージから起動し、300KB のファイルをコピーして比較</li></ul>
 <h3 id="s6">6. Nextor 3.0.0 Beta2 での注意</h3>
-<p>MEGA-SCSI のドライバではなく、Nextor 3.0.0 Beta2 のカーネルやほかのドライバの動きである。Beta 版なので、今後変わる可能性がある。</p>
+<p>MEGA-SCSI のドライバではなく、Nextor 3.0.0 Beta2 のカーネルやほかのドライバの動きである。正式版での状況は 8.5 に書いた(6.1 は正式版で解決、6.2 は正式版の仕様)。</p>
 <h4 id="s6.1">6.1 ドライブの割り当て</h4>
 <p>Nextor 3 では、起動時にメディアがある機器から先にドライブ名が割り当てられるようである。MegaFlashROM SCC+ SD(Nextor 3 用ドライバ)では、SD スロット 2 つと ROM ディスクのドライブ名が、SD カードの有無で次のように変わった。</p>
 <div class="scroll"><table><thead><tr><th>スロット 1</th><th>スロット 2</th><th>A:</th><th>B:</th><th>C:</th></tr></thead><tbody><tr><td>なし</td><td>なし</td><td>ROM ディスク</td><td>スロット 1</td><td>スロット 2</td></tr><tr><td>あり</td><td>あり</td><td>スロット 1</td><td>スロット 2</td><td>ROM ディスク</td></tr><tr><td>あり</td><td>なし</td><td>スロット 1</td><td>ROM ディスク</td><td>スロット 2</td></tr><tr><td>なし</td><td>あり</td><td>スロット 2</td><td>ROM ディスク</td><td>スロット 1</td></tr></tbody></table></div>
@@ -65,7 +65,7 @@ NXMSINST /B[:バックアップ] [/S:スロット]</pre></div>
 <h4 id="h4">できていること</h4>
 <ul><li>ノーマル版、SCC 付き版で Nextor 3 が動く</li><li>SCSI ID 0〜6 の機器の検出、読み書き、32 ビットのセクタ番号</li><li>速さ優先の読み込みと、安全側の書き込み</li><li>SCSI 機器がなくても起動が止まらない</li><li>インストーラによる書き込み、照合、バックアップ、復元</li><li>SRAM ディスク(SRAM の 128KB 以降)の読み書きと起動、インストーラでの作成、SRAM 全体のバックアップと復元(8 章)</li></ul>
 <h4 id="h5">できていないこと・確かめていないこと</h4>
-<ul><li>元の MEGA-SCSI カーネルでフォーマットしたディスクの互換性(Nextor の <code>CALL FDISK</code> で作り直す前提)</li><li>元のカーネルの似非 RAM ディスクの中身をそのまま使うこと(インストーラが SRAM ディスクに作り直す。元に戻すときは SRAM 全体のバックアップから)</li><li>元のカーネルのそのほかの機能(CALL 命令など)</li><li>SPC を直接操作するソフトのための仕組み(元のカーネル用のソフトは動かない)</li><li>Nextor 2 用のドライバ</li><li>実機での SRAM 256KB / 512KB の版、<code>CALL FDISK</code> での実際のフォーマット、2GB を超える容量、SCSI2SD 以外の機器(HDD、MO、SCSI2CF)、FS-A1ST 以外の機種</li></ul>
+<ul><li>元の MEGA-SCSI カーネルでフォーマットしたディスクの互換性(Nextor の <code>CALL FDISK</code> で作り直す前提)</li><li>元のカーネルの似非 RAM ディスクの中身をそのまま使うこと(インストーラが SRAM ディスクに作り直す。元に戻すときは SRAM 全体のバックアップから)</li><li>元のカーネルのそのほかの機能(CALL 命令など)</li><li>SPC を直接操作するソフトのための仕組み(元のカーネル用のソフトは動かない)</li><li>Nextor 2 用のドライバ</li><li>実機での SRAM 256KB / 512KB の版、2GB を超える容量、SCSI2SD 以外の機器(HDD、MO、SCSI2CF)、FS-A1ST 以外の機種</li></ul>
 <h3 id="s8">8. その後の更新(ドライバ 0.2 / インストーラ 0.3)</h3>
 <h4 id="s8.1">8.1 実機で見つかった問題(ドライバ 0.1.1〜0.1.6)</h4>
 <ul><li><strong>512 バイトでないセクタ:</strong> 2048 バイトの MO などは使わない(READ CAPACITY で確かめる)</li><li><strong>カードの入れ替え:</strong> SCSI2SD V4 は、取り外しできる機器の設定にしても、カードの入れ替えを UNIT ATTENTION で知らせなかった。入れ替えを知らせたことのない機器には「分からない」を返し、Nextor に読み直させるようにした。それでも入れ替え直後の読み込みで SCSI2SD が止まることがあったので、取り外しできる機器は 8 バイトごとに時間の上限付きで待つ読み方にし、転送が進まないときはバスをリセットする。依頼人の判断で、SCSI2SD は Hard Drive の設定で使い、カードは電源を切ってから入れ替えることにした</li><li><strong>永続ストレージ(device query 8):</strong> Nextor 3 の起動前の読み込みに対応した。ところが実機で、電源投入の直後に LED が点いたまま止まることがあった。この読み込みだけがバスリセットなしでコマンドを送っていたためで、最初の呼び出しでバスをリセットし、0.5 秒待つようにした</li><li><strong>電源投入直後の起動(0.2.1):</strong> SRAM ディスクをフォーマットすると永続ストレージが SRAM に置かれ、SCSI への最初のコマンドが早くなりすぎて、SCC 付き版で止まることがあった(3 回中 2 回)。初期化のバスリセットの後に、タイマーで数えて 2 秒待つようにした(0 回 / 5 回)</li></ul>
@@ -75,8 +75,13 @@ NXMSINST /B[:バックアップ] [/S:スロット]</pre></div>
 <ul><li>名前を元のインストーラ MGINST に合わせた。ROM の識別子も「NXMG」にしたが、探すときは「NXM」の 3 文字で探すので、0.2 までで入れたものも見つかる</li><li><strong>SRAM ディスクを作る:</strong> 256KB 以上の版では、Nextor の ROM と一緒に SRAM ディスクをフォーマットし(<code>CALL FDISK</code> と同じ形の FAT12 パーティション)、実行したフォルダに NEXTOR.SYS と COMMAND3.COM があれば書き込む。MGINST が似非 RAM ディスクを起動ディスクにしたのと同じである。中身があるとき(元のカーネルの似非 RAM ディスクや、前に作った SRAM ディスク)は、フォーマットするかを聞く。<code>/N</code> を付けると SRAM ディスクには触らない</li><li><strong>SRAM 全体のバックアップ:</strong> 依頼人から「元のカーネルは 64KB で、残りに似非 RAM ディスクの FAT などが入っている。128KB だけ書き戻すのは怖い」と指摘があった。実際、元のカーネルの似非 RAM ディスクは SRAM の 64KB 目から始まる(1024KB 版で 960KB)。そこで <code>/B</code> は SRAM 全体(1024KB 版なら 1MB)を保存し、書き戻すときも全体を戻すようにした。128KB 以降はファイルから 8KB ずつ書いて照合し、最後に先頭 128KB を書く。保存に失敗したときは途中までのファイルを消す。1MB はフロッピーに入らないので、SCSI2SD などに保存する(SRAM ディスクや似非 RAM ディスク自身には置けない)</li><li>ファイルの読み込みは、バンク(8KB)に入るだけまとめて読む。1 セクタずつだとフロッピーが 1 回転ずつ待ち、10 秒ほど余計にかかった</li></ul>
 <h4 id="s8.4">8.4 確かめたこと</h4>
 <ul><li>実機(ノーマル版 / SCC 付き版 1024KB): <code>CALL FDISK</code> での SRAM ディスクのフォーマット、SRAM ディスクからの起動、720KB のファイルを MegaFlashROM SCC+ SD → SRAM → SCSI2SD → MegaFlashROM と逆順にもコピーして照合(Z80 / R800)、電源を切っても中身が残ること、SCSI2SD なしで SRAM ディスクから起動</li><li>実機(インストーラ 0.3、両機種): SRAM ディスクの作成(フォーマットの確認に Y / N、<code>/N</code>、元のカーネルから)とそこからの起動。SRAM ディスクに書いたファイルを SD カードに書き戻して元のファイルと一致</li><li>実機(SRAM 全体のバックアップ、両機種): Nextor の上で保存 → 元のカーネルのダンプを書いて、元のカーネルと似非 RAM ディスクが動く(CHKDSK エラーなし) → 保存したものを書き戻して、Nextor と SRAM ディスクに戻る(CHKDSK エラーなし)</li><li>実機(ノーマル版 128KB): インストール(SRAM ディスクは作らない)</li><li>openMSX: ノーマル版 128KB / 256KB / 512KB / 1024KB、SCC 付き版 1024KB で、SRAM ディスクの作成、バックアップと復元、SRAM ディスクからの起動と読み書き。ノーマル版 1024KB の最後のバンクは openMSX では SPC と区別されず試せないが、実機では読み書きできた</li></ul>
+<h4 id="s8.5">8.5 Nextor 3.0 正式版での作り直し(2026-11)</h4>
+<ul><li>2026-11-01 公開の Nextor 3.0 のカーネル(<code>Nextor-3.0.0.base.dat</code>)で ROM を作り直した。ドライバとインストーラの中身は変えていない。ドライバ開発ガイドの変更は、デバイスの番号の付け方の指針が詳しくなったことだけで、SRAM ディスクを 1、SCSI ID 0〜6 を 2〜8 にした今の番号は、その指針(いつもある機器を先に)どおりである</li><li><strong>ドライブの割り当て(6.1):</strong> 正式版では、ドライバのデバイスの番号順にドライブが割り当てられるようになった(Issue #262 は解決済み)。MEGA-SCSI では、フォーマットした SRAM ディスクがいつも先頭のドライブになり、フォーマットしていない SRAM ディスクにはドライブが付かない。Nextor 3 はブートセクタのある最初のドライブから起動するので、SRAM ディスクがあると、いつもそこから起動する。中身が空だと、SCSI のディスクにシステムがあっても BASIC になる(openMSX で確認)。説明書に書いた</li><li><strong>Nextor 2 のカートリッジ(6.2):</strong> 正式版の文書に、Nextor 3 のカーネルは Nextor 2 のカーネルを止める仕様だと明記された</li><li>openMSX: これまでの試験(読み書き、SRAM ディスク、永続ストレージ、取り外しできる機器、DRVTEST、インストーラの 5 構成)がすべて通った</li><li>実機(両機種 1024KB): インストール、起動、ドライブの割り当て、電源投入、DRVTEST、720KB のファイルの読み書き(Z80 / R800、書き戻したものが一致)。ノーマル版 128KB のインストールと起動</li></ul>
+<h5 id="h6">SCSI2SD と SD カード</h5>
+<p>実機の試験の途中で、720KB のファイルのコピーがエラーなく終わったのに、SCSI2SD 上のファイルが 658KB しかなく、次の読み込みで止まることが 2 回あった。止まったあとは SCSI2SD の起動時の名前が化け、しばらく電源を切っておくまで直らなかった。</p>
+<ul><li>Nextor はファイルを閉じるときに、残りのデータとディレクトリをディスクに書き出す。コピーがエラーなく終わったので、SCSI2SD はそれらの書き込みに「GOOD」と答えたことになる</li><li>SCSI2SD V4 / V5 のファームウェアのソースを読むと、ホストが切り離し(disconnect)を許していないとき、データを受け取り終わっても SD カードへの書き込みが 150ms 以内に終わらなければ、書き終わる前に GOOD を返す。また、SD カードが応答しなくなったときの待ちには上限がない。つまり SD カードが止まると、データが失われても DOS はエラーを出せず、SCSI2SD も止まったままになる</li><li>SD カードを替えて確かめた: 2 枚目(1GB)は起動しただけで名前が化けて止まり、コピーのあとの読み込みでも止まった。3 枚目(2GB)では、720KB のファイル 12 個の連続した書き込みと読み込みで問題が出なかった</li><li>原因は SD カード(と SCSI2SD の作り)で、ドライバやカーネルの問題ではないと判断した。説明書に SD カードの注意を書いた。ドライバでできるのは、止まったときに MSX が固まらずエラーになるようにすること(待ちの上限を短くする、読み込みも安全な読み方にする)くらいで、今後の課題とした</li></ul>
 <h3 id="s9">9. 権利</h3>
-<ul><li>Nextor は Konamiman(Néstor Soriano)氏の作品で、MSX-DOS は MSX Licensing Corporation の著作物である。ROM イメージには Nextor 3.0.0 Beta2 のカーネルが入っているので、Nextor の使用条件(配布物に同梱、商用利用は不可)に従う</li><li>MEGA-SCSI は <a href="http://www.hat.hi-ho.ne.jp/tujikawa/ese/">似非職人工房</a> の製品である。元のカーネル(MSX-DOS2 を含む)は配布物に入れていない</li></ul>
+<ul><li>Nextor は Konamiman(Néstor Soriano)氏の作品で、MSX-DOS は MSX Licensing Corporation の著作物である。ROM イメージには Nextor 3.0 のカーネルが入っているので、Nextor の使用条件(配布物に同梱、商用利用は不可)に従う</li><li>MEGA-SCSI は <a href="http://www.hat.hi-ho.ne.jp/tujikawa/ese/">似非職人工房</a> の製品である。元のカーネル(MSX-DOS2 を含む)は配布物に入れていない</li></ul>
 </main>
 </div>
 </body>
