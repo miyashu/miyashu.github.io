@@ -604,12 +604,14 @@
         <li>元のカーネルでフォーマットしたディスクは保証しない(<code>CALL FDISK</code> で作り直す)</li>
         <li>元のカーネルの似非 RAM ディスクの中身はそのまま使えない(インストーラが確認してから SRAM ディスクに作り直す。元に戻すときは <code>/B</code> のバックアップから)</li>
         <li>CALL 命令など元のカーネルの機能、SPC を直接操作するソフト</li>
+        <li>セクタが 512 バイトでない機器やメディア(640MB 以上の MO など)。CD-ROM、スキャナなどディスク型でない機器は無視する(元の MEGA-SCSI 用の CD-ROM のソフトも動かない)</li>
         <li>実機ではまだ: SRAM 256KB / 512KB の版、2GB 超、SCSI2SD 以外の機器、FS-A1ST 以外の機種</li>
       </ul>
       <ul lang="en">
         <li>Disks formatted by the original kernel are not guaranteed (re-create them with <code>CALL FDISK</code>)</li>
         <li>The contents of the original kernel's ESE RAM disk are not used as they are (the installer asks, then makes a new SRAM disk; to go back, restore the <code>/B</code> backup)</li>
         <li>No CALL commands or other original-kernel features; software that drives the SPC directly does not work</li>
+        <li>No devices or media whose sectors are not 512 bytes (MO of 640 MB or more and so on). Devices that are not disks, such as CD-ROM drives and scanners, are ignored (the CD-ROM software for the original MEGA-SCSI does not work either)</li>
         <li>Not yet tested on real hardware: models with 256 / 512 KB SRAM, more than 2 GB, devices other than SCSI2SD, machines other than the FS-A1ST</li>
       </ul>
     </div>
