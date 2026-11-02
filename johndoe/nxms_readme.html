@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NXMG - MEGA-SCSI 用 Nextor 3 (試験版)</title>
+<title>NXMG - MEGA-SCSI 用 Nextor 3 (v1.0)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,12 +13,12 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">NXMG · README</div>
-  <h1>NXMG - MEGA-SCSI 用 Nextor 3 (試験版)</h1>
+  <h1>NXMG - MEGA-SCSI 用 Nextor 3 (v1.0)</h1>
   <p class="lead">似非職人工房の MEGA-SCSI(ノーマル版、SCC 付き版)で Nextor 3 を動かすための ROM イメージと、それを SRAM に書き込むインストーラです。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">できること</a></li><li class="t2"><a href="#h2">できないこと(元の MEGA-SCSI カーネルとの違い)</a></li><li class="t2"><a href="#h3">必要なもの</a></li><li class="t2"><a href="#h4">インストール</a></li><li class="t2"><a href="#h7">Nextor 3 でのドライブの割り当て</a></li><li class="t2"><a href="#h8">SCSI2SD と SD カード</a></li><li class="t2"><a href="#h9">確かめた環境</a></li><li class="t2"><a href="#h10">権利</a></li></ul></nav>
 <main class="docbody">
-<p>この ROM には Nextor 3.0(2026-11-01 公開の正式版)のカーネルが入っています。非公式のソフトです。使用は自己責任でお願いします。</p>
+<p>ドライバ 1.0、インストーラ NXMGINST 1.0 です。この ROM には Nextor 3.0(2026-11-01 公開の正式版)のカーネルが入っています。非公式のソフトです。使用は自己責任でお願いします。</p>
 <div class="scroll"><table><thead><tr><th>ファイル</th><th>内容</th></tr></thead><tbody><tr><td><code>NXMG_A8.ROM</code></td><td>ノーマル版 MEGA-SCSI(アスキー製メガロムコントローラ互換)用の Nextor 3 ROM イメージ(128KB)</td></tr><tr><td><code>NXMG_SCC.ROM</code></td><td>SCC 付き MEGA-SCSI(コナミ製メガロムコントローラ使用、通称 WAVE-SCSI)用の Nextor 3 ROM イメージ(128KB)</td></tr><tr><td><code>NXMGINST.COM</code></td><td>インストーラ。ROM イメージを MEGA-SCSI の SRAM に書き込み、SRAM ディスクを作る。元に戻すこともできる</td></tr><tr><td><code>LICENSE_Nextor.md</code></td><td>Nextor の使用条件(ROM イメージに Nextor のカーネルが入っているため)</td></tr></tbody></table></div>
 <h3 id="h1">できること</h3>
 <ul><li>SCSI ID 0〜6 の機器を探して、Nextor のドライブとして読み書きする(LUN は 0 のみ)</li><li>セクタ番号は 32 ビット。SCSI2SD の容量を 2GB より大きくしても使える</li><li>取り外しできる機器(MO など)はメディアの有無を確かめる</li><li>読み込みは元の MEGA-SCSI BIOS と同じく、1 セクタ 512 バイトを待ちなしで一気に読む(速さ優先)</li><li>書き込みは 8 バイトごとに SPC の FIFO が空くのを待つ。オリジナルの MEGA-SCSI(MSX-DOS2 カーネルベース)では SCSI2SD や SCSI2CF への書き込みで問題が出ることがあったため、こちらは安全側にしている</li><li>SCSI 機器がない、または電源が入っていなくても、起動時に止まらない(「SCSI bus not responding」と出して検出を打ち切る)</li><li><strong>SRAM ディスク</strong>(元のカーネルの似非 RAM ディスクにあたるもの): SRAM の 128KB 以降(256KB 版は 128KB、512KB 版は 384KB、1024KB 版は 896KB)をデバイス 1 として読み書きする。電源を切っても中身が残り、ここから起動もできる。SCSI の機器はデバイス 2〜8(SCSI ID 0〜6)</li></ul>
