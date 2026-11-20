@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NM(Next Maintenance)取扱説明書</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a><a class="alt" href="nm_manual_en.html" hreflang="en">English</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">NM · 取扱説明書</div>
+  <h1>NM(Next Maintenance)取扱説明書</h1>
+  <p class="lead">v0.99e(評価版、2026-11-21)。MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. 動作環境</a></li><li class="t2"><a href="#s2">2. ファイル</a></li><li class="t2"><a href="#s3">3. 起動と終了</a></li><li class="t2"><a href="#s4">4. 画面</a></li><li class="t2"><a href="#s5">5. キー操作</a></li><li class="t2"><a href="#s6">6. 内蔵ビューア</a></li><li class="t2"><a href="#s7">7. パーティション切替([P])</a></li><li class="t2"><a href="#s8">8. MGSDRV との連携</a></li><li class="t2"><a href="#s9">9. 設定(NMCFG.DAT)</a></li><li class="t2"><a href="#s10">10. MMRET.DAT、MMMCR.DAT(NMRET.DAT、NMMCR.DAT)、マクロ</a></li><li class="t2"><a href="#s11">11. 長いファイル名と漢字</a></li><li class="t2"><a href="#s12">12. ディスクやカードを入れ替えた時</a></li><li class="t2"><a href="#s13">13. 制限と、まだ出来ていないこと</a></li><li class="t2"><a href="#s14">14. 確認の状況</a></li><li class="t2"><a href="#s15">15. 使っているもの</a></li></ul></nav>
+<main class="docbody">
+<p>MultiMente(MM、MOGU 氏作)の操作を引き継いで、新しく書いたものです。MM のプログラムは使っていません。<strong>MM の設定はそのまま使えます</strong>: MMRET.DAT と MMMCR.DAT は MM のものを読み、MM.CFG の行は NMCFG.DAT へ写せます。</p>
+<p>評価版なので、動作を確かめきれていない部分があります。<strong>大事なディスクでは、書き込みを伴う操作を試す前にバックアップを取ってください。</strong>とくに <a href="並びの書き込み">Y</a>と <a href="パーティション切替">P</a>は、消えてもよいディスクで試してください。MM との違いは「MM-COMPARE」にあります。</p>
+<h3 id="s1">1. 動作環境</h3>
+<div class="scroll"><table><thead><tr><th>項目</th><th>内容</th></tr></thead><tbody><tr><td>本体</td><td>MSX2 以上、VRAM 128KB、マッパー RAM 128KB 以上</td></tr><tr><td>OS</td><td>MSX-DOS2、Nextor(2.1 と 3.0 で確認)。MSX-DOS1 では、メッセージを出して終了します</td></tr><tr><td>漢字</td><td>本体の漢字 ROM、または同梱の NMFONT.DAT。MSX-View の漢字 ROM(View フォント)があれば、それを使います</td></tr></tbody></table></div>
+<p>おもに turbo R で試しています。Z80 の本体や 128KB の本体でも動く作りですが、確認が少ない状態です。</p>
+<h3 id="s2">2. ファイル</h3>
+<p>全部を同じディレクトリに置いてください。</p>
+<div class="scroll"><table><thead><tr><th>ファイル</th><th>内容</th><th>無いとき</th></tr></thead><tbody><tr><td>NM.COM</td><td>本体</td><td>—</td></tr><tr><td>NM.OVL</td><td>本体の続き(必要な時に読み込みます)。本体と同じ時に作られたものが要ります</td><td>ビューア、ファイル操作などが使えません</td></tr><tr><td>NMFONT.DAT</td><td>一覧に漢字を出すための 8 ドットフォント(美咲フォント)</td><td>漢字 ROM の字を縮小して出します</td></tr><tr><td>NMUNI.DAT</td><td>Unicode → Shift-JIS の表。長いファイル名と UTF-8 のテキストに使います</td><td>漢字が <code>?</code> になります</td></tr><tr><td>NMCFG.DAT</td><td>設定(9 章)。同梱のものは全行が注釈です</td><td>既定値で動きます</td></tr><tr><td>NMRET.DAT または MMRET.DAT</td><td>[RETURN] で実行するコマンドを拡張子ごとに決めます(10 章)</td><td>[RETURN] は内蔵ビューアになります</td></tr><tr><td>NMMCR.DAT または MMMCR.DAT</td><td>[GRAPH] のキーマクロ(10 章)</td><td>[GRAPH] は何もしません</td></tr></tbody></table></div>
+<p>MMRET.DAT と MMMCR.DAT は MM と同じ書式です。MM のものがそのまま使えます(同梱はしていません)。お持ちでない時は、GIGAMIX さんのサイト(<a href="https://www.gigamix.jp/">https://www.gigamix.jp/</a>)から MultiMente をダウンロードすると、その中に入っています。NM だけ別の内容にしたい時は、同じ書式で NMRET.DAT、NMMCR.DAT という名前のファイルを作ってください。そちらが先に使われます。</p>
+<p>DAT ファイルは、環境変数 <code>%MM%</code> にディレクトリを設定しておくと、そこから読みます。そこに無いファイルと、設定が無い時は、本体と同じ場所から読みます。NMRET.DAT と NMMCR.DAT を探す順は、<code>%MM%</code> の NM の名前、本体の場所の NM の名前、<code>%MM%</code> の MM の名前、本体の場所の MM の名前です。</p>
+<h4 id="h1">環境変数</h4>
+<div class="scroll"><table><thead><tr><th>変数</th><th>用途</th></tr></thead><tbody><tr><td><code>%SHELL%</code></td><td>外部コマンドの実行に使うシェル。未設定なら、起動ドライブ、本体のあるドライブ、A: の順に COMMAND2.COM を探します</td></tr><tr><td><code>%MM%</code></td><td>DAT ファイルを置いたディレクトリ</td></tr><tr><td><code>%HOME%</code></td><td>[/] キーで移動する先</td></tr></tbody></table></div>
+<h3 id="s3">3. 起動と終了</h3>
+<div class="scroll"><pre>NM [左側] [右側]</pre></div>
+<p>何も付けなければ、起動時のドライブとディレクトリを、左右の両方に表示します。うしろに場所を書くと、左側、右側の順にそこから始まります。右側だけを省くこともできます。</p>
+<div class="scroll"><table><thead><tr><th>書き方</th><th>意味</th></tr></thead><tbody><tr><td><code>A:</code></td><td>そのドライブの、いまのディレクトリ</td></tr><tr><td><code>A:\UTILS</code></td><td>ドライブとディレクトリ</td></tr><tr><td><code>\UTILS</code></td><td>起動時のドライブのディレクトリ</td></tr><tr><td><code>UTILS</code></td><td>起動時のディレクトリの下のディレクトリ</td></tr></tbody></table></div>
+<div class="scroll"><pre>NM A: B:            左が A:、右が B:
+NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
+<p>無いドライブや、ディレクトリでないものを書いた側は、起動時の場所になります。外部コマンドを実行して戻ってきた時は、この指定は効きません(その時のディレクトリから始まります)。</p>
+<p>終了は [Q] か [ESC] です。[ESC] は確認を求めます。終了すると、操作していた側のドライブとディレクトリが DOS のカレントになります。</p>
+<h3 id="s4">4. 画面</h3>
+<div class="scroll"><pre> Attr Copy Dele Edit Find maKe Log Move Quit Run Sort View Wild eXec   ← メニュー行
++ NM v0.99e_K ----------------------------- 2026-11-14 19:36:05 +
+| Path: A:\                                                        |  操作している側のパス
+| Name: COMMAND2.COM                                               |  カーソルのファイル(長い名前があればそれ)
+| Size:     15708  Date: 2026-11-10  Time: 12:00:00  Attr: ----A   |
++ A:\ ----------------------------+ A:\DEST -----------------------+
+| DEST         &lt;dir&gt; 26-11-10 12:00| ..           &lt;dir&gt; 26-11-10 12:00|
+|*COMMAND2.COM 15708 26-11-10 12:00| LONGFI~1.TXT    11 26-11-10 12:00|  一覧(1 サイド 17 行)
+|  …                               |  …                               |
+|  18 files    2 marked 1K +N     |   6 files    0 marked            |  件数、マーク数と合計、ソート
+|A:REALLABEL  Free:  545K/  713K  |A:REALLABEL  Free:  545K/  713K  |  ドライブ、ボリューム名、空き/総容量
+ F1:help  TAB:side  F3:same dir  F4:open there  F5:one/two sides  Q:quit  ← 説明とメッセージ</pre></div>
+<ul><li>枠の左上に、名前と版が出ます(<code>NM v0.99e_K</code>)。最後の文字は、<code>K</code> が漢字を扱う状態、<code>A</code> が ANK 専用(<code>KANJI = OFF</code>)です。不具合を知らせる時は、この表示を添えてください。</li><li>左右を「サイド」と呼びます。白い帯(カーソル)のある側が、操作している側です。</li><li>最下行はキーの案内です。[SHIFT] を押している間は、[SHIFT] と一緒に使うキー([TAB]、[SPACE]、[F8]〜[F10] = [SHIFT] 併用の [F3]〜[F5])の案内に替わります。</li><li>一覧の左端の <code>*</code> はマークです。</li><li>一覧の下の行には、マークしたファイルの合計が KB で出ます(例 <code>46 marked 372K</code>)。コピー先の空き容量と見比べられます。バイト数の合計を 1KB 単位に切り上げた値で、ディレクトリの中身は足しません。コピー先のクラスタが大きいと、実際にはこれより多く使います。</li><li>そのうしろの <code>+N</code> はソートの状態です(<code>+</code> 昇順、<code>-</code> 降順。N 名前、S サイズ、D 日付、E 拡張子)。<code>*</code> は手で並べ替えたまま、まだディスクに書いていない印、<code>W</code> は表示フィルタが効いている印です。</li><li>空き容量は、Z80 の本体で大きなドライブを見ている時は出しません(数えるのに時間がかかるため)。設定で変えられます。</li></ul>
+<h4 id="h2">表示の切り替え</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[F5]</td><td>操作している側だけを画面いっぱいに出す / 2 画面に戻す</td></tr><tr><td><a href="[SHIFT]+[F3]">F8</a></td><td>詳細表示と名前のみ表示を切り替える(両側)</td></tr><tr><td><a href="[SHIFT]+[F4]">F9</a> / <a href="[SHIFT]+[F5]">F10</a></td><td>左側だけ / 右側だけ切り替える</td></tr></tbody></table></div>
+<p>名前のみ表示は、2 画面では 1 サイド 2 列(34 件)、1 画面では 5 列(85 件)です。</p>
+<h3 id="s5">5. キー操作</h3>
+<p>[F1] で、キーの一覧が画面に出ます。</p>
+<h4 id="h3">移動</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[↑][↓]</td><td>カーソル移動。[SHIFT] 併用で先頭 / 末尾</td></tr><tr><td>[←][→]</td><td>1 ページ移動(名前のみ表示では列の移動)。[SHIFT] 併用は常に 1 ページ</td></tr><tr><td>[CTRL]+[E][X][S][D]</td><td>上下左右(ダイヤモンドカーソル)。[CTRL]+[R][C][F][A] は [SHIFT] 併用と同じ</td></tr><tr><td>[RETURN]</td><td>ディレクトリに入る。ファイルの上では実行(下の「実行」)</td></tr><tr><td>[BS] / [.]</td><td>親ディレクトリへ</td></tr><tr><td>[¥]</td><td>ルートへ</td></tr><tr><td>[/]</td><td><code>%HOME%</code> のディレクトリへ</td></tr><tr><td>[H]</td><td>パスを入力して移動(<code>B:\DIR</code>、<code>\DIR</code>、いまの場所からの名前)</td></tr><tr><td>[L]</td><td>ドライブを選ぶ(A〜H の文字)</td></tr><tr><td>[1]〜[8]</td><td>ドライブ A:〜H: に替える</td></tr><tr><td>[0]</td><td>両側をディスクから読み直し、先頭から表示する(ボリューム名と空き容量も)。ディスクやカードを入れ替えたあとに押してください</td></tr><tr><td>[SHIFT]+[0]</td><td>ファイルの色を、属性別と拡張子別とで切り替える(9 章の「拡張子別の色」)</td></tr><tr><td>[F]</td><td>名前で探す(ワイルドカード可)。次に合うものへカーソルが動きます</td></tr></tbody></table></div>
+<h4 id="s2">2 画面の操作</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[TAB]</td><td>操作する側を替える</td></tr><tr><td>[F3]</td><td>反対側を、こちらと同じディレクトリにする</td></tr><tr><td>[F4]</td><td>カーソルのディレクトリを、反対側で開く</td></tr><tr><td>[SHIFT]+[1]〜[8]</td><td>反対側のドライブを A:〜H: に替える</td></tr><tr><td>[SHIFT]+[TAB]</td><td>左右を入れ替える。カーソルの位置と並び順は、ディレクトリと一緒に移ります(マークは消えます)</td></tr></tbody></table></div>
+<p>[SHIFT]+数字は、日本語配列の <code>!</code> <code>&quot;</code> <code>#</code> … で見分けています。配列が違う時は 9 章の <code>KEYMAP</code> を使ってください。</p>
+<h4 id="h4">マーク</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[SPACE]</td><td>マーク / 解除して 1 つ下へ</td></tr><tr><td>[SHIFT]+[SPACE]</td><td>カーソルのファイルをマーク / 解除(カーソルは動かない)</td></tr><tr><td>[SELECT]</td><td>全ファイルをマーク(マークがあれば全部解除)</td></tr><tr><td>[SHIFT]+[SELECT]</td><td>マークを全部反転</td></tr><tr><td>[CTRL]+[SELECT]</td><td>カーソルから下のマークを反転</td></tr><tr><td>[SHIFT]+[W]</td><td>カーソルから下の、ワイルドカードに合うファイルをマーク</td></tr></tbody></table></div>
+<p>[SELECT] の 3 つは、ディレクトリをマークしません。</p>
+<h4 id="h5">ファイル操作</h4>
+<p>マークがあればマークしたもの全部に、無ければカーソルのファイルに効きます。ディレクトリは中身ごと扱います。</p>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[C]</td><td>コピー。行き先を入力します(反対側のパスが入った状態から始まるので、そのまま [RETURN] で反対側へ)</td></tr><tr><td>[M]</td><td>移動。行き先の入力は [C] と同じ</td></tr><tr><td>[D]</td><td>削除。確認があります。中身のあるディレクトリは件数を示して確認します</td></tr><tr><td>[N]</td><td>名前の変更</td></tr><tr><td>[K]</td><td>ディレクトリの作成</td></tr><tr><td>[A]</td><td>属性と日時の変更。[R][H][S][A] で属性を切り替え、[D] で日時を入力、[RETURN] で設定</td></tr></tbody></table></div>
+<ul><li>同じ名前のファイルがある時は、[Y] 上書き / [N] 飛ばす / [T] 新しい時だけ / [C] 名前を変える / [ESC] 中止 を選びます。[Y] [N] [T] は、[SHIFT] 併用で以降すべてに適用します。[C] では、コピー先での名前を入力します(その名前もあれば、もう一度聞きます)。</li><li>読み取り専用のファイルを消す、上書きする時は、その前に確認します。</li><li>コピー中は [ESC] で中断できます。</li><li>コピー先のファイルには長いファイル名を付けません(8.3 形式の名前だけになります)。</li><li>長いファイル名を持つファイルを削除、名前変更、移動した時は、ディスクに残る長い名前の部分も消します(消さないと、Windows で壊れた名前に見えたり、MSX-DOS2 でディレクトリを消せなくなったりするためです)。</li><li>操作のあとは、中身が変わった側だけを読み直します(コピーはコピー先、削除や名前変更は操作した側、移動は両方)。</li></ul>
+<h4 id="h6">並べ替え</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[S]</td><td>操作している側をソート。続けて [N] 名前、[S] サイズ、[D] 日付、[E] 拡張子、[O] なし。文字を [SHIFT] 併用で押すと降順</td></tr><tr><td>[SHIFT]+[S]</td><td>両側をソート</td></tr><tr><td>[DEL]</td><td>並びかえモード(下の「並びかえモード」)</td></tr><tr><td>[Y]</td><td>いまの一覧の並びを、ディスクのディレクトリに書き込む</td></tr><tr><td>[SHIFT]+[Y]</td><td>両側の並びを、それぞれのディレクトリに書き込む</td></tr></tbody></table></div>
+<ul><li>[S] と [DEL] は画面の上だけの並べ替えです。ディスクは [Y] を押すまで変わりません。</li><li>ソートでは、ディレクトリがファイルより前に来ます。<code>..</code> は先頭のままです。</li><li>[DEL] で並べ替えると、その側のソートは「なし」になり、一覧の下の行に <code>*</code> が出ます。この並びは、その側を読み直すと消えます。</li><li>NEXTOR.SYS などを先頭に置いたまま残りを並べたい時は、[S] でソートし、[DEL] でそれらを取り出して先頭へ入れ直してから [Y] を押します。</li></ul>
+<p><strong>並びかえモード([DEL])</strong></p>
+<p>MM と同じやり方です。ファイルを一覧から取り出しておき、入れたい場所へ入れ直します。</p>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[DEL]</td><td>カーソルのファイルを一覧から取り出す。取り出したものは、一覧の上の 3 行(ふだん Path、Name、Size が出る所)に並びます。18 個まで</td></tr><tr><td>[INS]</td><td>取り出してあるファイルのうち、最後に取り出したものを、カーソルのファイルの前に入れる。カーソルは入れたファイルに乗るので、続けて押すと、取り出す前と同じ順に並びます</td></tr><tr><td>[↑][↓][←][→]</td><td>カーソル移動([SHIFT] 併用も同じ)。いちばん下のファイルの、さらに 1 行下まで動かせます(末尾に入れるため)</td></tr><tr><td>[ESC]</td><td>取り出したものが残っている時は、並べ替えをやめて、その側を読み直します</td></tr></tbody></table></div>
+<ul><li>一覧で [DEL] を押すと、カーソルのファイルを取り出して、このモードに入ります。</li><li>取り出したものを全部入れ終わると、モードは終わります。</li><li>カーソルを動かさずに [DEL] を何回か押し、同じ回数だけ [INS] を押すと、元の並びに戻ります。</li><li><code>..</code> は取り出せません。<code>..</code> の前に入れることもできません。</li><li>このモードの間、ほかのキーは効きません。反対側の一覧はそのままです。</li></ul>
+<p><strong>[Y] の注意</strong></p>
+<ul><li>最下行が赤い警告になり、もう一度 [Y] を押した時だけ書き込みます。ほかのキーでは何もしません。</li><li>ディレクトリを直接書き換えます。書き込みの途中で電源が切れたり、ディスクを抜いたりすると、ディレクトリが壊れるおそれがあります。</li><li>扱えるのは 192 スロットまでのディレクトリです(長い名前の無いファイルで 192 個。長い名前があるとその分少なくなります)。それより大きいディレクトリは断り、何も書きません。</li><li>書き込みに失敗した時は、元の内容を書き戻してから、ディスクの検査を促すメッセージを出します。</li><li>一覧に出ていないもの(表示フィルタで隠れたファイルなど)は、元の順のまま、うしろに続きます。</li></ul>
+<h4 id="h7">表示するファイル</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[W]</td><td>表示フィルタ。<code>*.TXT</code>、<code>A*</code> のようなワイルドカードか、<code>/文字列</code>(名前にその文字列を含むもの)。何も入れずに [RETURN] で解除。両側に効きます</td></tr><tr><td>[CTRL]+[W]</td><td>不可視ファイル、システムファイルを出すかどうか</td></tr></tbody></table></div>
+<p>ディレクトリはフィルタに関係なく出ます。</p>
+<h4 id="h8">実行</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[RETURN]</td><td>MMRET.DAT に従って実行(10 章)。当てはまる行が無ければ内蔵ビューア</td></tr><tr><td>[SHIFT]+[RETURN] / [CTRL]+[RETURN] / [SHIFT]+[CTRL]+[RETURN]</td><td>NMCFG.DAT の <code>S_TOOL</code> / <code>C_TOOL</code> / <code>SC_TOOL</code> を起動</td></tr><tr><td>[V]</td><td>内蔵ビューア(6 章)</td></tr><tr><td>[SHIFT]+[V]</td><td>外部ビューア(<code>PAGER2</code>、既定は <code>VF $C</code>)</td></tr><tr><td>[E]</td><td>エディタ(<code>EDITOR</code>、既定は <code>KID $F</code>)でカーソルのファイルを開く。ファイル名の入った入力欄が出るので、そのまま [RETURN] を押す。名前の後ろにエディタのオプションを足すこともできる(入力した全体が <code>$F</code> になる)</td></tr><tr><td>[SHIFT]+[E]</td><td>ファイル名を入力して、新しいファイルをエディタで開く</td></tr><tr><td>[R]</td><td>カーソルのファイル名が入った入力行を出します。.COM と .BAT は名前の後ろに空白が付き、そこへ引数を書き足せます。ほかのファイルとディレクトリは名前だけが入り、カーソルは先頭です(前にコマンドを書けます)。[RETURN] で実行し、終わるとキー入力を待ちます</td></tr><tr><td>[X]</td><td>コマンド行を入力して実行。マクロ(10 章)が使えます</td></tr><tr><td>[GRAPH]</td><td>MMMCR.DAT のマクロの一覧を窓に出す。キーを 1 つ押すと実行、[ESC] で閉じる</td></tr></tbody></table></div>
+<p>外部コマンドを実行すると、終了後に NM が起動し直します。左右のドライブとディレクトリ、カーソルの位置、操作していた側は、実行の前と同じに戻ります。マーク、並び順、表示するファイルの絞り込みは元に戻りません。(実行の間、場所は環境変数 <code>NM_L</code>、<code>NM_R</code>、<code>NM_A</code>、<code>NM_C</code> に入っています。起動し直した時に読んで消します。)</p>
+<p>実行中は、NM の小さな部分(512 バイト)だけがメモリに残ります。</p>
+<ul><li>コマンドの先頭の語が .COM ファイルなら、そのファイルを直接起動します。プログラムが使えるメモリ(TPA)は、プロンプトから起動した時より 512 バイト少ないだけです。ファイルは、シェルと同じ順に探します: パスを書いた時はそこだけ、書かない時はカレントディレクトリ、次に <code>%PATH%</code> のディレクトリ。</li><li>それ以外はシェル(<code>%SHELL%</code>)を通して実行します: DIR や TYPE などシェル自身のコマンド、バッチファイル、<code>&lt;</code> <code>&gt;</code> <code>|</code> <code>%</code> を含む行、見つからなかったもの。この時はシェルもメモリに残るので、TPA はさらに 1〜1.5KB 少なくなります。</li><li>1 回に複数のコマンドを実行する時(マクロの <code>$R</code> や <code>$T</code>)は、シェルを通したコマンドより後ろも、すべてシェルを通します。</li></ul>
+<h4 id="h9">そのほか</h4>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[I]</td><td>ディスク情報(ボリューム名、空き容量、総容量、クラスタの大きさ)</td></tr><tr><td>[CTRL]+[V]</td><td>ボリューム名の変更。いまの名前が入った状態から直します。何も入れずに [RETURN] で、名前を消します。名前は 11 文字までで、拡張子の区切りはありません(全角の 1 文字は 2 文字分)。入力行には 11 文字までしか入りません</td></tr><tr><td>[P]</td><td>パーティション切替(7 章)</td></tr><tr><td>[G] / [SHIFT]+[G]</td><td>MGSDRV の曲名表示 / 曲の一覧(8 章)</td></tr><tr><td>[F1]</td><td>キーの説明</td></tr><tr><td>[Q]</td><td>終了</td></tr><tr><td>[ESC]</td><td>終了(確認の窓が出ます。[Y] か [RETURN] で終了、[N] か [ESC] で戻る)</td></tr></tbody></table></div>
+<h4 id="h10">文字の入力</h4>
+<p>名前やコマンドを入力する時、確認を求める時、エラーを知らせる時は、画面の中央に窓が開きます。キーを押すと窓は消え、下の表示は元に戻ります。キーの案内と、コピーなどの進み具合は、今までどおり最下行に出ます。</p>
+<p>入力行で使えるキーです。60 文字まで入ります。</p>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[←] [→]</td><td>カーソルを動かす</td></tr><tr><td>[BS]</td><td>カーソルの左の 1 文字を消す</td></tr><tr><td>[DEL]</td><td>カーソルの位置の 1 文字を消す</td></tr><tr><td>[INS]</td><td>挿入と上書きを切り替える。挿入の時のカーソルは文字の下の線、上書きの時は文字の大きさ</td></tr><tr><td>[CTRL]+[SPACE]</td><td>漢字変換(MSX-JE)を始める / やめる</td></tr><tr><td>[RETURN] / [ESC]</td><td>決定 / 取り消し</td></tr></tbody></table></div>
+<p>初めは挿入です。全角の文字は 1 文字として扱います。[X] と [R] では打った英字がそのまま(小文字は小文字で)渡ります。ほかの入力では大文字になります。ファイルやディレクトリの名前を入力する所では、8 + 3 文字に入りきらない名前は受け付けません(全角の 1 文字は 2 文字分です)。知らせる窓が出たあと、入力行に戻って直せます。</p>
+<h5 id="h11">漢字変換(MSX-JE)</h5>
+<p>MSX-JE を内蔵した機種(FS-A1ST、FS-A1GT など)や、MSX-JE のカートリッジがある時は、入力行で漢字変換ができます。</p>
+<ul><li>[CTRL]+[SPACE] で始めます。窓の枠の下辺に <code>MSX-JE</code> と出て、入力行の下の行が変換用の行になります。</li><li>読みを打ち、[SPACE] で変換、[RETURN] で確定、という MSX-JE のいつもの操作です。確定した文字は、入力行のカーソルの位置に入ります。文節ごとに確定していく時は、確定した分が入力行へ移り、残りの文節の候補が変換用の行に出ます。</li><li>もう一度 [CTRL]+[SPACE] でやめます。変換中の文字が無い時の [RETURN] や [ESC] は入力行のキーとして働くので、入力の窓が閉じ、MSX-JE も終わります。</li><li><code>KANJI = OFF</code> の時と、メモリの上のほうに空きが足りない時(常駐プログラムが多い時など)は、[CTRL]+[SPACE] を押しても始まりません。</li></ul>
+<h3 id="s6">6. 内蔵ビューア</h3>
+<p>[V] で、カーソルのファイルを表示します。大きさの制限はありません(行数は約 2500 行まで)。</p>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[SPACE] / [BS]</td><td>次のページ / 前のページ</td></tr><tr><td>[SHIFT]+[SPACE] / [SHIFT]+[BS]</td><td>半ページずつ</td></tr><tr><td>[↑][↓]</td><td>1 行ずつ</td></tr><tr><td>[←][→]</td><td>10 ページずつ</td></tr><tr><td>[SHIFT]+[←][→]</td><td>5 ページずつ</td></tr><tr><td>[H] / [T]</td><td>先頭 / 末尾</td></tr><tr><td>[TAB]</td><td>タブの幅(8 / 4)</td></tr><tr><td>[K]</td><td>全角文字の出し方を替える(下の 3 種類)。16 進ダンプでは、文字の欄に全角文字を出す / 出さない</td></tr><tr><td>[U]</td><td>UTF-8 / Shift-JIS を替える(16 進ダンプでも同じ)。いまどちらで読んでいるかは、最上行の右端に <code>[SJIS]</code> / <code>[UTF8]</code> と出ます。1 バイトずつ ANK で出している時(16 進ダンプの初めと、<code>KANJI = OFF</code> の時)は <code>[ANK]</code> です</td></tr><tr><td>[X]</td><td>16 進ダンプ / テキスト</td></tr><tr><td>[RETURN] / [ESC]</td><td>終了</td></tr></tbody></table></div>
+<p>16 進ダンプは、初めは ANK 表示です。[K] を押すと全角文字が出て、[U] が効くようになります。<code>KANJI = OFF</code> の時は、ビューアの [K] と [U] は働かず、キーの案内にも出ません。</p>
+<ul><li><strong>文字コード</strong>: Shift-JIS と UTF-8。先頭の 1KB を見て自動で判定します。違っていたら [U] で替えてください。UTF-8 は NMUNI.DAT を使って表示します。Shift-JIS に無い文字は <code>?</code> になります。</li><li><strong>全角文字の出し方</strong>([K] で順に替わります。起動時の値は <code>VIEW</code> で決められます)
+<div class="scroll"><table><thead><tr><th>種類</th><th>1 画面</th><th>字</th></tr></thead><tbody><tr><td>8 ドット行</td><td>80 桁 × 25 行</td><td>漢字 ROM の字を 12×8 に縮小。既定</td></tr><tr><td>8 ドット行(美咲)</td><td>80 桁 × 25 行</td><td>NMFONT.DAT の字(一覧と同じ)</td></tr><tr><td>12 ドット行</td><td>80 桁 × 17 行</td><td>漢字 ROM の字を 12×12 に縮小</td></tr></tbody></table></div>
+<p>View フォントがあれば、1 番目と 3 番目はその 12×8、12×12 の字になります(縮小より読みやすくなります)。</p></li><li><strong>先読み</strong>: 表示したあと、キーを押していない間に残りを読み進めます。終わると 1 行目の行数が <code>?</code> から実際の数に変わり、[T] がすぐ効くようになります。</li><li><strong>16 進ダンプ</strong>: 1 行に 16 バイト。[←][→] は 1000h バイトずつ、[SHIFT] を押しながらだと 800h バイトずつです。文字の欄は、初めは ASCII と半角カナだけです。[K] を押すと全角文字も出ます(Shift-JIS か UTF-8 かは、テキスト表示と同じ判定で、[U] で替えられます)。全角文字が行をまたぐ時は、前の行の終わりに 1 文字として出し、次の行の先頭はその分だけ空白になります。</li></ul>
+<h3 id="s7">7. パーティション切替([P])</h3>
+<p>操作している側のドライブに、別のパーティションを割り当てます。一覧からカーソルか数字キーで選びます。[ESC] で取り消しです。</p>
+<div class="scroll"><table><thead><tr><th>環境</th><th>内容</th></tr></thead><tbody><tr><td>Nextor</td><td>そのドライブと同じドライバにつながっているデバイスのパーティションを並べます。いまのものに <code>(now)</code>、ほかのドライブに割り当て済みのものにはそのドライブ名が出ます</td></tr><tr><td>MSX-DOS2 の MEGA-SCSI</td><td>そのドライブのルートにある MEGASCSI.TBL の内容を並べます。似非 ASPI 形式の隠し領域(0 番)は出しません</td></tr></tbody></table></div>
+<ul><li><strong>NM 本体のあるドライブは切り替えられません</strong>(断りが出ます)。切り替えた先に NM のファイルが無いと、続けられなくなるためです。</li><li>一覧は 14 件までです。</li><li>Nextor で、ほかのドライブに割り当て済みのパーティションを選ぶと、Nextor のエラーが出て何も変わりません。</li><li>フロッピーなど、対象でないドライブでは、その旨を出すだけです。</li></ul>
+<h3 id="s8">8. MGSDRV との連携</h3>
+<p>MGSDRV が常駐している時に使えます。演奏は MGSDRV が行うので、NM の操作中も、終了したあとも鳴り続けます。</p>
+<div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[RETURN](.MGS の上)</td><td>その曲を読み込んで演奏します</td></tr><tr><td>[G]</td><td>いまの曲の名前を出します。そこで [S] を押すと演奏を止めます</td></tr><tr><td>[SHIFT]+[G]</td><td>読み込んである曲の一覧を出し、選んだものを演奏します</td></tr></tbody></table></div>
+<p>曲データは 16KB までです。MGSDRV が常駐していない時、.MGS の上の [RETURN] はふつうのファイルと同じ扱いになります。</p>
+<h3 id="s9">9. 設定(NMCFG.DAT)</h3>
+<p>テキストファイルです。1 行に <code>項目 = 値</code> を書き、<code>;</code> からうしろは注釈です。項目名は大文字でも小文字でも構いません。MM.CFG と同じ書き方なので、MM.CFG の行を写せます。知らない項目は読み飛ばします。先頭の 6143 バイトまでを読みます。</p>
+<div class="scroll"><table><thead><tr><th>項目</th><th>内容</th><th>既定</th></tr></thead><tbody><tr><td><code>MODE</code></td><td>起動時の表示。1 = 詳細表示、2 = 名前のみ表示</td><td>1</td></tr><tr><td><code>MODE2</code></td><td>起動時のファイルの色。0 = 属性別、1 = 拡張子別</td><td>0</td></tr><tr><td><code>VIEW</code></td><td>ビューアの全角文字。1 = 8 ドット行、2 = 8 ドット行(美咲)、3 = 12 ドット行</td><td>1</td></tr><tr><td><code>KANJI</code></td><td>全角文字を扱うか。ON / OFF / AUTO。AUTO は、本体が日本語仕様なら ON</td><td>AUTO</td></tr><tr><td><code>VIEWFONT</code></td><td>View フォントを使うか。ON / OFF</td><td>ON</td></tr><tr><td><code>FREE</code></td><td>空き容量の表示。AUTO(Z80 で大きなドライブの時は出さない)/ ON / OFF</td><td>AUTO</td></tr><tr><td><code>LFN</code></td><td>長いファイル名を Name の行に出すか。ON / OFF。フロッピーで遅い時は OFF に</td><td>ON</td></tr><tr><td><code>ATTR_H</code> / <code>ATTR_S</code></td><td>不可視ファイル / システムファイルを出すか。1 / 0</td><td>1</td></tr><tr><td><code>COL_BACK</code> など</td><td>色(下の表)。赤・緑・青を 0〜7 の 3 桁で書きます</td><td>下の表</td></tr><tr><td><code>KEYMAP</code></td><td>キーの置き換え。「押すキー、その代わりになるキー」の 2 文字を、空白で区切って 8 組まで。一覧の画面でだけ効きます</td><td>なし</td></tr><tr><td><code>EDITOR</code></td><td>[E] のエディタ</td><td><code>KID $F</code></td></tr><tr><td><code>PAGER</code> / <code>PAGER2</code></td><td>[V] / [SHIFT]+[V]</td><td><code>$V</code> / <code>VF $C</code></td></tr><tr><td><code>S_TOOL</code> / <code>C_TOOL</code> / <code>SC_TOOL</code></td><td>[SHIFT] / [CTRL] / [SHIFT]+[CTRL] 併用の [RETURN]</td><td><code>KID $C</code> / <code>VF $C</code> / <code>VF $C</code></td></tr><tr><td><code>TOOL</code></td><td>MMRET.DAT に当てはまる行が無い時の [RETURN]</td><td><code>$V</code>(内蔵ビューア)</td></tr><tr><td><code>SCSAVER</code></td><td>スクリーンセーバーとして起動するプログラム。書かなければ内蔵のもの</td><td>(内蔵)</td></tr><tr><td><code>SC_TIME</code></td><td>スクリーンセーバーが始まるまでの時間。0〜255 で、1 あたり約 4.3 秒。0 は「始めない」</td><td>43(約 3 分)</td></tr></tbody></table></div>
+<ul><li><strong><code>KANJI = OFF</code>(ANK 専用)</strong>: 80h 以上の文字も 1 バイトずつ本体のフォントで出します。長いファイル名は ASCII 以外が <code>?</code> になります。NMFONT.DAT と NMUNI.DAT は使いません(無くても構いません)。日本語仕様でない本体では、AUTO のままでこの動作になります。</li><li><strong><code>KEYMAP</code> の例</strong>: [SHIFT]+[2] が <code>@</code> になる配列で、[SHIFT]+[2] を「反対側を B: に」として使うには <code>KEYMAP = @&quot;</code> と書きます。</li></ul>
+<h4 id="h12">色</h4>
+<div class="scroll"><table><thead><tr><th>項目</th><th>使う場所</th><th>既定</th></tr></thead><tbody><tr><td><code>COL_BACK</code></td><td>背景。メニュー行のキーの文字もこの色</td><td>111</td></tr><tr><td><code>COL_TEXT</code></td><td>値、読み取り専用のファイル、カーソルの帯</td><td>777</td></tr><tr><td><code>COL_LINE</code></td><td>枠の線</td><td>345</td></tr><tr><td><code>COL_HEAD</code></td><td>見出し、一覧の下の行</td><td>456</td></tr><tr><td><code>COL_FILE</code></td><td>ファイル、パス</td><td>666</td></tr><tr><td><code>COL_DIR</code></td><td>ディレクトリ</td><td>357</td></tr><tr><td><code>COL_HID</code></td><td>不可視ファイル、システムファイル</td><td>333</td></tr><tr><td><code>COL_KEY</code></td><td>メニュー行のキーの文字の地</td><td>741</td></tr><tr><td><code>COL_BAR</code></td><td>カーソルの帯と最下行の文字</td><td>000</td></tr></tbody></table></div>
+<p>同梱の NMCFG.DAT には、MultiMente の配色(113、777、077、577、770、577、440、070、000)が注釈の行で入っています。行の頭の <code>;</code> を取ると、その配色になります。</p>
+<p>色は起動時に設定し、終了時と外部コマンドの実行前に、電源を入れた時の色へ戻します。</p>
+<h4 id="h13">拡張子別の色</h4>
+<p>[SHIFT]+[0] を押すか、<code>MODE2 = 1</code> と書くと、ファイルの色が拡張子で決まります。表に無い拡張子のファイルとディレクトリは、属性別の時と同じ色です。</p>
+<p>何も書かなければ、MultiMente と同じ分け方になります。</p>
+<div class="scroll"><table><thead><tr><th>色</th><th>拡張子</th></tr></thead><tbody><tr><td>770(黄)</td><td>COM、BAT</td></tr><tr><td>373(明るい緑)</td><td>MGS、MPK</td></tr><tr><td>347(青)</td><td>PMA、LZH、ARC、ARK、DES、ISH、ZIP、FNS</td></tr><tr><td>700(赤)</td><td>BAS</td></tr><tr><td>077(水色)</td><td>PCK、PCM</td></tr><tr><td>707(紫)</td><td>SC?、SR?、GRP、PIC、MAG、PI、Q4、JPG、MKI、MSA、BMP、LAP、MAX、GIF</td></tr></tbody></table></div>
+<p>自分で決めるには、NMCFG.DAT に <code>EXT</code> の行を書きます。色(<code>COL_xxxx</code> と同じ 3 桁)のあとに、その色にする拡張子を空白で区切って並べます。</p>
+<div class="scroll"><pre>EXT = 770 COM BAT
+EXT = 700 ROM DSK
+EXT = 373 MGS IMS VGM</pre></div>
+<ul><li><code>EXT</code> の行は 6 行まで(6 色まで)、拡張子は合わせて 40 個までです。それを超えたぶんは無視します。</li><li><code>EXT</code> を 1 行でも書くと、上の表は使わず、書いた行だけになります。</li><li><code>?</code> は任意の 1 文字に合います(<code>SC?</code> は SC5 にも SC7 にも合う)。</li><li>[SHIFT]+[0] で切り替えた状態は、外部コマンドを実行すると <code>MODE2</code> の設定に戻ります。</li></ul>
+<h3 id="s10">10. MMRET.DAT、MMMCR.DAT(NMRET.DAT、NMMCR.DAT)、マクロ</h3>
+<h4 id="h14">ファイルの大きさの上限</h4>
+<p>DAT ファイルは、次の大きさまで読みます。それより後ろに書いた行は読まれません(知らせは出ません)。</p>
+<div class="scroll"><table><thead><tr><th>ファイル</th><th>読む大きさ</th></tr></thead><tbody><tr><td>NMCFG.DAT</td><td>6143 バイト</td></tr><tr><td>MMRET.DAT、NMRET.DAT</td><td>8191 バイト</td></tr><tr><td>MMMCR.DAT、NMMCR.DAT</td><td>7167 バイト</td></tr></tbody></table></div>
+<p>同梱の NMCFG.DAT は約 2.6KB、MultiMente に付いている MMRET.DAT と MMMCR.DAT は 2〜3KB です。</p>
+<h4 id="h15">MMRET.DAT([RETURN] で実行するコマンド)</h4>
+<div class="scroll"><pre>.拡張子&lt;TAB&gt;コマンド&lt;TAB&gt;注釈
+:ファイル名.拡張子&lt;TAB&gt;コマンド&lt;TAB&gt;注釈</pre></div>
+<ul><li>行の先頭が <code>.</code> か <code>:</code> の行だけを読みます。区切りは TAB です。拡張子には <code>?</code> が使えます。</li><li>上から順に見て、最初に当てはまった行を使います。</li><li><strong>同じ拡張子に複数のコマンド</strong>: 1 行の中を <code>;</code> で区切るか、同じ拡張子の行を並べると、[RETURN] でメニューが出て選べます(9 個まで)。数字キーか、[↑][↓] と [RETURN] で選びます。
+<div class="scroll"><pre>.TXT&lt;TAB&gt;$V;KID $C;TYPE $C$K</pre></div>
+<p>MM は最初の行だけを使うので、行を並べる書き方なら、同じファイルを MM と共用できます。</p></li></ul>
+<h4 id="h16">MMMCR.DAT([GRAPH] のマクロ)</h4>
+<div class="scroll"><pre>キー)コマンド&lt;TAB&gt;&#x27;一覧に出す文&lt;TAB&gt;;注釈</pre></div>
+<p>キーは数字(0〜9)と英字(A〜Z)の 36 個です。[GRAPH] を押すと窓が開き、36 個が決まった位置に並びます(左の列が 0〜H、右の列が I〜Z)。登録の無いキーは記号だけが出ます。同じキーの行が 2 つある時は、先に書いた方が使われます。一覧に出す文は 34 文字までです。</p>
+<h4 id="h17">マクロ</h4>
+<div class="scroll"><table><thead><tr><th>マクロ</th><th>内容</th></tr></thead><tbody><tr><td><code>$C</code> / <code>$X</code></td><td>カーソルのファイル名(拡張子あり / なし)</td></tr><tr><td><code>$D</code></td><td>操作している側のドライブ名</td></tr><tr><td><code>$P</code></td><td>操作している側のパス(ドライブ名は含みません)</td></tr><tr><td><code>$O</code> / <code>$o</code></td><td>反対側のパス(ドライブ名つき)/ 反対側のドライブ名</td></tr><tr><td><code>$T</code> / <code>$t</code></td><td>マークしたファイルを 1 つずつ実行(拡張子あり / なし)</td></tr><tr><td><code>$M</code> / <code>$m</code></td><td>マークしたファイルを 1 行にまとめて実行</td></tr><tr><td><code>$K</code> / <code>$k</code></td><td>実行のあとにキー入力を待つ</td></tr><tr><td><code>$R</code></td><td>改行(コマンドを続けて書く)</td></tr><tr><td><code>$V</code></td><td>内蔵ビューアで見る(行の先頭に書く)</td></tr><tr><td><code>$F</code></td><td>入力したファイル名(<code>EDITOR</code> で使う)</td></tr><tr><td><code>$$</code> / <code>$;</code></td><td><code>$</code> / <code>;</code></td></tr></tbody></table></div>
+<p>展開後のコマンドは、合わせて約 126 文字までです。</p>
+<h3 id="s11">11. 長いファイル名と漢字</h3>
+<ul><li><strong>長いファイル名(LFN)</strong>: Windows などで付けた長い名前を、カーソルを止めた時に Name の行へ出します(キーを押し続けて動かしている間は 8.3 形式の名前です)。表示だけで、入力や変更はできません。一覧と操作は 8.3 形式の名前で行います。FAT12 と FAT16 が対象です。</li><li><strong>漢字のファイル名</strong>: 一覧、パス、Name の行に漢字で出ます。字は次の順で選びます。
+<ol><li>View フォント(MSX-View の漢字 ROM)の 12×8 の字</li><li>NMFONT.DAT(美咲フォント 8×8)</li><li>漢字 ROM の字を 12×8 に縮小したもの</li></ol></li><li><strong>View フォント</strong>: 次のどれかがあると自動で使います。使いたくない時は <code>VIEWFONT = OFF</code> にしてください。
+<div class="scroll"><table><thead><tr><th>種類</th><th>一覧と 8 ドット行</th><th>12 ドット行</th></tr></thead><tbody><tr><td>MSX-View 付属の ROM カートリッジ</td><td>第一水準</td><td>第一・第二水準</td></tr><tr><td>Extended View font(似非 RAM などに入れたもの)</td><td>第一・第二水準</td><td>第一・第二水準</td></tr><tr><td>FS-A1GT の内蔵</td><td>第一水準</td><td>第一水準</td></tr><tr><td>FS-A1ST に載せた ROM</td><td>載せた ROM による</td><td>同左</td></tr></tbody></table></div>
+<p>View フォントに無い字は、上の 2、3 の方法で出ます。</p></li></ul>
+<h3 id="s12">12. ディスクやカードを入れ替えた時</h3>
+<p>NM は、ディスクや SD カードが入れ替わったことを自分では調べません。画面は、最後に読んだ時の内容のままです。入れ替えたあとは [0] を押してください。両側の一覧、ボリューム名、空き容量を読み直し、どちらも先頭から表示します。このとき、DOS が覚えているディスクの内容も捨てさせます。</p>
+<ul><li>入れ替えに気づくのは DOS(とドライバ)です。次にそのドライブを読み書きした時に、DOS が新しいディスクとして扱います。カードの入れ替えを DOS に知らせるかどうかは、インターフェースのドライバによります。</li><li>[0] を押す前でも、ディレクトリの移動やファイル操作をすれば、その時点でディスクから読み直します。ただし、画面に残っている古い一覧を見てファイルを選ぶことになるので、先に [0] を押すほうが安全です。</li><li>NM 本体のあるディスクを抜くと、NM.OVL、NMFONT.DAT、NMUNI.DAT が読めなくなります。本体は、抜かないドライブ(RAM ディスクなど)に置いてください。</li><li>コピーなどの操作の途中では抜かないでください。</li></ul>
+<h4 id="s1">1 台のドライブを 2 つのドライブとして使う時</h4>
+<p>フロッピーのドライブが 1 台の本体では、DOS が 1 台のドライブに 2 つのドライブ名を付けます(A: と B:。ほかのインターフェースがあると D: と E: などになります)。もう一方のドライブ名を読み書きしようとすると、画面の中ほどに次の案内が出ます。</p>
+<div class="scroll"><pre> Insert disk for drive B: and press a key</pre></div>
+<p>そのドライブ名で使うディスクに入れ替えて、何かキーを押してください。案内は消えて、続きの操作に戻ります。左右に A: と B: を開いてコピーする時は、読む側と書く側が替わるたびにこの案内が出ます。</p>
+<h4 id="h18">スクリーンセーバー</h4>
+<p>一覧の画面で <code>SC_TIME</code> の時間だけキーを押さずにいると、スクリーンセーバーが始まります。入力や確認の窓が出ている間、ビューアの中、コピーなどの処理中は始まりません。</p>
+<ul><li><strong>内蔵のもの</strong>(<code>SCSAVER</code> を書いていない時): 画面を 16 枚に分け、1 枚を黒くして、隣の 1 枚をそこへ滑らせる動きを繰り返します。何かキーを押すと元の画面に戻ります。一覧、カーソル、マークはそのままです。止めるために押したキーは、操作としては働きません。</li><li><strong>外部のもの</strong>(<code>SCSAVER = プログラム名</code>): MultiMente 用のスクリーンセーバーなど、「起動して、キーが押されたら終わる」プログラムを起動します。終わると NM に戻り、左右の場所とカーソルは元のとおりです(マークは消えます)。起動のたびにディスクを読みます。</li><li>やめたい時は <code>SC_TIME = 0</code> と書きます。</li></ul>
+<h3 id="s13">13. 制限と、まだ出来ていないこと</h3>
+<ul><li>一覧に出せるのは 1 サイド 819 件までです(空きのマッパー RAM が無い時は 409 件ずつ)。</li><li>ビューアの行数は約 2500 行までです。ビューアのモード(コントロールコードの表示など)はありません。</li><li>時計は 24 時間表示だけです。</li><li>[P] は、パーティションを番号で直接指定することはできません。</li><li>ボリューム名の半角の英字は大文字になります。</li><li>フロッピーでは、漢字の多い長いファイル名や UTF-8 のテキストの表示に時間がかかります(1 字ごとに NMUNI.DAT を読むため)。</li></ul>
+<h3 id="s14">14. 確認の状況</h3>
+<p>開発はエミュレータ(openMSX)で行い、実機では一部だけを確かめています。</p>
+<div class="scroll"><table><thead><tr><th>内容</th><th>状況</th></tr></thead><tbody><tr><td>基本の操作(一覧、移動、マーク、コピー、移動、削除、名前変更、ビューア、外部コマンド)</td><td>エミュレータの MSX-DOS2、Nextor 3、Nextor 2.1 で確認。実機でも確認(turbo R と、MSX2 の FS-A1FM)</td></tr><tr><td>[P] パーティション切替</td><td>実機の Nextor 2.1(SD カード)と MSX-DOS2 の MEGA-SCSI で確認</td></tr><tr><td>MGSDRV の演奏</td><td>実機で確認</td></tr><tr><td>View フォント</td><td>エミュレータで 4 種類とも確認。実機では FS-A1GT の内蔵、FS-A1ST に載せた ROM、カートリッジ(FS-A1FM で、12 ドット行の第二水準が View フォントの有無で変わることを確認)</td></tr><tr><td><code>KANJI = OFF</code></td><td>実機で確認</td></tr><tr><td>[Y] 並びの書き込み、[SHIFT]+[S]、[SHIFT]+[Y]、マークの合計</td><td>実機で確認</td></tr><tr><td>起動時の場所の指定、[C] 名前を変える、[CTRL]+[V] ボリューム名、[F8]〜[F10]</td><td>実機で確認</td></tr><tr><td>[DEL] 並びかえモード、[0] の読み直し(カードの差し替え後を含む)</td><td>実機で確認</td></tr><tr><td>1 台のドライブを 2 つのドライブとして使う時の案内</td><td>エミュレータの MSX-DOS2 と Nextor 3 で確認</td></tr><tr><td>128KB の本体</td><td>確認できていません</td></tr></tbody></table></div>
+<h3 id="s15">15. 使っているもの</h3>
+<ul><li>美咲フォント(門真 なむ 氏、<a href="https://littlelimit.net/misaki.htm#download">https://littlelimit.net/misaki.htm</a>)。NMFONT.DAT は、これを変換したものです。</li><li>操作と画面は MultiMente(MOGU 氏)にならっています。MultiMente は GIGAMIX さんのサイト(<a href="https://www.gigamix.jp/">https://www.gigamix.jp/</a>)で配布されています。</li><li>View フォントの読み方は「Let's use View font」(A to C 氏)の資料によります(<a href="http://www.yo.rim.or.jp/~anaka/AtoC/index32.htm">http://www.yo.rim.or.jp/~anaka/AtoC/index32.htm</a>)。</li></ul>
+</main>
+</div>
+</body>
+</html>

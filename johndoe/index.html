@@ -669,6 +669,132 @@
 
 <hr class="divider">
 
+<!-- ======================================================= NM (Next Maintenance) -->
+<section class="soft" id="nm" aria-labelledby="nm-name">
+  <div class="soft-head">
+    <h2 id="nm-name">NM (Next Maintenance)</h2>
+    <span class="ver" lang="ja">v0.99e 評価版 · 2026-11-21</span>
+    <span class="ver" lang="en">v0.99e evaluation · 2026-11-21</span>
+    <span class="platform">MSX2 以降 · MSX-DOS2 / Nextor</span>
+  </div>
+  <p class="tagline" lang="ja">MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツール</p>
+  <p class="tagline" lang="en">A two-screen file maintenance tool for MSX-DOS2 and Nextor</p>
+  <p lang="ja">左右に 2 つのディレクトリを並べて、コピー、移動、削除、名前の変更、並べ替え、中身の表示、外部コマンドの実行を行うツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。操作は、MSX-DOS2 で長く使われてきた MultiMente(MM、MOGU 氏作)にならっています。<strong>MM の設定はそのまま使えます</strong>: MMRET.DAT と MMMCR.DAT は MM のものを読み、MM.CFG の行は NMCFG.DAT へ写せて、環境変数 <code>%MM%</code> も同じ意味で使います。</p>
+  <p lang="en">Two directories side by side, for copying, moving, deleting, renaming, sorting, viewing files and running external commands. NM stands for Next Maintenance: a file maintenance tool with another screen next to the first. The keys follow MultiMente (MM, by MOGU), the long-time standard file manager of MSX-DOS2. <strong>MM's settings work as they are</strong>: NM reads MM's own MMRET.DAT and MMMCR.DAT, lines of MM.CFG can be copied into NMCFG.DAT, and the <code>%MM%</code> environment variable has the same meaning.</p>
+  <p lang="ja">MM のプログラムは使っていません。参考にしたのは、MM の取扱説明書、設定ファイルの見本(MM.CFG)、DAT ファイルの書式、MM を動かして見た画面と動きです。MM のプログラムの中身は使っておらず、逆アセンブルもしていません。MM のファイルは同梱していません。MMRET.DAT と MMMCR.DAT は、<a href="https://www.gigamix.jp/">GIGAMIX さんのサイト</a>から MultiMente をダウンロードすると、その中に入っています。</p>
+  <p lang="en">No MM code is used. The references were MM's manual, its sample settings file (MM.CFG), the formats of the DAT files, and the screens and behaviour seen when running MM. MM's program was neither reused nor disassembled. No MM files are included: MMRET.DAT and MMMCR.DAT come with MultiMente, which can be downloaded from the <a href="https://www.gigamix.jp/">GIGAMIX site</a>.</p>
+
+  <div class="shots">
+  <figure class="shot">
+    <img src="nm_screen.png" width="640" height="480" alt="NM の画面。左右に同じディレクトリの一覧が並び、カーソルのファイルの長い名前「日本語ファイル名のテスト.txt」が上の Name の行に出ている" loading="lazy">
+    <figcaption lang="ja">一覧の画面。カーソルのファイルの長い名前が Name の行に出る(openMSX、Nextor 3)</figcaption>
+    <figcaption lang="en">The lists. The long name of the file under the cursor appears on the Name line (openMSX, Nextor 3)</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="nm_view.png" width="640" height="480" alt="NM の内蔵ビューアで UTF-8 のテキストを表示している画面。右上に [UTF8] と出ている" loading="lazy">
+    <figcaption lang="ja">内蔵ビューア。UTF-8 のテキストを 8 ドット行で表示</figcaption>
+    <figcaption lang="en">The built-in viewer showing a UTF-8 text</figcaption>
+  </figure>
+  </div>
+
+  <div class="facts">
+    <div>
+      <h3 lang="ja">できること</h3>
+      <h3 lang="en">Features</h3>
+      <ul lang="ja">
+        <li>左右 2 画面。[TAB] で操作する側を替え、[SHIFT]+[TAB] で左右を入れ替え。[F5] で 1 画面表示にもなる</li>
+        <li>1 サイド 819 件まで表示。空き容量と総容量、マークの合計、ボリューム名をいつも表示</li>
+        <li>Windows などで付けた長いファイル名(LFN)を、漢字も含めて表示。削除や名前の変更の時は、ディスクに残る長い名前の部分も片付ける</li>
+        <li>漢字のファイル名を一覧に表示(同梱の 8 ドットフォント、漢字 ROM、MSX-View の View フォント)。漢字の入力は MSX-JE</li>
+        <li>内蔵ビューア: Shift-JIS と UTF-8 のテキスト、16 進ダンプ、8 ドット行と 12 ドット行の切り替え</li>
+        <li>外部コマンドの実行、拡張子ごとのコマンド(MMRET.DAT)、キーマクロ(MMMCR.DAT)。実行中に NM がメモリに残すのは 512 バイト</li>
+        <li>並べ替えと、並びのディスクへの書き込み。Nextor と MEGA-SCSI のパーティション切替。MGSDRV での演奏</li>
+        <li>色、キーの置き換え、スクリーンセーバーなどの設定(NMCFG.DAT)</li>
+        <li>漢字を使わない ANK 専用の動作(<code>KANJI = OFF</code>。日本語仕様でない本体では自動)。この時は NM.COM と NM.OVL だけで動く</li>
+        <li>ドライブが 1 台の本体で A: と B: を使い分ける時の、ディスクの入れ替えの案内</li>
+      </ul>
+      <ul lang="en">
+        <li>Two sides. [TAB] changes the active side, [SHIFT]+[TAB] swaps them, [F5] shows one side on the whole screen</li>
+        <li>Up to 819 entries per side. Free and total space, the total size of the marked files and the volume name are always shown</li>
+        <li>Shows long file names (LFN) made on Windows etc., kanji included. Deleting or renaming also cleans up the long-name entries left on the disk</li>
+        <li>Kanji file names in the lists (the included 8-dot font, the kanji ROM, or the View font of MSX-View). Kanji input through MSX-JE</li>
+        <li>Built-in viewer: Shift-JIS and UTF-8 text, hex dump, 8-dot and 12-dot rows</li>
+        <li>External commands, commands per extension (MMRET.DAT), key macros (MMMCR.DAT). While a command runs, NM keeps only 512 bytes of memory</li>
+        <li>Sorting, and writing the sorted order to the disk. Partition switching on Nextor and the MEGA-SCSI. Playing songs with MGSDRV</li>
+        <li>Settings in NMCFG.DAT: colours, key mapping, screen saver and more</li>
+        <li>ANK mode without kanji (<code>KANJI = OFF</code>; automatic on machines that are not Japanese models). Then NM.COM and NM.OVL are all it needs</li>
+        <li>The "insert disk" prompt when one drive stands for A: and B:</li>
+      </ul>
+      <h3 lang="ja">持たないもの、まだのもの</h3>
+      <h3 lang="en">Not included, not yet done</h3>
+      <ul lang="ja">
+        <li>MM にあって持たないと決めたもの: ツリー表示、圧縮と解凍、ヒストリー、HDD のシャットダウンなど</li>
+        <li>まだ出来ていないもの: ビューアのモード、パーティションの直接指定、時計の 12 時間表示、MM.CFG の一部の項目など</li>
+        <li>くわしくは「MM との比較」にあります</li>
+      </ul>
+      <ul lang="en">
+        <li>Left out on purpose: the tree, archiving, history, HDD shutdown and so on</li>
+        <li>Not yet done: the viewer modes, choosing a partition by number, a 12-hour clock, some MM.CFG items and so on</li>
+        <li>The full list is in the comparison with MM</li>
+      </ul>
+    </div>
+    <div>
+      <h3 lang="ja">必要なもの</h3>
+      <h3 lang="en">Requirements</h3>
+      <ul lang="ja">
+        <li>MSX2 以上、VRAM 128KB、マッパー RAM 128KB 以上</li>
+        <li>MSX-DOS2、または Nextor(2.1 と 3.0 で確認)。MSX-DOS1 では動きません</li>
+        <li>漢字を出すには、本体の漢字 ROM か同梱の NMFONT.DAT</li>
+      </ul>
+      <ul lang="en">
+        <li>MSX2 or later, 128 KB VRAM, 128 KB or more of mapper RAM</li>
+        <li>MSX-DOS2, or Nextor (tested with 2.1 and 3.0). It does not run on MSX-DOS1</li>
+        <li>For kanji: the machine's kanji ROM or the included NMFONT.DAT</li>
+      </ul>
+      <h3 lang="ja">確かめた環境</h3>
+      <h3 lang="en">Tested on</h3>
+      <ul lang="ja">
+        <li>実機: FS-A1GT + MegaFlashROM SCC+ SD(Nextor 2)で v0.99 までの各機能。それまでの版で FS-A1ST、MSX2 の FS-A1FM、MEGA-SCSI の MSX-DOS2</li>
+        <li>openMSX: MSX-DOS2、Nextor 2.1、Nextor 3 で、キー操作を自動で流す試験</li>
+        <li>128KB の本体では確認できていません</li>
+      </ul>
+      <ul lang="en">
+        <li>Real hardware: the features up to v0.99 on an FS-A1GT with a MegaFlashROM SCC+ SD (Nextor 2). Earlier versions on an FS-A1ST, an FS-A1FM (MSX2) and MSX-DOS2 on a MEGA-SCSI</li>
+        <li>openMSX: scripted key tests on MSX-DOS2, Nextor 2.1 and Nextor 3</li>
+        <li>Not tested on a machine with 128 KB of RAM</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="memo" lang="ja">
+    <span class="memo-label">作業メモ — J.D.</span>
+    <p>依頼内容は「MultiMente の代わりになる、左右 2 画面のやつを」。条件が付いていました。「MM のプログラムは 1 バイトも使わない。でも操作は同じに。設定ファイルもそのまま読めるように」。説明書と画面だけを見て、同じ手触りのものを一から作れ、という注文です。作りました。</p>
+    <p>そこからが長い。「起動が遅い」と言われてファイルを読む順番を入れ替え、「外部コマンドに渡すメモリが少ない」と言われて居残る部分を 512 バイトまで削り、「漢字変換も」と言われて MSX-JE につなぎました。依頼人は「えせえせえせ」と打って、1 文節ずつ変換されるのを確かめていました。ほかに打つ言葉は無かったのでしょうか。</p>
+    <p>最初の版には、漢字のフォルダを開くと止まる不具合がありました。さる消息筋によると、Nextor 2 でだけ起きるとのこと。そのとおりでした。直して渡したら「まだ止まる」。古いファイルを SD カードにコピーしていたのは依頼人です。もっとも、設定ファイルを途中までしか読んでおらず待ち時間を短く書き換えた依頼人を 3 分待たせたのは私なので、おあいこにしておきます。名前は依頼人が付けました。</p>
+  </div>
+  <div class="memo" lang="en">
+    <span class="memo-label">Work log — J.D.</span>
+    <p>The brief: "something to replace MultiMente, with two screens side by side." With conditions: "not one byte of MM's program. But the same keys. And it must read the same settings files." In other words, build something that feels the same from nothing but the manual and the screen. Done.</p>
+    <p>Then came the long part. "It starts slowly", so the order of reading files changed. "External commands get too little memory", so the part that stays behind shrank to 512 bytes. "Kanji input too", so it talks to MSX-JE. The client tested that by typing "eseeseese" and watching it convert one phrase at a time. Surely there were other words.</p>
+    <p>The first version hung when opening a folder with a kanji name. According to a certain well-informed source, only on Nextor 2. Correct. I fixed it and handed it over: "still hangs." The client had copied the old files to the SD card. Then again, it was me who read only part of the settings file and made the client wait three minutes after they had set a shorter time, so let's call it even. The name is the client's.</p>
+  </div>
+
+  <p class="caution" lang="ja"><strong>注意:</strong> 評価版です。動作を確かめきれていない部分があります。大事なディスクでは、書き込みを伴う操作の前にバックアップを取ってください。とくに並びの書き込み([Y])とパーティション切替([P])は、消えてもよいディスクで試してください。非公式のソフトです。使用は自己責任でお願いします。画面の表示は英語です。説明書は日本語と英語があります。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> this is an evaluation version and parts of it are not fully tested. Back up important disks before trying anything that writes; try writing the sorted order ([Y]) and partition switching ([P]) on a disk you can afford to lose. Unofficial software; use at your own risk. The program's own messages are in English, and so is one edition of the manual.</p>
+
+  <div class="links">
+    <a class="btn primary" href="NM-v0.99e-20261121.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 964 KB</small></a>
+    <a class="btn ghost" href="nm_manual.html" lang="ja">取扱説明書</a>
+    <a class="btn ghost" href="nm_manual_en.html" lang="en">Manual</a>
+    <a class="btn ghost" href="nm_compare.html" lang="ja">MM との比較</a>
+    <a class="btn ghost" href="nm_compare_en.html" lang="en">Comparison with MM</a>
+    <a class="btn ghost" href="nm_manual_en.html" lang="ja">Manual (English)</a>
+    <a class="btn ghost" href="nm_manual.html" lang="en">取扱説明書 (Japanese)</a>
+  </div>
+</section>
+
+<hr class="divider">
+
 <footer class="colophon">
   <p lang="ja">Nextor は Konamiman 氏の作品で、MSX-DOS は MSX Licensing Corporation の著作物です(<a href="https://github.com/Konamiman/Nextor">Nextor</a>)。MEGA-SCSI 用 Nextor 3 の ROM イメージは Nextor の使用条件に従います(商用利用は不可)。MEGA-SCSI は<a href="http://www.hat.hi-ho.ne.jp/tujikawa/ese/">似非職人工房</a>の製品です。</p>
   <p lang="en">Nextor is Konamiman's work, and MSX-DOS is (c) MSX Licensing Corporation (<a href="https://github.com/Konamiman/Nextor">Nextor</a>). The Nextor 3 ROM images for the MEGA-SCSI follow the Nextor license (no commercial use). The MEGA-SCSI is a product of <a href="http://www.hat.hi-ho.ne.jp/tujikawa/ese/">ESE Artists' Factory</a>.</p>
@@ -678,6 +804,8 @@
   <p lang="en">EVASD / EV9SD / EV6SD are based on EVASD (ESE Video Authorizer) from d4.princess.ne.jp. The MegaFlashROM SCC+ SD read timing is based on notes and real-hardware tests by Manuel Pazos. The converter contains Python, numpy and Pillow (licenses in the LICENSES folder of the package).</p>
   <p lang="ja">MCPLAYERのドライバの番地などは、Roberto Vargasさんによる幻影都市のドライバの逆アセンブル(Manuel Pazosさんのサイトで公開されている mcdrv.asm)と突き合わせて求めました。Thanks: Manuel Pazos(MCDRV.COM、Windows版 PCPLAYER)、Patriek Lesparre。フォント: 門真なむ氏の「k8x12」「k6x8」。</p>
   <p lang="en">MCPLAYER's driver addresses were found by matching against Roberto Vargas' disassembly of the Illusion City driver (mcdrv.asm, published on Manuel Pazos' website). Thanks: Manuel Pazos (MCDRV.COM, PCPLAYER for Windows), Patriek Lesparre. Fonts: "k8x12" and "k6x8" by Num Kadoma.</p>
+  <p lang="ja">NM の操作と画面は MultiMente(MOGU 氏)にならっています。MultiMente のプログラムとファイルは含みません(MultiMente は <a href="https://www.gigamix.jp/">GIGAMIX さんのサイト</a>で配布されています)。同梱の NMFONT.DAT は、門真 なむ 氏の<a href="https://littlelimit.net/misaki.htm">美咲フォント</a>を変換したものです。View フォントの読み方は「<a href="http://www.yo.rim.or.jp/~anaka/AtoC/index32.htm">Let's use View font</a>」(A to C 氏)の資料によります。</p>
+  <p lang="en">NM's keys and screens follow MultiMente (by MOGU); no MultiMente program or file is included (MultiMente is distributed on the <a href="https://www.gigamix.jp/">GIGAMIX site</a>). The included NMFONT.DAT is converted from the <a href="https://littlelimit.net/misaki.htm">Misaki font</a> by Num Kadoma. Reading the View font follows the "<a href="http://www.yo.rim.or.jp/~anaka/AtoC/index32.htm">Let's use View font</a>" notes by A to C.</p>
   <p>All music © MICRO CABIN Corp. Dragon Quest is a registered trademark of SQUARE ENIX CO., LTD. MSX is a trademark of MSX Licensing Corporation.</p>
   <p class="signoff" lang="ja">依頼人へ: 次の注文は、もう少し仕様を固めてから持ってきてください。 — ジョン・ドウ</p>
   <p class="signoff" lang="en">To the client: next time, pin down the spec before you call me. — John Doe</p>
