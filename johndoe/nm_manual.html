@@ -14,7 +14,7 @@
 <header class="dochead">
   <div class="kicker">NM · 取扱説明書</div>
   <h1>NM(Next Maintenance)取扱説明書</h1>
-  <p class="lead">v0.99j(評価版、2026-11-22)。MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。</p>
+  <p class="lead">v0.99k(評価版、2026-11-23)。MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. 動作環境</a></li><li class="t2"><a href="#s2">2. ファイル</a></li><li class="t2"><a href="#s3">3. 起動と終了</a></li><li class="t2"><a href="#s4">4. 画面</a></li><li class="t2"><a href="#s5">5. キー操作</a></li><li class="t2"><a href="#s6">6. 内蔵ビューア</a></li><li class="t2"><a href="#s7">7. パーティション切替([P])</a></li><li class="t2"><a href="#s8">8. MGSDRV、MCPLAYER との連携</a></li><li class="t2"><a href="#s9">9. 設定(NMCFG.DAT)</a></li><li class="t2"><a href="#s10">10. MMRET.DAT、MMMCR.DAT(NMRET.DAT、NMMCR.DAT)、マクロ</a></li><li class="t2"><a href="#s11">11. 長いファイル名と漢字</a></li><li class="t2"><a href="#s12">12. ディスクやカードを入れ替えた時</a></li><li class="t2"><a href="#s13">13. 制限と、まだ出来ていないこと</a></li><li class="t2"><a href="#s14">14. 確認の状況</a></li><li class="t2"><a href="#s15">15. 使っているもの</a></li></ul></nav>
 <main class="docbody">
@@ -40,7 +40,7 @@ NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
 <p>終了は [Q] か [ESC] です。[ESC] は確認を求めます。終了すると、操作していた側のドライブとディレクトリが DOS のカレントになります。</p>
 <h3 id="s4">4. 画面</h3>
 <div class="scroll"><pre> Attr Copy Dele Edit Find maKe Log Move Quit Run Sort View Wild eXec   ← メニュー行
-+ NM v0.99j_K ----------------------------- 2026-11-14 19:36:05 +
++ NM v0.99k_K ----------------------------- 2026-11-14 19:36:05 +
 | Path: A:\                                                        |  操作している側のパス
 | Name: COMMAND2.COM                                               |  カーソルのファイル(長い名前があればそれ)
 | Size:     15708  Date: 2026-11-10  Time: 12:00:00  Attr: ----A   |
@@ -51,7 +51,7 @@ NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
 |  18 files    2 marked 1K +N     |   6 files    0 marked            |  件数、マーク数と合計、ソート
 |A:REALLABEL  Free:  545K/  713K  |A:REALLABEL  Free:  545K/  713K  |  ドライブ、ボリューム名、空き/総容量
  F1:help  TAB:side  F3:same dir  F4:open there  F5:one/two sides  Q:quit  ← 説明とメッセージ</pre></div>
-<ul><li>枠の左上に、名前と版が出ます(<code>NM v0.99j_K</code>)。最後の文字は、<code>K</code> が漢字を扱う状態、<code>A</code> が ANK 専用(<code>KANJI = OFF</code>)です。不具合を知らせる時は、この表示を添えてください。</li><li>左右を「サイド」と呼びます。白い帯(カーソル)のある側が、操作している側です。</li><li>最下行はキーの案内です。[SHIFT] を押している間は、[SHIFT] と一緒に使うキー([TAB]、[SPACE]、[F8]〜[F10] = [SHIFT] 併用の [F3]〜[F5])の案内に替わります。</li><li>一覧の左端の <code>*</code> はマークです。</li><li>一覧の下の行には、マークしたファイルの合計が KB で出ます(例 <code>46 marked 372K</code>)。コピー先の空き容量と見比べられます。バイト数の合計を 1KB 単位に切り上げた値で、ディレクトリの中身は足しません。コピー先のクラスタが大きいと、実際にはこれより多く使います。</li><li>そのうしろの <code>+N</code> はソートの状態です(<code>+</code> 昇順、<code>-</code> 降順。N 名前、S サイズ、D 日付、E 拡張子)。<code>*</code> は手で並べ替えたまま、まだディスクに書いていない印、<code>W</code> は表示フィルタが効いている印です。</li><li>空き容量は、Z80 の本体で大きなドライブを見ている時は出しません(数えるのに時間がかかるため)。設定で変えられます。</li></ul>
+<ul><li>枠の左上に、名前と版が出ます(<code>NM v0.99k_K</code>)。最後の文字は、<code>K</code> が漢字を扱う状態、<code>A</code> が ANK 専用(<code>KANJI = OFF</code>)です。不具合を知らせる時は、この表示を添えてください。</li><li>左右を「サイド」と呼びます。白い帯(カーソル)のある側が、操作している側です。</li><li>最下行はキーの案内です。[SHIFT] を押している間は、[SHIFT] と一緒に使うキー([TAB]、[SPACE]、[F8]〜[F10] = [SHIFT] 併用の [F3]〜[F5])の案内に替わります。</li><li>一覧の左端の <code>*</code> はマークです。</li><li>一覧の下の行には、マークしたファイルの合計が KB で出ます(例 <code>46 marked 372K</code>)。コピー先の空き容量と見比べられます。バイト数の合計を 1KB 単位に切り上げた値で、ディレクトリの中身は足しません。コピー先のクラスタが大きいと、実際にはこれより多く使います。</li><li>そのうしろの <code>+N</code> はソートの状態です(<code>+</code> 昇順、<code>-</code> 降順。N 名前、S サイズ、D 日付、E 拡張子)。<code>*</code> は手で並べ替えたまま、まだディスクに書いていない印、<code>W</code> は表示フィルタが効いている印です。</li><li>空き容量は、Z80 の本体で大きなドライブを見ている時は出しません(数えるのに時間がかかるため)。設定で変えられます。</li></ul>
 <h4 id="h2">表示の切り替え</h4>
 <div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[F5]</td><td>操作している側だけを画面いっぱいに出す / 2 画面に戻す</td></tr><tr><td><a href="[SHIFT]+[F3]">F8</a></td><td>詳細表示と名前のみ表示を切り替える(両側)</td></tr><tr><td><a href="[SHIFT]+[F4]">F9</a> / <a href="[SHIFT]+[F5]">F10</a></td><td>左側だけ / 右側だけ切り替える</td></tr></tbody></table></div>
 <p>名前のみ表示は、2 画面では 1 サイド 2 列(34 件)、1 画面では 5 列(85 件)です。</p>
