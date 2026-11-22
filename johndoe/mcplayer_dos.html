@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.31</title>
+<title>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.32</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,14 +13,14 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · DOS版</div>
-  <h1>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.31</h1>
+  <h1>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.32</h1>
   <p class="lead">MSX-DOS2 / Nextor の上で常駐し、DOS のプロンプトやファイラを使いながら、マイクロキャビンのゲームの曲をバックグラウンドで鳴らします。MGSDRV のように <code>MCPLAYER /Z</code> で常駐させ、<code>MCPLAYER 曲.MCM</code> で鳴らします。曲は ROM 版と同じく、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">できるファイル（dos/）</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">使い方</a></li><li class="t2"><a href="#h6">ファイラから使う</a></li><li class="t2"><a href="#h7">MGSDRV と一緒に使う</a></li><li class="t2"><a href="#h8">注意</a></li><li class="t2"><a href="#h9">動作確認</a></li><li class="t2"><a href="#h10">仕組み（概要）</a></li></ul></nav>
 <main class="docbody">
 <p>DOS 版のファイルは、ROM 版と同じ手順（README.md）で <code>player/build_rom.py</code> を動かすと、ROM と一緒に <code>dos/</code> フォルダにできます。曲・ドライバはご自分で持っているゲームのディスクイメージから取り出したもので、配布物には入っていません。</p>
 <h3 id="h1">できるファイル（dos/）</h3>
-<div class="scroll"><table><thead><tr><th>場所</th><th>内容</th></tr></thead><tbody><tr><td><code>MCPLAYER.COM</code></td><td>プレーヤー（常駐・再生・停止。約 5KB）</td></tr><tr><td><code>XAK.DRV</code> など</td><td>ゲームごとのドライバ（ディスクイメージから取り出し、MCPLAYER.COM で動くように直したもの）</td></tr><tr><td><code>XAK/XAK101.MCM</code> など</td><td>プレイリストの曲（ゲームのフォルダごと）</td></tr><tr><td><code>XAK/XAK.LST</code> など</td><td>曲の一覧（ファイル名・ドライバ・ループ回数・曲名。ゲームのフォルダごと、Shift-JIS）</td></tr></tbody></table></div>
+<div class="scroll"><table><thead><tr><th>場所</th><th>内容</th></tr></thead><tbody><tr><td><code>MCPLAYER.COM</code></td><td>プレーヤー（常駐・再生・停止。約 5KB）</td></tr><tr><td><code>XAK.DRV</code> など</td><td>ゲームごとのドライバ（ディスクイメージから取り出し、MCPLAYER.COM で動くように直したもの）</td></tr><tr><td><code>XAK/XAK101.MCM</code> など</td><td>プレイリストの曲（ゲームのフォルダごと、元のファイル名。ほかのゲームと中身が同じ曲も、それぞれのゲームのフォルダに入れます）</td></tr><tr><td><code>XAK/XAK.LST</code> など</td><td>曲の一覧（ファイル名・ドライバ・ループ回数・曲名。ゲームのフォルダごと、Shift-JIS）</td></tr></tbody></table></div>
 <p><code>dos/</code> の中身をフォルダごと MSX のディスクにコピーしてください。<code>MCPLAYER.COM</code> と <code>*.DRV</code> は同じフォルダに置きます。</p>
 <div class="scroll"><table><thead><tr><th>DRV</th><th>ゲーム</th><th>曲のファイル名</th></tr></thead><tbody><tr><td>XAK</td><td>Xak</td><td>XAK…</td></tr><tr><td>XAKI</td><td>Xak II</td><td>XAKI…</td></tr><tr><td>GAZZ</td><td>ガゼルの塔</td><td>GAZZ…</td></tr><tr><td>FRYM / FRYT / FRYD</td><td>FRAY（MSX2 版 / turboR 版 / デモ）</td><td>FRYM… / FRYT… / FRYD…</td></tr><tr><td>ILLU</td><td>幻影都市</td><td>ILLU…</td></tr><tr><td>FFAN</td><td>ファイナルファンタジー</td><td>FFAN…</td></tr><tr><td>RISK</td><td>キャンペーン版大戦略II</td><td>RISK…</td></tr><tr><td>PMAK</td><td>プリンセスメーカー</td><td>PMAK…</td></tr><tr><td>CABI / CABI3</td><td>The Tower of Cabin（ディスク 1・2 / ディスク 3）</td><td>CABI… / CABI3…</td></tr></tbody></table></div>
 <h3 id="h2">必要なもの</h3>

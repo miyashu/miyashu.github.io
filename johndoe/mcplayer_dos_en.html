@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.31</title>
+<title>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.32</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,14 +13,14 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · DOS version</div>
-  <h1>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.31</h1>
+  <h1>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.32</h1>
   <p class="lead">MCPLAYER.COM stays resident under MSX-DOS2 or Nextor and plays the music of Micro Cabin games in the background while you keep using the DOS prompt or a file manager. Like MGSDRV, you install it with <code>MCPLAYER /Z</code> and play a song with <code>MCPLAYER song.MCM</code>. As in the ROM version, every song is played with the game's own sound driver and instruments.</p>
 </header>
 <nav class="toc" aria-label="Contents"><ul><li class="t2"><a href="#h1">Files (dos/)</a></li><li class="t2"><a href="#h2">Requirements</a></li><li class="t2"><a href="#h3">Usage</a></li><li class="t2"><a href="#h6">From a file manager</a></li><li class="t2"><a href="#h7">With MGSDRV</a></li><li class="t2"><a href="#h8">Notes</a></li><li class="t2"><a href="#h9">Tested</a></li></ul></nav>
 <main class="docbody">
 <p>The DOS files are made in the <code>dos/</code> folder together with the ROM when you run <code>player/build_rom.py</code> as described in README_en.md. The music and drivers come from your own disk images; the package contains none of them.</p>
 <h3 id="h1">Files (dos/)</h3>
-<div class="scroll"><table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>MCPLAYER.COM</code></td><td>The player (install, play, stop; about 5 KB)</td></tr><tr><td><code>XAK.DRV</code> etc.</td><td>The game's sound driver, extracted from your disk images and adapted to MCPLAYER.COM</td></tr><tr><td><code>XAK/XAK101.MCM</code> etc.</td><td>The songs of the playlist, one folder per game</td></tr><tr><td><code>XAK/XAK.LST</code> etc.</td><td>Song list (file name, driver, loop count, titles), one per game folder, Shift-JIS</td></tr></tbody></table></div>
+<div class="scroll"><table><thead><tr><th>File</th><th>Contents</th></tr></thead><tbody><tr><td><code>MCPLAYER.COM</code></td><td>The player (install, play, stop; about 5 KB)</td></tr><tr><td><code>XAK.DRV</code> etc.</td><td>The game's sound driver, extracted from your disk images and adapted to MCPLAYER.COM</td></tr><tr><td><code>XAK/XAK101.MCM</code> etc.</td><td>The songs of the playlist, one folder per game, with their original file names (a song that several games share is put in the folder of each game)</td></tr><tr><td><code>XAK/XAK.LST</code> etc.</td><td>Song list (file name, driver, loop count, titles), one per game folder, Shift-JIS</td></tr></tbody></table></div>
 <p>Copy the contents of <code>dos/</code> with its folders to an MSX disk. Keep <code>MCPLAYER.COM</code> and the <code>*.DRV</code> files in the same folder.</p>
 <div class="scroll"><table><thead><tr><th>DRV</th><th>Game</th><th>Song file names</th></tr></thead><tbody><tr><td>XAK</td><td>Xak</td><td>XAK…</td></tr><tr><td>XAKI</td><td>Xak II</td><td>XAKI…</td></tr><tr><td>GAZZ</td><td>Tower of Gazzel</td><td>GAZZ…</td></tr><tr><td>FRYM / FRYT / FRYD</td><td>Fray (MSX2 / turboR / demo)</td><td>FRYM… / FRYT… / FRYD…</td></tr><tr><td>ILLU</td><td>Illusion City</td><td>ILLU…</td></tr><tr><td>FFAN</td><td>Final Fantasy</td><td>FFAN…</td></tr><tr><td>RISK</td><td>Dai Senryaku II (Campaign Version)</td><td>RISK…</td></tr><tr><td>PMAK</td><td>Princess Maker</td><td>PMAK…</td></tr><tr><td>CABI / CABI3</td><td>The Tower of Cabin (disks 1-2 / disk 3)</td><td>CABI… / CABI3…</td></tr></tbody></table></div>
 <h3 id="h2">Requirements</h3>
