@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.30</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar"><a href="index.html">← ジョン・ドウ レポート</a><a class="alt" href="mcplayer_dos_en.html" hreflang="en">English</a></div>
+<div class="docwrap">
+<header class="dochead">
+  <div class="kicker">MCPLAYER · DOS版</div>
+  <h1>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.30</h1>
+  <p class="lead">MSX-DOS2 / Nextor の上で常駐し、DOS のプロンプトやファイラを使いながら、マイクロキャビンのゲームの曲をバックグラウンドで鳴らします。MGSDRV のように <code>MCPLAYER /Z</code> で常駐させ、<code>MCPLAYER 曲.MCM</code> で鳴らします。曲は ROM 版と同じく、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
+</header>
+<nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">できるファイル（dos/）</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">使い方</a></li><li class="t2"><a href="#h5">ファイラから使う</a></li><li class="t2"><a href="#h6">MGSDRV と一緒に使う</a></li><li class="t2"><a href="#h7">注意</a></li><li class="t2"><a href="#h8">動作確認</a></li><li class="t2"><a href="#h9">仕組み（概要）</a></li></ul></nav>
+<main class="docbody">
+<p>DOS 版のファイルは、ROM 版と同じ手順（README.md）で <code>player/build_rom.py</code> を動かすと、ROM と一緒に <code>dos/</code> フォルダにできます。曲・ドライバはご自分で持っているゲームのディスクイメージから取り出したもので、配布物には入っていません。</p>
+<h3 id="h1">できるファイル（dos/）</h3>
+<div class="scroll"><table><thead><tr><th>場所</th><th>内容</th></tr></thead><tbody><tr><td><code>MCPLAYER.COM</code></td><td>プレーヤー（常駐・再生・停止。約 5KB）</td></tr><tr><td><code>XAK.DRV</code> など</td><td>ゲームごとのドライバ（ディスクイメージから取り出し、MCPLAYER.COM で動くように直したもの）</td></tr><tr><td><code>XAK/XAK101.MCM</code> など</td><td>プレイリストの曲（ゲームのフォルダごと）</td></tr></tbody></table></div>
+<p><code>dos/</code> の中身をフォルダごと MSX のディスクにコピーしてください。<code>MCPLAYER.COM</code> と <code>*.DRV</code> は同じフォルダに置きます。</p>
+<div class="scroll"><table><thead><tr><th>DRV</th><th>ゲーム</th><th>曲のファイル名</th></tr></thead><tbody><tr><td>XAK</td><td>Xak</td><td>XAK…</td></tr><tr><td>XAKI</td><td>Xak II</td><td>XAKI…</td></tr><tr><td>GAZZ</td><td>ガゼルの塔</td><td>GAZZ…</td></tr><tr><td>FRYM / FRYT / FRYD</td><td>FRAY（MSX2 版 / turboR 版 / デモ）</td><td>FRYM… / FRYT… / FRYD…</td></tr><tr><td>ILLU</td><td>幻影都市</td><td>ILLU…</td></tr><tr><td>FFAN</td><td>ファイナルファンタジー</td><td>FFAN…</td></tr><tr><td>RISK</td><td>キャンペーン版大戦略II</td><td>RISK…</td></tr><tr><td>PMAK</td><td>プリンセスメーカー</td><td>PMAK…</td></tr><tr><td>CABI / CABI3</td><td>The Tower of Cabin（ディスク 1・2 / ディスク 3）</td><td>CABI… / CABI3…</td></tr></tbody></table></div>
+<h3 id="h2">必要なもの</h3>
+<ul><li>MSX-DOS2 または Nextor（2 / 3）が動く MSX（マッパー RAM の空きセグメントが 1 つ = 16KB 必要）</li><li>MSX-MUSIC か FM-PAC（無ければ PSG のパートだけ鳴ります）</li><li>turboR は R800 のままで構いません（FM 音源の書き込みは R800 でも間に合うように待ちます）</li></ul>
+<h3 id="h3">使い方</h3>
+<div class="scroll"><pre>MCPLAYER /Z                 常駐する（もう一度で解除）
+MCPLAYER XAK\XAK201.MCM     バックグラウンドで再生（すぐプロンプトに戻る）
+MCPLAYER XAK201.MCM /L:2    2 回ループしたらフェードアウトして止める（既定はずっとループ）
+MCPLAYER /S                 停止
+MCPLAYER /F                 フェードアウトして止める（/F:8 のように速さも指定できる。既定 4）
+MCPLAYER                    使い方と今の状態（演奏中・フェード中・停止と曲名）</pre></div>
+<ul><li>常駐と解除のときは DOS を立ち上げ直します（MGSDRV と同じ。REBOOT.BAT があれば動きます）。立ち上げ直すと環境変数とカレントディレクトリは元に戻るので、必要なら REBOOT.BAT で設定し直してください。</li><li>解除できるのは、MCPLAYER が一番後から常駐したときだけです（MGSDRV などを後から常駐させたら、そちらを先に解除してください）。</li><li>ループしない曲は、最後まで鳴ると止まります。</li></ul>
+<h4 id="h4">ドライバの選び方</h4>
+<p>曲のファイル名の先頭 5 文字 → 4 文字 → 3 文字の順に <code>○○.DRV</code> を探します（<code>XAK201.MCM</code> なら XAK20.DRV、XAK2.DRV、XAK.DRV）。探す場所は曲と同じフォルダ、次に MCPLAYER.COM のあるフォルダです。見つからなければ、その 2 つのフォルダの <code>*.DRV</code> を順に調べ、この曲が入っているもの（DRV の中に曲の一覧があります）を使います。名前を変えた曲もこれで鳴ります。<code>/D:XAK.DRV</code> で直接指定もできます。</p>
+<h3 id="h5">ファイラから使う</h3>
+<p>ファイラの拡張子の関連付けで、.MCM に <code>MCPLAYER</code> を割り当てます。NM や MultiMente なら MMRET.DAT に、.MCM の行として <code>MCPLAYER $C</code> を書きます。.MCM を選んで実行すると、ファイラを使ったまま曲が鳴ります。</p>
+<h3 id="h6">MGSDRV と一緒に使う</h3>
+<p>MCPLAYER と MGSDRV は同時に常駐できます。ただし同じ音源（PSG・MSX-MUSIC）を使うので、同時に鳴らすと音が混ざります。</p>
+<ul><li><code>MCPLAYER 曲.MCM</code> は、MGSDRV が常駐していれば MGSDRV の演奏を止めてから鳴らします。</li><li>MGS を鳴らす前に MCPLAYER を止めるのは、MGS を鳴らすプログラムの側の仕事です（止めなければ混ざります）。ファイラなどから止めるための入口は <code>API.md</code> にあります。</li></ul>
+<h3 id="h7">注意</h3>
+<ul><li><strong>TPA</strong>: 常駐部はページ3を 249 バイト使います（TPA の上限は 100h 程度下がります）。MSX-DOS2 で MGSDRV と両方を常駐させると、TPA を多く使うプログラム（たとえば D360h 以上を求める NM）が起動できないことがあります。Nextor では両方常駐しても足ります。</li><li><strong>Nextor の COMMAND3.COM / COMMAND2.COM 2.44</strong>: プログラムが DOS を立ち上げ直す（MGSDRV や MCPLAYER の常駐・解除）たびに、シェルの退避場所が少しずつ埋まり、4〜5 回で「Not enough memory」になるシェル側の問題があります（Konamiman/Nextor #289）。MCPLAYER は立ち上げ直す前にこれを片付けるので、MCPLAYER の常駐・解除では起きません（MGSDRV だけで繰り返すと起きます）。</li><li>曲は 6KB まで（今あるいちばん大きい曲は 4.7KB）。</li></ul>
+<h3 id="h8">動作確認</h3>
+<ul><li>openMSX（FS-A1ST）の MSX-DOS2 と Nextor 3 で、全 12 種類のドライバでの再生・停止・フェード・ループ回数、MGSDRV との重ね常駐、名前を変えた曲。</li><li>ドライバを移した結果は、元の番地のドライバと PSG・FM への出力が全曲（471 曲）一致することを Z80 エミュレータで確かめています。</li><li>実機（MSX turboR、MSX-DOS2・Nextor 2）で、R800 / Z80 での再生、ファイラ（NM）の関連付けからの再生、MGSDRV との使い分け。</li></ul>
+<h3 id="h9">仕組み（概要）</h3>
+<ul><li>常駐部はページ3に入口と切り替えの処理（249 バイト）だけを置き、ドライバ・音色の表・曲と処理の本体はマッパー RAM のセグメント（16KB）に置きます。割込みのたびにセグメントをページ2に出してドライバを動かし、元に戻します。</li><li>ドライバはゲームの中では決まった番地（CD00h〜D100h など）で動く作りなので、DRV を作るとき（<code>player/mcdos/mkdrv.py</code>）に命令を辿って番地を付け替え、セグメントの 8000h〜で動くようにしています。</li><li>ファイラなどから直接鳴らす・止める入口（拡張 BIOS のデバイス番号 F1h）の説明は <code>API.md</code> にあります。</li></ul>
+</main>
+</div>
+</body>
+</html>

@@ -125,13 +125,13 @@
 <section class="soft" id="mcplayer" aria-labelledby="mcplayer-name">
   <div class="soft-head">
     <h2 id="mcplayer-name">MCPLAYER</h2>
-    <span class="ver">Ver 0.21</span>
-    <span class="platform">MSX ROM</span>
+    <span class="ver">Ver 0.30</span>
+    <span class="platform">MSX ROM / MSX-DOS2・Nextor</span>
   </div>
   <p class="tagline" lang="ja">MICRO CABIN MUSIC PLAYER — マイクロキャビンのゲーム音楽をメガロムで聴く</p>
   <p class="tagline" lang="en">MICRO CABIN MUSIC PLAYER — Micro Cabin game music on a MegaROM</p>
-  <p lang="ja">マイクロキャビンのゲームの曲を、MSXのROMカートリッジ(ASCII16メガロム)にまとめて聴くためのツールです。曲はそれぞれのゲーム自身のサウンドドライバと音色で鳴らします。配布物には曲・ドライバ・ゲームの画面などのデータは入っておらず、<strong>ご自分で持っているゲームのディスクイメージ</strong>から取り出してROMを作ります。</p>
-  <p lang="en">A tool that builds an MSX MegaROM cartridge (ASCII16) for listening to the music of Micro Cabin games. Every song plays with the game's own sound driver and instruments. The package contains no Micro Cabin data; the music and drivers are extracted from <strong>your own disk images</strong> when you build the ROM.</p>
+  <p lang="ja">マイクロキャビンのゲームの曲を、MSXのROMカートリッジ(ASCII16メガロム)にまとめて聴くためのツールです。曲はそれぞれのゲーム自身のサウンドドライバと音色で鳴らします。配布物には曲・ドライバ・ゲームの画面などのデータは入っておらず、<strong>ご自分で持っているゲームのディスクイメージ</strong>から取り出してROMを作ります。Ver 0.30 からは、ROM と一緒に<strong>DOS版(MCPLAYER.COM)</strong>のファイルもできます。MSX-DOS2 / Nextor の上で常駐し、DOSやファイラを使いながら曲をバックグラウンドで鳴らします。</p>
+  <p lang="en">A tool that builds an MSX MegaROM cartridge (ASCII16) for listening to the music of Micro Cabin games. Every song plays with the game's own sound driver and instruments. The package contains no Micro Cabin data; the music and drivers are extracted from <strong>your own disk images</strong> when you build the ROM. Since Ver 0.30 the build also makes the <strong>DOS version (MCPLAYER.COM)</strong>, which stays resident under MSX-DOS2 or Nextor and plays the music in the background while you use DOS or a file manager.</p>
 
   <div class="shots">
   <figure class="shot" lang="ja">
@@ -190,6 +190,26 @@
       </ul>
     </div>
     <div>
+      <h3 lang="ja">DOS版(MCPLAYER.COM)</h3>
+      <h3 lang="en">DOS version (MCPLAYER.COM)</h3>
+      <ul lang="ja">
+        <li>MSX-DOS2 / Nextor 2・3、マッパーRAMの空きセグメント1つ(16KB)</li>
+        <li><code>MCPLAYER /Z</code> で常駐(MGSDRVと同じ方式)、<code>MCPLAYER 曲.MCM</code> で再生、停止・フェード・ループ回数</li>
+        <li>ファイラの関連付けから鳴らせる(NM・MultiMente の MMRET.DAT に <code>MCPLAYER $C</code>)</li>
+        <li>ページ3は249バイトだけ。ドライバと曲はマッパーRAMに置く</li>
+        <li>MGSDRVと一緒に常駐できる(鳴らす前にMGSDRVを止める)</li>
+        <li>turboR は R800 のままで鳴る。実機の turboR(MSX-DOS2・Nextor 2)で確認</li>
+      </ul>
+      <ul lang="en">
+        <li>MSX-DOS2 / Nextor 2 or 3, one free mapper RAM segment (16 KB)</li>
+        <li>Install with <code>MCPLAYER /Z</code> (the MGSDRV way), play with <code>MCPLAYER song.MCM</code>; stop, fade out, loop count</li>
+        <li>Plays from a file manager's file association (<code>MCPLAYER $C</code> in MMRET.DAT for NM or MultiMente)</li>
+        <li>Only 249 bytes of page 3; drivers and songs live in mapper RAM</li>
+        <li>Can be resident together with MGSDRV (stops MGSDRV before playing)</li>
+        <li>Plays in R800 mode on the turbo R; tested on a real turbo R (MSX-DOS2, Nextor 2)</li>
+      </ul>
+    </div>
+    <div>
       <h3 lang="ja">ROMを作るのに必要なもの</h3>
       <h3 lang="en">To build the ROM</h3>
       <ul lang="ja">
@@ -206,19 +226,23 @@
   <div class="memo" lang="ja">
     <span class="memo-label">作業メモ — J.D.</span>
     <p>依頼内容は「マイクロキャビンの曲を、それぞれのゲーム自身のドライバで鳴らすメガロムを」。できあがった頃に「やっぱりマイクロキャビンのコードは配布物に入れたくない」と言い出したので、ドライバをユーザーのディスクから取り出して手を入れる方式に作り直しました。ドライバ10種類、全255曲で動作を確認済み。依頼人いわく「音そのものは耳でまだ十分に確かめていない」そうです。私の仕事は終わっています。</p>
+    <p>……と書いたら、今度は「ファイラを使いながら DOS で鳴らしたい。MGSDRV みたいに」。ゲームの決まった番地でしか動かないドライバを、命令を一つずつ辿って番地を付け替え、マッパーRAMで動くようにしました。付け替えた結果は元のドライバと全471曲で出力が一致することを確かめています。常駐部が大きいとファイラが起動しないと言われて 975 バイトを 249 バイトまで削り、ついでに Nextor のシェルの不具合まで見つけて報告する羽目に。依頼人が自分で書いたファイラのために、です。</p>
   </div>
   <div class="memo" lang="en">
     <span class="memo-label">Work log — J.D.</span>
     <p>The brief: "A MegaROM that plays Micro Cabin music with each game's own sound driver." Right when it was done, the client decided no Micro Cabin code should ship in the package, so I rebuilt it to pull the drivers out of the user's own disks and patch them at build time. Ten game drivers and all 255 songs checked. The client admits they "haven't properly listened to it yet." My part is finished.</p>
+    <p>…Or so I wrote. Next request: "I want to play it under DOS while using my file manager, like MGSDRV." The drivers only run at fixed addresses inside the games, so I traced them instruction by instruction and relocated them into mapper RAM, then checked that all 471 songs give the same output as the original drivers. The client's file manager would not start with the resident part taking 975 bytes, so I squeezed it down to 249, and on the way found and reported a bug in Nextor's shell. All for a file manager the client wrote themselves.</p>
   </div>
 
   <p class="caution" lang="ja"><strong>著作権:</strong> 曲・ドライバ・ゲームの画面の著作権はマイクロキャビンにあります。作ったROMは個人で楽しむ範囲で使い、配布しないでください。</p>
   <p class="caution" lang="en"><strong>Copyright:</strong> the music, drivers and game graphics are © MICRO CABIN Corp. Use the ROM you build for your own enjoyment only, and do not distribute it.</p>
 
   <div class="links">
-    <a class="btn primary" href="MCPLAYER_v0.21.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 328 KB</small></a>
+    <a class="btn primary" href="MCPLAYER_v0.30.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 362 KB</small></a>
     <a class="btn ghost" href="mcplayer_readme.html" lang="ja">使い方</a>
     <a class="btn ghost" href="mcplayer_readme_en.html" lang="en">How to use</a>
+    <a class="btn ghost" href="mcplayer_dos.html" lang="ja">DOS版の使い方</a>
+    <a class="btn ghost" href="mcplayer_dos_en.html" lang="en">DOS version</a>
     <a class="btn ghost" href="mcplayer_tech.html" lang="ja">技術資料</a>
     <a class="btn ghost" href="mcplayer_tech_en.html" lang="en">Technical notes</a>
   </div>
@@ -226,6 +250,12 @@
   <div class="history" lang="ja">
     <h3>履歴</h3>
     <dl>
+      <dt>Ver 0.30 <span>2026-11-22</span></dt>
+      <dd>
+        <ul>
+          <li>DOS版(MCPLAYER.COM)を追加。build_rom.py で ROM と一緒に、MCPLAYER.COM・ゲームごとのドライバ(*.DRV)・ゲームのフォルダごとの曲を dos/ に作る</li>
+        </ul>
+      </dd>
       <dt>Ver 0.21 <span>2026-10-29</span></dt>
       <dd>
         <ul>
@@ -253,6 +283,12 @@
   <div class="history" lang="en">
     <h3>History</h3>
     <dl>
+      <dt>Ver 0.30 <span>2026-11-22</span></dt>
+      <dd>
+        <ul>
+          <li>Added the DOS version (MCPLAYER.COM). build_rom.py now also makes MCPLAYER.COM, one driver file (*.DRV) per game and the songs per game in dos/</li>
+        </ul>
+      </dd>
       <dt>Ver 0.21 <span>2026-10-29</span></dt>
       <dd>
         <ul>
