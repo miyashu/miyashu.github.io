@@ -125,7 +125,7 @@
 <section class="soft" id="mcplayer" aria-labelledby="mcplayer-name">
   <div class="soft-head">
     <h2 id="mcplayer-name">MCPLAYER</h2>
-    <span class="ver">Ver 0.30</span>
+    <span class="ver">Ver 0.31</span>
     <span class="platform">MSX ROM / MSX-DOS2・Nextor</span>
   </div>
   <p class="tagline" lang="ja">MICRO CABIN MUSIC PLAYER — マイクロキャビンのゲーム音楽をメガロムで聴く</p>
@@ -198,6 +198,7 @@
         <li>ファイラの関連付けから鳴らせる(NM・MultiMente の MMRET.DAT に <code>MCPLAYER $C</code>)</li>
         <li>ページ3は249バイトだけ。ドライバと曲はマッパーRAMに置く</li>
         <li>MGSDRVと一緒に常駐できる(鳴らす前にMGSDRVを止める)</li>
+        <li>ゲームのフォルダごとの曲の一覧(XAK.LST など、Shift-JIS のテキスト)で曲名を表示。ファイラにも渡せる</li>
         <li>turboR は R800 のままで鳴る。実機の turboR(MSX-DOS2・Nextor 2)で確認</li>
       </ul>
       <ul lang="en">
@@ -206,6 +207,7 @@
         <li>Plays from a file manager's file association (<code>MCPLAYER $C</code> in MMRET.DAT for NM or MultiMente)</li>
         <li>Only 249 bytes of page 3; drivers and songs live in mapper RAM</li>
         <li>Can be resident together with MGSDRV (stops MGSDRV before playing)</li>
+        <li>Shows song titles from a song list per game folder (XAK.LST etc., Shift-JIS text), also for file managers</li>
         <li>Plays in R800 mode on the turbo R; tested on a real turbo R (MSX-DOS2, Nextor 2)</li>
       </ul>
     </div>
@@ -238,7 +240,7 @@
   <p class="caution" lang="en"><strong>Copyright:</strong> the music, drivers and game graphics are © MICRO CABIN Corp. Use the ROM you build for your own enjoyment only, and do not distribute it.</p>
 
   <div class="links">
-    <a class="btn primary" href="MCPLAYER_v0.30.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 362 KB</small></a>
+    <a class="btn primary" href="MCPLAYER_v0.31.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 365 KB</small></a>
     <a class="btn ghost" href="mcplayer_readme.html" lang="ja">使い方</a>
     <a class="btn ghost" href="mcplayer_readme_en.html" lang="en">How to use</a>
     <a class="btn ghost" href="mcplayer_dos.html" lang="ja">DOS版の使い方</a>
@@ -250,6 +252,12 @@
   <div class="history" lang="ja">
     <h3>履歴</h3>
     <dl>
+      <dt>Ver 0.31 <span>2026-11-22</span></dt>
+      <dd>
+        <ul>
+          <li>DOS版: ゲームのフォルダごとに曲の一覧(XAK.LST など。ファイル名・ドライバ・ループ回数・曲名)を作り、MCPLAYER.COM が曲名を表示するようにした(/J・/E で日本語・英語)</li>
+        </ul>
+      </dd>
       <dt>Ver 0.30 <span>2026-11-22</span></dt>
       <dd>
         <ul>
@@ -283,6 +291,12 @@
   <div class="history" lang="en">
     <h3>History</h3>
     <dl>
+      <dt>Ver 0.31 <span>2026-11-22</span></dt>
+      <dd>
+        <ul>
+          <li>DOS version: makes a song list per game folder (XAK.LST etc.: file name, driver, loop count, titles), and MCPLAYER.COM shows the song titles (/J, /E for Japanese / English)</li>
+        </ul>
+      </dd>
       <dt>Ver 0.30 <span>2026-11-22</span></dt>
       <dd>
         <ul>
