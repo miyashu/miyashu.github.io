@@ -771,8 +771,8 @@
 <section class="soft" id="nm" aria-labelledby="nm-name">
   <div class="soft-head">
     <h2 id="nm-name">NM (Next Maintenance)</h2>
-    <span class="ver" lang="ja">v0.99e 評価版 · 2026-11-21</span>
-    <span class="ver" lang="en">v0.99e evaluation · 2026-11-21</span>
+    <span class="ver" lang="ja">v0.99j 評価版 · 2026-11-23</span>
+    <span class="ver" lang="en">v0.99j evaluation · 2026-11-23</span>
     <span class="platform">MSX2 以降 · MSX-DOS2 / Nextor</span>
   </div>
   <p class="tagline" lang="ja">MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツール</p>
@@ -806,8 +806,9 @@
         <li>漢字のファイル名を一覧に表示(同梱の 8 ドットフォント、漢字 ROM、MSX-View の View フォント)。漢字の入力は MSX-JE</li>
         <li>内蔵ビューア: Shift-JIS と UTF-8 のテキスト、16 進ダンプ、8 ドット行と 12 ドット行の切り替え</li>
         <li>外部コマンドの実行、拡張子ごとのコマンド(MMRET.DAT)、キーマクロ(MMMCR.DAT)。実行中に NM がメモリに残すのは 512 バイト</li>
-        <li>並べ替えと、並びのディスクへの書き込み。Nextor と MEGA-SCSI のパーティション切替。MGSDRV での演奏</li>
-        <li>色、キーの置き換え、スクリーンセーバーなどの設定(NMCFG.DAT)</li>
+        <li>並べ替えと、並びのディスクへの書き込み。Nextor と MEGA-SCSI のパーティション切替</li>
+        <li>常駐した MGSDRV と MCPLAYER での演奏(.MGS、.MCM)。NM の画面のまま鳴り、曲名も出る</li>
+        <li>色、拡張子別の色分け、半角フォント、キーの置き換え、スクリーンセーバーなどの設定(NMCFG.DAT、環境変数)</li>
         <li>漢字を使わない ANK 専用の動作(<code>KANJI = OFF</code>。日本語仕様でない本体では自動)。この時は NM.COM と NM.OVL だけで動く</li>
         <li>ドライブが 1 台の本体で A: と B: を使い分ける時の、ディスクの入れ替えの案内</li>
       </ul>
@@ -818,8 +819,9 @@
         <li>Kanji file names in the lists (the included 8-dot font, the kanji ROM, or the View font of MSX-View). Kanji input through MSX-JE</li>
         <li>Built-in viewer: Shift-JIS and UTF-8 text, hex dump, 8-dot and 12-dot rows</li>
         <li>External commands, commands per extension (MMRET.DAT), key macros (MMMCR.DAT). While a command runs, NM keeps only 512 bytes of memory</li>
-        <li>Sorting, and writing the sorted order to the disk. Partition switching on Nextor and the MEGA-SCSI. Playing songs with MGSDRV</li>
-        <li>Settings in NMCFG.DAT: colours, key mapping, screen saver and more</li>
+        <li>Sorting, and writing the sorted order to the disk. Partition switching on Nextor and the MEGA-SCSI</li>
+        <li>Songs played by the resident MGSDRV and MCPLAYER (.MGS, .MCM), without leaving NM, with their titles</li>
+        <li>Settings (NMCFG.DAT, environment): colours, colours by extension, a font file for half-width characters, key mapping, screen saver and more</li>
         <li>ANK mode without kanji (<code>KANJI = OFF</code>; automatic on machines that are not Japanese models). Then NM.COM and NM.OVL are all it needs</li>
         <li>The "insert disk" prompt when one drive stands for A: and B:</li>
       </ul>
@@ -881,7 +883,7 @@
   <p class="caution" lang="en"><strong>Note:</strong> this is an evaluation version and parts of it are not fully tested. Back up important disks before trying anything that writes; try writing the sorted order ([Y]) and partition switching ([P]) on a disk you can afford to lose. Unofficial software; use at your own risk. The program's own messages are in English, and so is one edition of the manual.</p>
 
   <div class="links">
-    <a class="btn primary" href="NM-v0.99e-20261121.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 964 KB</small></a>
+    <a class="btn primary" href="NM-v0.99j-20261123.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 967 KB</small></a>
     <a class="btn ghost" href="nm_manual.html" lang="ja">取扱説明書</a>
     <a class="btn ghost" href="nm_manual_en.html" lang="en">Manual</a>
     <a class="btn ghost" href="nm_compare.html" lang="ja">MM との比較</a>
