@@ -14,7 +14,7 @@
 <header class="dochead">
   <div class="kicker">NM · 取扱説明書</div>
   <h1>NM(Next Maintenance)取扱説明書</h1>
-  <p class="lead">v0.99m(評価版、2026-11-23)。MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。</p>
+  <p class="lead">v0.99n(評価版、2026-11-23)。MSX-DOS2 と Nextor で動く、左右 2 画面のファイル管理ツールです。名前の NM は Next Maintenance の略で、「隣にもう 1 つの画面があるファイル整理の道具」という意味です。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#s1">1. 動作環境</a></li><li class="t2"><a href="#s2">2. ファイル</a></li><li class="t2"><a href="#s3">3. 起動と終了</a></li><li class="t2"><a href="#s4">4. 画面</a></li><li class="t2"><a href="#s5">5. キー操作</a></li><li class="t2"><a href="#s6">6. 内蔵ビューア</a></li><li class="t2"><a href="#s7">7. パーティション切替([P])</a></li><li class="t2"><a href="#s8">8. MGSDRV、MCPLAYER との連携</a></li><li class="t2"><a href="#s9">9. 設定(NMCFG.DAT)</a></li><li class="t2"><a href="#s10">10. MMRET.DAT、MMMCR.DAT(NMRET.DAT、NMMCR.DAT)、マクロ</a></li><li class="t2"><a href="#s11">11. 長いファイル名と漢字</a></li><li class="t2"><a href="#s12">12. ディスクやカードを入れ替えた時</a></li><li class="t2"><a href="#s13">13. 制限と、まだ出来ていないこと</a></li><li class="t2"><a href="#s14">14. 確認の状況</a></li><li class="t2"><a href="#s15">15. 使っているもの</a></li></ul></nav>
 <main class="docbody">
@@ -40,7 +40,7 @@ NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
 <p>終了は [Q] か [ESC] です。[ESC] は確認を求めます。終了すると、操作していた側のドライブとディレクトリが DOS のカレントになります。</p>
 <h3 id="s4">4. 画面</h3>
 <div class="scroll"><pre> Attr Copy Dele Edit Find maKe Log Move Quit Run Sort View Wild eXec   ← メニュー行
-+ NM v0.99m_K ----------------------------- 2026-11-14 19:36:05 +
++ NM v0.99n_K ----------------------------- 2026-11-14 19:36:05 +
 | Path: A:\                                                        |  操作している側のパス
 | Name: COMMAND2.COM                                               |  カーソルのファイル(長い名前があればそれ)
 | Size:     15708  Date: 2026-11-10  Time: 12:00:00  Attr: ----A   |
@@ -51,7 +51,7 @@ NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
 |  18 files    2 marked 1K +N     |   6 files    0 marked            |  件数、マーク数と合計、ソート
 |A:REALLABEL  Free:  545K/  713K  |A:REALLABEL  Free:  545K/  713K  |  ドライブ、ボリューム名、空き/総容量
  F1:help  TAB:side  F3:same dir  F4:open there  F5:one/two sides  Q:quit  ← 説明とメッセージ</pre></div>
-<ul><li>枠の左上に、名前と版が出ます(<code>NM v0.99m_K</code>)。最後の文字は、<code>K</code> が漢字を扱う状態、<code>A</code> が ANK 専用(<code>KANJI = OFF</code>)です。不具合を知らせる時は、この表示を添えてください。</li><li>左右を「サイド」と呼びます。白い帯(カーソル)のある側が、操作している側です。</li><li>最下行はキーの案内です。[SHIFT] を押している間は、[SHIFT] と一緒に使うキー([TAB]、[SPACE]、[F8]〜[F10] = [SHIFT] 併用の [F3]〜[F5])の案内に替わります。</li><li>一覧の左端の <code>*</code> はマークです。</li><li>一覧の下の行には、マークしたファイルの合計が KB で出ます(例 <code>46 marked 372K</code>)。コピー先の空き容量と見比べられます。バイト数の合計を 1KB 単位に切り上げた値で、ディレクトリの中身は足しません。コピー先のクラスタが大きいと、実際にはこれより多く使います。</li><li>そのうしろの <code>+N</code> はソートの状態です(<code>+</code> 昇順、<code>-</code> 降順。N 名前、S サイズ、D 日付、E 拡張子)。<code>*</code> は手で並べ替えたまま、まだディスクに書いていない印、<code>W</code> は表示フィルタが効いている印です。</li><li>空き容量は、Z80 の本体で大きなドライブを見ている時は出しません(数えるのに時間がかかるため)。設定で変えられます。</li></ul>
+<ul><li>枠の左上に、名前と版が出ます(<code>NM v0.99n_K</code>)。最後の文字は、<code>K</code> が漢字を扱う状態、<code>A</code> が ANK 専用(<code>KANJI = OFF</code>)です。不具合を知らせる時は、この表示を添えてください。</li><li>左右を「サイド」と呼びます。白い帯(カーソル)のある側が、操作している側です。</li><li>最下行はキーの案内です。[SHIFT] を押している間は、[SHIFT] と一緒に使うキー([TAB]、[SPACE]、[F8]〜[F10] = [SHIFT] 併用の [F3]〜[F5])の案内に替わります。</li><li>一覧の左端の <code>*</code> はマークです。</li><li>一覧の下の行には、マークしたファイルの合計が KB で出ます(例 <code>46 marked 372K</code>)。コピー先の空き容量と見比べられます。バイト数の合計を 1KB 単位に切り上げた値で、ディレクトリの中身は足しません。コピー先のクラスタが大きいと、実際にはこれより多く使います。</li><li>そのうしろの <code>+N</code> はソートの状態です(<code>+</code> 昇順、<code>-</code> 降順。N 名前、S サイズ、D 日付、E 拡張子)。<code>*</code> は手で並べ替えたまま、まだディスクに書いていない印、<code>W</code> は表示フィルタが効いている印です。</li><li>空き容量は、Z80 の本体で大きなドライブを見ている時は出しません(数えるのに時間がかかるため)。設定で変えられます。</li></ul>
 <h4 id="h2">表示の切り替え</h4>
 <div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[F5]</td><td>操作している側だけを画面いっぱいに出す / 2 画面に戻す</td></tr><tr><td><a href="[SHIFT]+[F3]">F8</a></td><td>詳細表示と名前のみ表示を切り替える(両側)</td></tr><tr><td><a href="[SHIFT]+[F4]">F9</a> / <a href="[SHIFT]+[F5]">F10</a></td><td>左側だけ / 右側だけ切り替える</td></tr></tbody></table></div>
 <p>名前のみ表示は、2 画面では 1 サイド 2 列(34 件)、1 画面では 5 列(85 件)です。</p>
@@ -97,7 +97,7 @@ NM A:\UTILS         左が A:\UTILS、右は起動時の場所</pre></div>
 <p>MSX-JE を内蔵した機種(FS-A1ST、FS-A1GT など)や、MSX-JE のカートリッジがある時は、入力行で漢字変換ができます。</p>
 <ul><li>[CTRL]+[SPACE] で始めます。窓の枠の下辺に <code>MSX-JE</code> と出て、入力行の下の行が変換用の行になります。</li><li>読みを打ち、[SPACE] で変換、[RETURN] で確定、という MSX-JE のいつもの操作です。確定した文字は、入力行のカーソルの位置に入ります。文節ごとに確定していく時は、確定した分が入力行へ移り、残りの文節の候補が変換用の行に出ます。</li><li>もう一度 [CTRL]+[SPACE] でやめます。変換中の文字が無い時の [RETURN] や [ESC] は入力行のキーとして働くので、入力の窓が閉じ、MSX-JE も終わります。</li><li><code>KANJI = OFF</code> の時と、メモリの上のほうに空きが足りない時(常駐プログラムが多い時など)は、[CTRL]+[SPACE] を押しても始まりません。</li></ul>
 <h3 id="s6">6. 内蔵ビューア</h3>
-<p>[V] で、カーソルのファイルを表示します。大きさの制限はありません(行数は約 2500 行まで)。</p>
+<p>[V] で、カーソルのファイルを表示します。大きさの制限はありません(行数は約 3000 行まで)。</p>
 <div class="scroll"><table><thead><tr><th>キー</th><th>内容</th></tr></thead><tbody><tr><td>[SPACE] / [BS]</td><td>次のページ / 前のページ</td></tr><tr><td>[SHIFT]+[SPACE] / [SHIFT]+[BS]</td><td>半ページずつ</td></tr><tr><td>[↑][↓]</td><td>1 行ずつ</td></tr><tr><td>[←][→]</td><td>10 ページずつ</td></tr><tr><td>[SHIFT]+[←][→]</td><td>5 ページずつ</td></tr><tr><td>[H] / [T]</td><td>先頭 / 末尾</td></tr><tr><td>[TAB]</td><td>タブの幅(8 / 4)</td></tr><tr><td>[K]</td><td>全角文字の出し方を替える(下の 3 種類)。16 進ダンプでは、文字の欄に全角文字を出す / 出さない</td></tr><tr><td>[U]</td><td>UTF-8 / Shift-JIS を替える(16 進ダンプでも同じ)。いまどちらで読んでいるかは、最上行の右端に <code>[SJIS]</code> / <code>[UTF8]</code> と出ます。1 バイトずつ ANK で出している時(16 進ダンプの初めと、<code>KANJI = OFF</code> の時)は <code>[ANK]</code> です</td></tr><tr><td>[X]</td><td>16 進ダンプ / テキスト</td></tr><tr><td>[RETURN] / [ESC]</td><td>終了</td></tr></tbody></table></div>
 <p>16 進ダンプは、初めは ANK 表示です。[K] を押すと全角文字が出て、[U] が効くようになります。<code>KANJI = OFF</code> の時は、ビューアの [K] と [U] は働かず、キーの案内にも出ません。</p>
 <ul><li><strong>文字コード</strong>: Shift-JIS と UTF-8。先頭の 1KB を見て自動で判定します。違っていたら [U] で替えてください。UTF-8 は NMUNI.DAT を使って表示します。Shift-JIS に無い文字は <code>?</code> になります。</li><li><strong>全角文字の出し方</strong>([K] で順に替わります。起動時の値は <code>VIEW</code> で決められます)
@@ -165,7 +165,7 @@ EXT = 373 MGS IMS VGM</pre></div>
 <p>一覧の画面で <code>SC_TIME</code> の時間だけキーを押さずにいると、スクリーンセーバーが始まります。入力や確認の窓が出ている間、ビューアの中、コピーなどの処理中は始まりません。</p>
 <ul><li><strong>内蔵のもの</strong>(<code>SCSAVER</code> を書いていない時): 画面を 16 枚に分け、1 枚を黒くして、隣の 1 枚をそこへ滑らせる動きを繰り返します。何かキーを押すと元の画面に戻ります。一覧、カーソル、マークはそのままです。止めるために押したキーは、操作としては働きません。</li><li><strong>外部のもの</strong>(<code>SCSAVER = プログラム名</code>): MultiMente 用のスクリーンセーバーなど、「起動して、キーが押されたら終わる」プログラムを起動します。終わると NM に戻り、左右の場所とカーソルは元のとおりです(マークは消えます)。起動のたびにディスクを読みます。</li><li>やめたい時は <code>SC_TIME = 0</code> と書きます。</li></ul>
 <h3 id="s13">13. 制限と、まだ出来ていないこと</h3>
-<ul><li>一覧に出せるのは 1 サイド 819 件までです(空きのマッパー RAM が無い時は 409 件ずつ)。</li><li>ビューアの行数は約 2500 行までです。ビューアのモード(コントロールコードの表示など)はありません。</li><li>時計は 24 時間表示だけです。</li><li>[P] は、パーティションを番号で直接指定することはできません。</li><li>ボリューム名の半角の英字は大文字になります。</li><li>フロッピーでは、漢字の多い長いファイル名や UTF-8 のテキストの表示に時間がかかります(1 字ごとに NMUNI.DAT を読むため)。</li></ul>
+<ul><li>一覧に出せるのは 1 サイド 819 件までです(空きのマッパー RAM が無い時は 409 件ずつ)。</li><li>ビューアの行数は約 3000 行までです。ビューアのモード(コントロールコードの表示など)はありません。</li><li>時計は 24 時間表示だけです。</li><li>[P] は、パーティションを番号で直接指定することはできません。</li><li>ボリューム名の半角の英字は大文字になります。</li><li>フロッピーでは、漢字の多い長いファイル名や UTF-8 のテキストの表示に時間がかかります(1 字ごとに NMUNI.DAT を読むため)。</li></ul>
 <h3 id="s14">14. 確認の状況</h3>
 <p>開発はエミュレータ(openMSX)で行い、実機では一部だけを確かめています。</p>
 <div class="scroll"><table><thead><tr><th>内容</th><th>状況</th></tr></thead><tbody><tr><td>基本の操作(一覧、移動、マーク、コピー、移動、削除、名前変更、ビューア、外部コマンド)</td><td>エミュレータの MSX-DOS2、Nextor 3、Nextor 2.1 で確認。実機でも確認(turbo R と、MSX2 の FS-A1FM)</td></tr><tr><td>[P] パーティション切替</td><td>実機の Nextor 2.1(SD カード)と MSX-DOS2 の MEGA-SCSI で確認</td></tr><tr><td>MGSDRV の演奏</td><td>実機で確認</td></tr><tr><td>View フォント</td><td>エミュレータで 4 種類とも確認。実機では FS-A1GT の内蔵、FS-A1ST に載せた ROM、カートリッジ(FS-A1FM で、12 ドット行の第二水準が View フォントの有無で変わることを確認)</td></tr><tr><td><code>KANJI = OFF</code></td><td>実機で確認</td></tr><tr><td>[Y] 並びの書き込み、[SHIFT]+[S]、[SHIFT]+[Y]、マークの合計</td><td>実機で確認</td></tr><tr><td>起動時の場所の指定、[C] 名前を変える、[CTRL]+[V] ボリューム名、[F8]〜[F10]</td><td>実機で確認</td></tr><tr><td>[DEL] 並びかえモード、[0] の読み直し(カードの差し替え後を含む)</td><td>実機で確認</td></tr><tr><td>1 台のドライブを 2 つのドライブとして使う時の案内</td><td>エミュレータの MSX-DOS2 と Nextor 3 で確認</td></tr><tr><td>128KB の本体</td><td>確認できていません</td></tr></tbody></table></div>
