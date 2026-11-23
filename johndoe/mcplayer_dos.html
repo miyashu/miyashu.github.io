@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.35</title>
+<title>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.36</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,7 +13,7 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · DOS版</div>
-  <h1>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.35</h1>
+  <h1>MCPLAYER.COM（MICRO CABIN MUSIC PLAYER の DOS 版）Ver 0.36</h1>
   <p class="lead">MSX-DOS2 / Nextor の上で常駐し、DOS のプロンプトやファイラを使いながら、マイクロキャビンのゲームの曲をバックグラウンドで鳴らします。MGSDRV のように <code>MCPLAYER /Z</code> で常駐させ、<code>MCPLAYER 曲.MCM</code> で鳴らします。曲は ROM 版と同じく、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">できるファイル（dos/）</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">使い方</a></li><li class="t2"><a href="#h6">ファイラから使う</a></li><li class="t2"><a href="#h7">MGSDRV と一緒に使う</a></li><li class="t2"><a href="#h8">注意</a></li><li class="t2"><a href="#h9">動作確認</a></li><li class="t2"><a href="#h10">仕組み（概要）</a></li></ul></nav>
@@ -27,13 +27,14 @@
 <ul><li>MSX-DOS2 または Nextor（2 / 3）が動く MSX（マッパー RAM の空きセグメントが 1 つ = 16KB 必要）</li><li>MSX-MUSIC か FM-PAC（無ければ PSG のパートだけ鳴ります）</li><li>turboR は R800 のままで構いません（FM 音源の書き込みは R800 でも間に合うように待ちます）</li></ul>
 <h3 id="h3">使い方</h3>
 <div class="scroll"><pre>MCPLAYER /Z                 常駐する（もう一度で解除）
+MCPLAYER /I                 常駐していなければ常駐する（していれば何もせずに戻る）
 MCPLAYER XAK\XAK201.MCM     バックグラウンドで再生（すぐプロンプトに戻る）
 MCPLAYER XAK201.MCM /L:2    2 回ループしたらフェードアウトして止める（既定はずっとループ）
 MCPLAYER /S                 停止
 MCPLAYER /F                 フェードアウトして止める（/F:8 のように速さも指定できる。既定 4）
 MCPLAYER                    使い方と今の状態（演奏中・フェード中・停止と曲名）
 MCPLAYER XAK201.MCM /J      曲名を日本語で出す（/E なら英語）</pre></div>
-<ul><li>常駐と解除のときは DOS を立ち上げ直します（MGSDRV と同じ。REBOOT.BAT があれば動きます）。立ち上げ直すと環境変数とカレントディレクトリは元に戻るので、必要なら REBOOT.BAT で設定し直してください。</li><li>解除できるのは、MCPLAYER が一番後から常駐したときだけです（MGSDRV などを後から常駐させたら、そちらを先に解除してください）。</li><li>ループしない曲は、最後まで鳴ると止まります。</li></ul>
+<ul><li>常駐と解除のときは DOS を立ち上げ直します（MGSDRV と同じ。REBOOT.BAT があれば動きます）。立ち上げ直すと環境変数とカレントディレクトリは元に戻るので、必要なら REBOOT.BAT で設定し直してください。</li><li>REBOOT.BAT は立ち上げ直すたびに動くので、REBOOT.BAT から常駐させるときは <code>/Z</code>（もう一度で解除）ではなく <code>/I</code> を使います。たとえば AUTOEXEC.BAT に <code>MGSDRV /Z</code>、REBOOT.BAT に <code>MCPLAYER /I</code> と <code>NM</code> を書くと、電源を入れるだけで MGSDRV と MCPLAYER を常駐させて NM が起動します（MCPLAYER を常駐させて立ち上げ直した後、もう一度 REBOOT.BAT が動き、<code>/I</code> はそのまま戻るので次の行に進みます。MGSDRV と両方を常駐させて NM を使えるのは Nextor のときです。下の「注意」の TPA を見てください）。</li><li>解除できるのは、MCPLAYER が一番後から常駐したときだけです（MGSDRV などを後から常駐させたら、そちらを先に解除してください）。</li><li>ループしない曲は、最後まで鳴ると止まります。</li></ul>
 <h4 id="h4">曲の一覧（*.LST）</h4>
 <p>ゲームのフォルダごとに、そのゲームの曲の一覧（<code>XAK.LST</code> のようにドライバと同じ名前）があります。1 行 1 曲の Shift-JIS のテキストで、<code>#</code> で始まる行は注釈です。</p>
 <div class="scroll"><pre>XAK201.MCM | XAK.DRV |  | Xak | フェアレスの町 | Xak | Village of Fearless

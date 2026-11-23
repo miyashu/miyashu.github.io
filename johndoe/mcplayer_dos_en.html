@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.35</title>
+<title>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.36</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,7 +13,7 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · DOS version</div>
-  <h1>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.35</h1>
+  <h1>MCPLAYER.COM (MICRO CABIN MUSIC PLAYER for MSX-DOS) Ver 0.36</h1>
   <p class="lead">MCPLAYER.COM stays resident under MSX-DOS2 or Nextor and plays the music of Micro Cabin games in the background while you keep using the DOS prompt or a file manager. Like MGSDRV, you install it with <code>MCPLAYER /Z</code> and play a song with <code>MCPLAYER song.MCM</code>. As in the ROM version, every song is played with the game's own sound driver and instruments.</p>
 </header>
 <nav class="toc" aria-label="Contents"><ul><li class="t2"><a href="#h1">Files (dos/)</a></li><li class="t2"><a href="#h2">Requirements</a></li><li class="t2"><a href="#h3">Usage</a></li><li class="t2"><a href="#h6">From a file manager</a></li><li class="t2"><a href="#h7">With MGSDRV</a></li><li class="t2"><a href="#h8">Notes</a></li><li class="t2"><a href="#h9">Tested</a></li></ul></nav>
@@ -27,13 +27,14 @@
 <ul><li>An MSX running MSX-DOS2 or Nextor (2 / 3), with one free mapper RAM segment (16 KB)</li><li>MSX-MUSIC or FM-PAC (without FM only the PSG parts play)</li><li>A turbo R can stay in R800 mode (the FM writes wait long enough for the R800)</li></ul>
 <h3 id="h3">Usage</h3>
 <div class="scroll"><pre>MCPLAYER /Z                 install (again to remove)
+MCPLAYER /I                 install if not installed (otherwise do nothing)
 MCPLAYER XAK\XAK201.MCM     play in the background (back to the prompt at once)
 MCPLAYER XAK201.MCM /L:2    fade out and stop after 2 loops (default: loop forever)
 MCPLAYER /S                 stop
 MCPLAYER /F                 fade out and stop (speed with /F:8 etc., default 4)
 MCPLAYER                    usage and state (playing / fading / stopped, song name)
 MCPLAYER XAK201.MCM /E      show the title in English (/J: Japanese)</pre></div>
-<ul><li>Installing and removing reboot DOS (like MGSDRV; REBOOT.BAT runs if present). The reboot resets the environment and the current directory, so set them again in REBOOT.BAT if needed.</li><li>MCPLAYER can be removed only while it is the last program installed (remove MGSDRV etc. first if you installed them after it).</li><li>Songs that do not loop stop at their end.</li></ul>
+<ul><li>Installing and removing reboot DOS (like MGSDRV; REBOOT.BAT runs if present). The reboot resets the environment and the current directory, so set them again in REBOOT.BAT if needed.</li><li>REBOOT.BAT runs after every reboot, so use <code>/I</code> rather than <code>/Z</code> (which removes when installed) in REBOOT.BAT. For example, with <code>MGSDRV /Z</code> in AUTOEXEC.BAT and <code>MCPLAYER /I</code> and <code>NM</code> in REBOOT.BAT, turning on the MSX installs MGSDRV and MCPLAYER and starts NM (after MCPLAYER is installed and DOS reboots, REBOOT.BAT runs again; <code>/I</code> then just returns, so the next line runs. Using NM with both MGSDRV and MCPLAYER installed works on Nextor; see TPA under Notes).</li><li>MCPLAYER can be removed only while it is the last program installed (remove MGSDRV etc. first if you installed them after it).</li><li>Songs that do not loop stop at their end.</li></ul>
 <h4 id="h4">Song lists (*.LST)</h4>
 <p>Each game folder has a list of its songs, named like the driver (<code>XAK.LST</code>). It is Shift-JIS text, one song per line; lines starting with <code>#</code> are comments.</p>
 <div class="scroll"><pre>XAK201.MCM | XAK.DRV |  | Xak | (Japanese title) | Xak | Village of Fearless
