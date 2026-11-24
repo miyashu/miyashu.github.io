@@ -887,19 +887,21 @@
     <p>依頼内容は「MultiMente の代わりになる、左右 2 画面のやつを」。条件が付いていました。「MM のプログラムは 1 バイトも使わない。でも操作は同じに。設定ファイルもそのまま読めるように」。説明書と画面だけを見て、同じ手触りのものを一から作れ、という注文です。作りました。</p>
     <p>そこからが長い。「起動が遅い」と言われてファイルを読む順番を入れ替え、「外部コマンドに渡すメモリが少ない」と言われて居残る部分を 512 バイトまで削り、「漢字変換も」と言われて MSX-JE につなぎました。依頼人は「えせえせえせ」と打って、1 文節ずつ変換されるのを確かめていました。ほかに打つ言葉は無かったのでしょうか。</p>
     <p>最初の版には、漢字のフォルダを開くと止まる不具合がありました。さる消息筋によると、Nextor 2 でだけ起きるとのこと。そのとおりでした。直して渡したら「まだ止まる」。古いファイルを SD カードにコピーしていたのは依頼人です。もっとも、設定ファイルを途中までしか読んでおらず待ち時間を短く書き換えた依頼人を 3 分待たせたのは私なので、おあいこにしておきます。名前は依頼人が付けました。</p>
+     <p>公開したあとは、さる事情通から意見が届きました。「カーソルキーを押しっぱなしにすると重い。上の表示は、キーを離した時にだけ書き換えては」。言われたとおりに直したら、言われたとおりに軽くなりました。直し方まで付いてくる指摘は助かります。「半角フォントを差し替えたいが、重くなる?」には、読むのは起動時の 1 回だけです、と答えて入れました。左右キーで反対側へ移りたい、という希望もありましたが、依頼人は今の動きが気に入っているそうで、[CTRL] を押しながら、に落ち着いています。[CTRL] と [SHIFT] のどちらにするかを設定で選べるようにしたのは、どちらからも叱られないための用心です。</p>
   </div>
   <div class="memo" lang="en">
     <span class="memo-label">Work log — J.D.</span>
     <p>The brief: "something to replace MultiMente, with two screens side by side." With conditions: "not one byte of MM's program. But the same keys. And it must read the same settings files." In other words, build something that feels the same from nothing but the manual and the screen. Done.</p>
     <p>Then came the long part. "It starts slowly", so the order of reading files changed. "External commands get too little memory", so the part that stays behind shrank to 512 bytes. "Kanji input too", so it talks to MSX-JE. The client tested that by typing "eseeseese" and watching it convert one phrase at a time. Surely there were other words.</p>
     <p>The first version hung when opening a folder with a kanji name. According to a certain well-informed source, only on Nextor 2. Correct. I fixed it and handed it over: "still hangs." The client had copied the old files to the SD card. Then again, it was me who read only part of the settings file and made the client wait three minutes after they had set a shorter time, so let's call it even. The name is the client's.</p>
+     <p>After the release, word came from someone in the know. "Holding a cursor key down feels heavy. Why not rewrite the lines at the top only when the key is released?" I did as told, and it got lighter as told. A complaint that comes with its own fix is a gift. "Could I use my own half-width font, or would that slow it down?" It is read once, at start-up, I said, and put it in. There was also a wish to move to the other side with the left and right keys; the client likes those keys as they are, so it became left and right with [CTRL]. That a setting lets you choose between [CTRL] and [SHIFT] is my way of not being scolded by either of them.</p>
   </div>
 
   <p class="caution" lang="ja"><strong>注意:</strong> 評価版です。動作を確かめきれていない部分があります。大事なディスクでは、書き込みを伴う操作の前にバックアップを取ってください。とくに並びの書き込み([Y])とパーティション切替([P])は、消えてもよいディスクで試してください。非公式のソフトです。使用は自己責任でお願いします。画面の表示は英語です。説明書は日本語と英語があります。</p>
   <p class="caution" lang="en"><strong>Note:</strong> this is an evaluation version and parts of it are not fully tested. Back up important disks before trying anything that writes; try writing the sorted order ([Y]) and partition switching ([P]) on a disk you can afford to lose. Unofficial software; use at your own risk. The program's own messages are in English, and so is one edition of the manual.</p>
 
   <div class="links">
-    <a class="btn primary" href="NM-v0.99n-20261124.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 1019 KB</small></a>
+    <a class="btn primary" href="NM-v0.99n-20261124.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 1021 KB</small></a>
     <a class="btn ghost" href="nm_manual.html" lang="ja">取扱説明書</a>
     <a class="btn ghost" href="nm_manual_en.html" lang="en">Manual</a>
     <a class="btn ghost" href="nm_compare.html" lang="ja">MM との比較</a>
