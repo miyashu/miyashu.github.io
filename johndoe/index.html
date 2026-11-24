@@ -682,7 +682,7 @@
   <div class="soft-head">
     <h2 id="nxmg-name" lang="ja">MEGA-SCSI 用 Nextor 3</h2>
     <h2 id="nxmg-name-en" lang="en">Nextor 3 for MEGA-SCSI</h2>
-    <span class="ver">v1.0 · Nextor 3.0 · 2026-11-02</span>
+    <span class="ver">v1.0.1 · Nextor 3.0 · 2026-11-24</span>
     <span class="platform">MSX2 以降 · MEGA-SCSI</span>
   </div>
   <p class="tagline" lang="ja">ドライバのなかった MEGA-SCSI で、Nextor 3 を動かす</p>
@@ -700,14 +700,14 @@
         <li>SCSI ID 0〜6 の機器を探して読み書き。セクタ番号は 32 ビットで、2GB を超える SCSI2SD も使える</li>
         <li>読み込みは 512 バイトを待ちなしで一気に読む速さ優先、書き込みは 8 バイトごとに FIFO が空くのを待つ安全側(オリジナルの MEGA-SCSI(MSX-DOS2 カーネルベース)では SCSI2SD / SCSI2CF への書き込みに問題があった)</li>
         <li>SCSI 機器がない、電源が入っていないときも、起動時に止まらない</li>
-        <li><strong>SRAM ディスク</strong>(似非 RAM ディスクにあたるもの): SRAM の 128KB 以降(256KB 版は 128KB、512KB 版は 384KB、1024KB 版は 896KB)をデバイス 1 として読み書き。電源を切っても中身が残り、ここから起動もできる</li>
+        <li><strong>SRAM ディスク</strong>(似非 RAM ディスクにあたるもの): SRAM の 128KB 以降(256KB 版は 128KB、512KB 版は 384KB、1024KB 版は 896KB)をデバイス 1 として読み書き。容量は 128KB 単位で調べるので、768KB などの自作の版でも使える。電源を切っても中身が残り、ここから起動もできる(MSX-DOS 1 でも)</li>
         <li>NXMGINST: 書き込み、照合、SRAM ディスクの作成(<code>/N</code> で作らない)、SRAM 全体のバックアップ(<code>/B</code>)と復元。カーネルが動いていないときは <code>/S:スロット</code> で指定</li>
       </ul>
       <ul lang="en">
         <li>Finds devices on SCSI IDs 0-6 and reads and writes them. 32-bit sector numbers, so an SCSI2SD larger than 2 GB works</li>
         <li>Reads take 512 bytes in one go with no waits, for speed. Writes wait for an empty FIFO every 8 bytes, for safety (the original MEGA-SCSI, with its MSX-DOS2 based kernel, had write problems with SCSI2SD / SCSI2CF)</li>
         <li>Booting does not hang when no SCSI device is connected or powered</li>
-        <li><strong>SRAM disk</strong> (the counterpart of the ESE RAM disk): the SRAM after the first 128 KB (128 KB on the 256 KB model, 384 KB on 512 KB, 896 KB on 1024 KB) is device 1. It keeps its contents with the power off, and Nextor can boot from it</li>
+        <li><strong>SRAM disk</strong> (the counterpart of the ESE RAM disk): the SRAM after the first 128 KB (128 KB on the 256 KB model, 384 KB on 512 KB, 896 KB on 1024 KB) is device 1. The size is checked in 128 KB steps, so home-made models with 768 KB and so on work too. It keeps its contents with the power off, and Nextor can boot from it (MSX-DOS 1 too)</li>
         <li>NXMGINST: writes and verifies, makes the SRAM disk (<code>/N</code> to skip it), backs up the whole SRAM (<code>/B</code>) and restores it. Give the slot with <code>/S:slot</code> when the kernel is not running</li>
       </ul>
       <h3 lang="ja">できないこと</h3>
@@ -717,14 +717,14 @@
         <li>元のカーネルの似非 RAM ディスクの中身はそのまま使えない(インストーラが確認してから SRAM ディスクに作り直す。元に戻すときは <code>/B</code> のバックアップから)</li>
         <li>CALL 命令など元のカーネルの機能、SPC を直接操作するソフト</li>
         <li>セクタが 512 バイトでない機器やメディア(640MB 以上の MO など)。CD-ROM、スキャナなどディスク型でない機器は無視する(元の MEGA-SCSI 用の CD-ROM のソフトも動かない)</li>
-        <li>実機ではまだ: SRAM 256KB / 512KB の版、2GB 超、SCSI2SD 以外の機器、FS-A1ST 以外の機種</li>
+        <li>実機ではまだ: SRAM 512KB の版、2GB 超、SCSI2SD 以外の機器、FS-A1ST 以外の機種</li>
       </ul>
       <ul lang="en">
         <li>Disks formatted by the original kernel are not guaranteed (re-create them with <code>CALL FDISK</code>)</li>
         <li>The contents of the original kernel's ESE RAM disk are not used as they are (the installer asks, then makes a new SRAM disk; to go back, restore the <code>/B</code> backup)</li>
         <li>No CALL commands or other original-kernel features; software that drives the SPC directly does not work</li>
         <li>No devices or media whose sectors are not 512 bytes (MO of 640 MB or more and so on). Devices that are not disks, such as CD-ROM drives and scanners, are ignored (the CD-ROM software for the original MEGA-SCSI does not work either)</li>
-        <li>Not yet tested on real hardware: models with 256 / 512 KB SRAM, more than 2 GB, devices other than SCSI2SD, machines other than the FS-A1ST</li>
+        <li>Not yet tested on real hardware: the model with 512 KB SRAM, more than 2 GB, devices other than SCSI2SD, machines other than the FS-A1ST</li>
       </ul>
     </div>
     <div>
@@ -744,10 +744,12 @@
       <h3 lang="en">Tested on</h3>
       <ul lang="ja">
         <li>実機: FS-A1ST + SCSI2SD V4。Nextor 3.0 のカーネルで、SCC 付き版とノーマル版 1024KB のインストール、起動、ドライブの割り当て、DRVTEST、720KB のファイルの読み書き(Z80 / R800、書き戻して一致)、ノーマル版 128KB のインストール。Beta2 のカーネルのときに、SCC 付き版とノーマル版 1024KB で、インストール、起動、Z80 / R800 での読み書き。SRAM ディスクの作成と起動、書いたファイルの照合、電源を切っても残ること。SRAM 全体のバックアップから元のカーネル(似非 RAM ディスクを含む)に戻し、また Nextor に戻すこと。ノーマル版 128KB へのインストール</li>
+        <li>v1.0.1: さる事情通の実機(FS-A1ST + 製品版 256KB)で、SRAM ディスクの大きさ、MSX-DOS 1 での起動、<code>_SYSTEM</code></li>
         <li>openMSX: ノーマル版 128KB / 256KB / 512KB / 1024KB、SCC 付き版 1024KB で、インストール、SRAM ディスクの作成、バックアップと復元、起動、読み書き</li>
       </ul>
       <ul lang="en">
         <li>Real hardware: FS-A1ST + SCSI2SD V4. With the Nextor 3.0 kernel: install, boot, drive mapping, DRVTEST, 720 KB file reads and writes on Z80 / R800 (compared after copying back) on the SCC and normal 1024 KB models, install on the normal 128 KB model. Earlier, with the Beta2 kernel and the SCC and normal 1024 KB models: install, boot, reads and writes on Z80 / R800; making and booting the SRAM disk, files compared after copying back, contents kept with the power off; a whole-SRAM backup back to the original kernel (with its ESE RAM disk) and then back to Nextor. Install on the normal 128 KB model</li>
+        <li>v1.0.1: on the real hardware of someone in the know (FS-A1ST + retail 256 KB model): the SRAM disk size, booting MSX-DOS 1, <code>_SYSTEM</code></li>
         <li>openMSX: install, SRAM disk creation, backup and restore, boot, reads and writes on the normal 128 / 256 / 512 / 1024 KB models and the SCC 1024 KB model</li>
       </ul>
     </div>
@@ -758,19 +760,21 @@
     <p>始まりは「Nextor が 3 になったのは知ってる?」でした。知っています。続けて「MEGA-SCSI で使えない」。そもそもドライバが存在しないのだから当然です。そこからは元の BIOS の解析、SRAM へのインストーラ、エミュレータでの試験と進み、いざ実機に挿したら、SCSI 機器の電源が入っていないだけで起動が止まり、ノーマル版はインストーラが見つけられず、書き込みが一瞬で終わって画面が緑一色になり「戸惑います」。どれも直しました。ついでに Nextor 3 そのものの癖まで掘り当て、依頼人は作者に Issue まで出しています。注文が多いのは相変わらずですが、全部実機で試してくるのも相変わらずです。</p>
     <p>追記: 次の注文は「似非 RAM ディスクも」。作りました。ついでに「元のカーネルは 64KB で、残りに RAM ディスクの FAT がある。128KB だけ書き戻すのは怖い」とのことで、バックアップは SRAM 丸ごと 1MB に。フロッピーに入らないと文句を言われる前に、説明書に書いておきました。</p>
     <p>追記その 2: Nextor 3.0 の正式版が出たので作り直し。今度は「コピーは成功したのにファイルが短い」。犯人探しの末、SCSI2SD のファームウェアは、SD カードが遅いと書き終わる前に「書けました」と返すと判明しました。SD カードを替えたら直りました。ドライバの濡れ衣が晴れて何よりです。</p>
+    <p>追記その 3: さる事情通から「製品版の 256KB が 512KB に見える」「MSX-DOS 1 で起動しない」と報告が来ました。製品版の 256KB は、空きのバンクの先に前半の写しが見えるという素直でない作りで、容量の調べ方がまんまと騙されていました。調べ方を変え、ついでに起動コードも入れて v1.0.1 に。依頼人の「768KB の自作の版もあるけど?」にも対応済みです。報告してくれた方が実機で確かめてくれたので、今回は依頼人の出番がありませんでした。</p>
   </div>
   <div class="memo" lang="en">
     <span class="memo-label">Work log — J.D.</span>
     <p>It began with "did you know Nextor went to version 3?" I did. Then: "it doesn't work with the MEGA-SCSI." Of course not; there was never a driver. So: disassembling the original BIOS, an SRAM installer, emulator tests. Then on real hardware the boot hung just because the SCSI device was switched off, the installer couldn't find the normal model, and the write finished so fast that the screen went solid green and the client was "puzzled." All fixed. Along the way we dug up quirks of Nextor 3 itself, and the client filed an issue with its author. As many demands as ever, and as ever, every one of them tried on real hardware.</p>
     <p>Update: the next demand was "the ESE RAM disk too." Done. Then: "the original kernel is 64 KB and the RAM disk's FAT lives in the rest; restoring only 128 KB is scary." So the backup is now the whole SRAM, 1 MB. Before the complaint that it doesn't fit on a floppy arrives, it's already in the manual.</p>
     <p>Update 2: Nextor 3.0 final came out, so a rebuild. Next: "the copy succeeded but the file is short." After some detective work, the SCSI2SD firmware turns out to report "written" before a slow SD card has finished. A different SD card fixed it. Glad the driver is cleared.</p>
+    <p>Update 3: someone in the know reported "the retail 256 KB model shows up as 512 KB" and "MSX-DOS 1 won't boot." The retail 256 KB model has empty banks followed by a copy of the first half, and that fooled the size check completely. New size check, the boot code added, and that is v1.0.1. The client's "there are home-made 768 KB ones too, you know?" is covered as well. The person who reported it also tested the fix on real hardware, so for once the client had nothing to do.</p>
   </div>
 
-  <p class="caution" lang="ja"><strong>注意:</strong> 2026-11-01 公開の Nextor 3.0(正式版)のカーネルで作り直しました。非公式のソフトです。SRAM を書き換えるので、元のカーネルに戻したい人は必ず <code>/B</code> でバックアップを取ってください。使用は自己責任でお願いします。開発報告は日本語のみです(説明書は英語版もあります)。</p>
-  <p class="caution" lang="en"><strong>Note:</strong> Rebuilt with the kernel of Nextor 3.0, the final release of 2026-11-01. Unofficial software. It rewrites the SRAM, so if you may want the original kernel back, make a backup with <code>/B</code>. Use at your own risk. The report is in Japanese only; the manual is also in English.</p>
+  <p class="caution" lang="ja"><strong>注意:</strong> 2026-11-01 公開の Nextor 3.0(正式版)のカーネルで作り直しました。v1.0 の SRAM ディスクは、v1.0.1 のインストーラで作り直してください(製品版 256KB では、v1.0 の SRAM ディスクの 128KB より後ろに書いたファイルは残っていません)。非公式のソフトです。SRAM を書き換えるので、元のカーネルに戻したい人は必ず <code>/B</code> でバックアップを取ってください。使用は自己責任でお願いします。開発報告は日本語のみです(説明書は英語版もあります)。</p>
+  <p class="caution" lang="en"><strong>Note:</strong> Rebuilt with the kernel of Nextor 3.0, the final release of 2026-11-01. Make SRAM disks created by v1.0 again with the v1.0.1 installer (on the retail 256 KB model, files written past the first 128 KB of a v1.0 SRAM disk were not kept). Unofficial software. It rewrites the SRAM, so if you may want the original kernel back, make a backup with <code>/B</code>. Use at your own risk. The report is in Japanese only; the manual is also in English.</p>
 
   <div class="links">
-    <a class="btn primary" href="nxmg.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 158 KB</small></a>
+    <a class="btn primary" href="nxmg.zip" download><span lang="ja">ダウンロード</span><span lang="en">Download</span> <small>zip · 160 KB</small></a>
     <a class="btn ghost" href="nxmg.html"><span lang="ja">開発報告</span><span lang="en">Report (Japanese)</span></a>
     <a class="btn ghost" href="nxmg_readme.html"><span lang="ja">説明書</span><span lang="en">Manual (Japanese)</span></a>
     <a class="btn ghost" href="nxmg_readme_en.html"><span lang="ja">説明書(英語)</span><span lang="en">Manual (English)</span></a>
