@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MICRO CABIN MUSIC PLAYER Ver 0.37</title>
+<title>MICRO CABIN MUSIC PLAYER Ver 0.38</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,7 +13,7 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · README</div>
-  <h1>MICRO CABIN MUSIC PLAYER Ver 0.37</h1>
+  <h1>MICRO CABIN MUSIC PLAYER Ver 0.38</h1>
   <p class="lead">A tool that builds an MSX MegaROM cartridge (ASCII16) to listen to the music of Micro Cabin games. Every song is played with the game's own sound driver and instruments.</p>
 </header>
 <nav class="toc" aria-label="Contents"><ul><li class="t2"><a href="#h1">Supported games</a></li><li class="t2"><a href="#h2">Requirements</a></li><li class="t2"><a href="#h3">Building the ROM</a></li><li class="t2"><a href="#h4">Running</a></li><li class="t2"><a href="#h5">Editing the playlist</a></li><li class="t2"><a href="#h6">Pictures</a></li><li class="t2"><a href="#h7">Fixing titles</a></li><li class="t2"><a href="#h8">Credits</a></li></ul></nav>
@@ -27,7 +27,7 @@
 <ul><li>Python 3.8 or later with Pillow (<code>pip install pillow</code>)</li><li>Disk images (.dsk) of the games</li><li>sjasmplus is not needed (the prebuilt <code>player/player.bin</code> is used; only needed if you change <code>player/player.asm</code>)</li></ul>
 <h3 id="h3">Building the ROM</h3>
 <p>Run in the folder containing this README:</p>
-<ol><li><code>python tools/extract_disks.py</code> - creates one folder per game under <code>disk_image</code>.</li><li>Put the disk images (.dsk) of each game in its folder. Disks are numbered in file name order (names like "Disk 1 of 3" are fine as they are).</li><li><code>python tools/extract_disks.py</code> again - extracts the songs to <code>data/&lt;folder&gt;/</code>, and writes <code>player/playlist.txt</code> and <code>extract_log.txt</code>.</li><li><code>cd player</code> and <code>python build_rom.py</code> - writes <code>player/MCPLAYER.ROM</code> (1MB, ASCII16 mapper) and the DOS version in <code>dos/</code> (MCPLAYER.COM, one driver file <code>*.DRV</code> per game, and the songs in one folder per game; see <code>README_DOS_en.md</code>).</li></ol>
+<ol><li><code>python tools/extract_disks.py</code> - creates one folder per game under <code>disk_image</code>.</li><li>Put the disk images (.dsk) of each game in its folder. Disks are numbered in file name order (names like "Disk 1 of 3" are fine as they are).</li><li><code>python tools/extract_disks.py</code> again - extracts the songs to <code>data/&lt;folder&gt;/</code>, and writes <code>player/playlist.txt</code> and <code>extract_log.txt</code>.</li><li><code>cd player</code> and <code>python build_rom.py</code> - writes <code>player/MCPLAYER.ROM</code> (1MB, ASCII16 mapper) and the DOS version in <code>dos/</code> (MCPLAYER.COM, and one folder per game with its songs, driver file <code>*.DRV</code> and song list <code>*.LST</code>; see <code>README_DOS_en.md</code>).</li></ol>
 <p>build_rom.py options:</p>
 <div class="scroll"><table><thead><tr><th>Option</th><th></th></tr></thead><tbody><tr><td><code>--autoplay</code></td><td>Auto play (see below)</td></tr><tr><td><code>--loops 3</code></td><td>Default loop count (2)</td></tr><tr><td><code>--lang en</code> / <code>ja</code></td><td>Always English / Japanese (default: by the machine's character set)</td></tr><tr><td><code>--size auto</code></td><td>Smallest ROM size (default 1024KB)</td></tr><tr><td><code>-o name.rom</code></td><td>Output file</td></tr><tr><td><code>--no-dos</code></td><td>Do not make the DOS version files</td></tr><tr><td><code>--dos-dir folder</code></td><td>Where to make the DOS version files (default <code>../dos</code>)</td></tr></tbody></table></div>
 <p>A ROM built with <code>--autoplay</code> plays the list from the first song after the startup song (or right after boot), forever. For machines without a keyboard (1chipMSX etc.). You can still use the keys.</p>

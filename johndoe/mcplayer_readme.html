@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MICRO CABIN MUSIC PLAYER Ver 0.37</title>
+<title>MICRO CABIN MUSIC PLAYER Ver 0.38</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=DotGothic16&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -13,7 +13,7 @@
 <div class="docwrap">
 <header class="dochead">
   <div class="kicker">MCPLAYER · README</div>
-  <h1>MICRO CABIN MUSIC PLAYER Ver 0.37</h1>
+  <h1>MICRO CABIN MUSIC PLAYER Ver 0.38</h1>
   <p class="lead">マイクロキャビンのゲームの曲を、MSX の ROM カートリッジ（メガロム）にまとめて聴くためのツールです。曲は、それぞれのゲーム自身のサウンドドライバと音色で鳴らします。</p>
 </header>
 <nav class="toc" aria-label="目次"><ul><li class="t2"><a href="#h1">対応しているゲーム</a></li><li class="t2"><a href="#h2">必要なもの</a></li><li class="t2"><a href="#h3">ROM の作り方</a></li><li class="t2"><a href="#h5">動かし方</a></li><li class="t2"><a href="#h7">プレイリストを直す</a></li><li class="t2"><a href="#h10">フォルダの中身</a></li><li class="t2"><a href="#h11">クレジット</a></li></ul></nav>
@@ -35,7 +35,7 @@
 <ul><li><code>data/ゲームのフォルダ/</code> に曲（.MCM）ができます。FM 音源を使う曲と、データベースに登録した PSG の曲だけを取り出します。</li><li><code>player/playlist.txt</code>（プレイリスト）と <code>extract_log.txt</code>（取り出した曲の一覧）ができます。</li></ul></li><li>ROM を作る
 <div class="scroll"><pre>cd player
 python build_rom.py</pre></div>
-<p><code>player/MCPLAYER.ROM</code>（1MB、ASCII16 マッパー）と、DOS 版のファイル（<code>dos/</code> の下に MCPLAYER.COM、ゲームごとのドライバ <code>*.DRV</code>、ゲームのフォルダごとの曲）ができます。DOS 版の使い方は <code>README_DOS.md</code> を見てください。</p></li></ol>
+<p><code>player/MCPLAYER.ROM</code>（1MB、ASCII16 マッパー）と、DOS 版のファイル（<code>dos/</code> の下に MCPLAYER.COM と、ゲームのフォルダごとの曲・ドライバ <code>*.DRV</code>・曲の一覧 <code>*.LST</code>）ができます。DOS 版の使い方は <code>README_DOS.md</code> を見てください。</p></li></ol>
 <h4 id="h4">オプション（build_rom.py）</h4>
 <div class="scroll"><table><thead><tr><th>オプション</th><th>内容</th></tr></thead><tbody><tr><td><code>--autoplay</code></td><td>自動再生（下を参照）</td></tr><tr><td><code>--loops 3</code></td><td>ループ回数の既定値（既定 2）</td></tr><tr><td><code>--lang en</code> / <code>ja</code></td><td>表示を英語 / 日本語に固定（既定は本体の文字セットで決める）</td></tr><tr><td><code>--size auto</code></td><td>ROM の大きさを必要最小限にする（既定 1024KB）</td></tr><tr><td><code>-o 名前.rom</code></td><td>出力するファイル名</td></tr><tr><td><code>--no-dos</code></td><td>DOS 版のファイルを作らない</td></tr><tr><td><code>--dos-dir フォルダ</code></td><td>DOS 版のファイルを作る所（既定 <code>../dos</code>）</td></tr><tr><td><code>リスト.txt</code></td><td>別のプレイリストを使う</td></tr></tbody></table></div>
 <p><code>--autoplay</code> で作った ROM は、起動時の曲が終わったら（起動時の曲がなければ起動してすぐ）リストの先頭の曲から順に鳴らし続けます。キーボードのない環境（1chipMSX など）向けです。途中でキーを押せば、ふだんどおり操作できます。</p>
